@@ -12,7 +12,7 @@ The DecimalArrayExtensions class is a static class that provides extension metho
 
 Calculates the average of an array of decimal values.
 
-Throws an `InvalidInputDataException` if the input array is empty or null.
+Throws an `EmptyOrNullArrayException` if the input array is empty or null.
 
 #### Parameters
 
@@ -107,20 +107,6 @@ Custom exception for insufficient data for a sample calculation.
 throw new InsufficientDataException("Not enough data for sample calculation.");
 ```
 
-
-### `InvalidInputDataException`
-
-Custom exception for invalid input data.
-
-#### Constructor Parameters
-
-- `message` (string): The exception message.
-
-#### Example Usage
-
-```csharp
-throw new InvalidInputDataException("Invalid input data.");
-```
 
 ## Inner Classes
 

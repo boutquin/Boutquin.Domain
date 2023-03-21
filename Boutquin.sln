@@ -5,7 +5,14 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boutquin.Domain", "Domain\Boutquin.Domain.csproj", "{B54B3102-55F0-4A5C-906A-84B6237D2F3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boutquin.UnitTests", "UnitTests\Boutquin.UnitTests.csproj", "{DA431FBA-1AF0-427A-97BD-82BAE2EAE312}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boutquin.UnitTests", "UnitTests\Boutquin.UnitTests.csproj", "{DA431FBA-1AF0-427A-97BD-82BAE2EAE312}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66DCA184-6AA9-430B-949F-E93F90DB156E}"
+	ProjectSection(SolutionItems) = preProject
+		CommonAssemblyInfo.props = CommonAssemblyInfo.props
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

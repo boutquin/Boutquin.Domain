@@ -41,19 +41,11 @@ public static class DecimalArrayExtensions
     }
 
     /// <summary>
-    /// Custom exception for invalid input data.
-    /// </summary>
-    public class InvalidInputDataException : Exception
-    {
-        public InvalidInputDataException(string message) : base(message) { }
-    }
-
-    /// <summary>
     /// Calculates the average of an array of decimal values.
     /// </summary>
     /// <param name="values">The array of decimal values.</param>
     /// <returns>The average of the values.</returns>
-    /// <exception cref="InvalidInputDataException">Thrown when the input array is empty or null.</exception>
+    /// <exception cref="EmptyOrNullArrayException">Thrown when the input array is empty or null.</exception>
     public static decimal Average(this decimal[] values)
     {
         if (values == null || values.Length == 0)
