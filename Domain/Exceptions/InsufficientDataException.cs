@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Pierre G. Boutquin. All rights reserved.
+﻿// Copyright (c) 2023 Pierre G. Boutquin. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // You may not use this file except in compliance with the License.
@@ -23,5 +23,7 @@ public class InsufficientDataException : Exception
     /// Constructor for the InsufficientDataException class.
     /// </summary>
     /// <param name="message">The error message for the exception.</param>
-    public InsufficientDataException(string message) : base(message) { }
+    public InsufficientDataException(string message) : base(message) 
+    { 
+    }
 }

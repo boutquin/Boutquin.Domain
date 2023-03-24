@@ -20,7 +20,7 @@ namespace Boutquin.Domain.Extensions;
 /// <summary>
 /// Provides extension methods for calculating statistical measures on an array of decimal values.
 /// </summary>
-public static class DecimalArrayExtensions
+public static partial class DecimalArrayExtensions
 {
     /// <summary>
     /// Enum to represent the calculation type for variance and standard deviation.
@@ -29,15 +29,6 @@ public static class DecimalArrayExtensions
     {
         Sample,
         Population
-    }
-
-    /// <summary>
-    /// Contains constants for exception messages.
-    /// </summary>
-    public static class ExceptionMessages
-    {
-        public const string EmptyOrNullArray = "Input array must not be empty or null.";
-        public const string InsufficientDataForSampleCalculation = "Input array must have at least two elements for sample calculation.";
     }
 
     /// <summary>
@@ -50,7 +41,7 @@ public static class DecimalArrayExtensions
     {
         if (values == null || values.Length == 0)
         {
-            throw new EmptyOrNullArrayException(ExceptionMessages.EmptyOrNullArray);
+            throw new EmptyOrNullArrayException();
         }
 
         return values.Sum() / values.Length;
@@ -68,7 +59,7 @@ public static class DecimalArrayExtensions
     {
         if (values == null || values.Length == 0)
         {
-            throw new EmptyOrNullArrayException(ExceptionMessages.EmptyOrNullArray);
+            throw new EmptyOrNullArrayException();
         }
 
         if (calculationType == CalculationType.Sample && values.Length == 1)

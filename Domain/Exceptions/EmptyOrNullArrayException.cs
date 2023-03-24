@@ -20,8 +20,17 @@ namespace Boutquin.Domain.Exceptions;
 public class EmptyOrNullArrayException : Exception
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="EmptyOrNullArrayException"/> class.
+    /// </summary>
+    public EmptyOrNullArrayException() : base(ExceptionMessages.EmptyOrNullArray)
+    {
+    }
+
+    /// <summary>
     /// Constructor for the EmptyArrayException class.
     /// </summary>
     /// <param name="message">The error message for the exception.</param>
-    public EmptyOrNullArrayException(string message) : base(message) { }
+    public EmptyOrNullArrayException(string message) : base(message) 
+    { 
+    }
 }
