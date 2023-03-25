@@ -21,20 +21,6 @@ namespace Boutquin.UnitTests.Domain;
 public sealed class DecimalArrayExtensionsTestData
 {
     /// <summary>
-    /// Gets a collection of test cases containing varied decimal arrays and their corresponding average values.
-    /// </summary>
-    public static IEnumerable<object[]> AverageData => new List<object[]>
-    {
-        new object[] { new decimal[] { 1m, 2m, 3m, 4m, 5m }, 3m },
-        new object[] { new decimal[] { 0m, 0m, 0m, 0m, 0m }, 0m },
-        new object[] { new decimal[] { -1m, 1m, -2m, 2m, -3m, 3m }, 0m },
-        new object[] { new decimal[] { 100m, 50m, 25m, 12.5m }, 46.875m },
-        new object[] { new decimal[] { 0.5m, 0.25m, 0.125m, 0.0625m }, 0.234375m },
-        new object[] { new decimal[] { -5m, -10m, -15m, -20m, -25m }, -15m },
-        new object[] { new decimal[] { 12345m, 67890m }, 40117.5m }
-    };
-
-    /// <summary>
     /// Gets a collection of test cases containing varied decimal arrays and their corresponding variance values.
     /// </summary>
     public static IEnumerable<object[]> VarianceData =>

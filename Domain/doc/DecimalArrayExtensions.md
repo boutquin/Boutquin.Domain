@@ -8,27 +8,6 @@ The DecimalArrayExtensions class is a static class that provides extension metho
 
 ## Methods
 
-### `Average(this decimal[] values) -> decimal`
-
-Calculates the average of an array of decimal values.
-
-Throws an `EmptyOrNullArrayException` if the input array is empty or null.
-
-#### Parameters
-
-- `values` (decimal[]): The array of decimal values.
-
-#### Returns
-
-(decimal): The average of the values.
-
-#### Example Usage
-
-```csharp
-decimal[] values = { 1.5m, 2.0m, 3.5m, 4.2m, 5.8m };
-decimal average = values.Average();
-```
-
 
 ### `Variance(this decimal[] values, CalculationType calculationType = CalculationType.Sample) -> decimal`
 

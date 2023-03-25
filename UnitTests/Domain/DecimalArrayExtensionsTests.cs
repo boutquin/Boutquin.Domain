@@ -23,20 +23,6 @@ namespace Boutquin.UnitTests.Domain;
 public class DecimalArrayExtensionsTests
 {
     /// <summary>
-    /// Tests the Average method using test data provided by AverageData.
-    /// </summary>
-    [Theory]
-    [MemberData(nameof(DecimalArrayExtensionsTestData.AverageData), MemberType = typeof(DecimalArrayExtensionsTestData))]
-    public void Average_ShouldCalculateCorrectly(decimal[] values, decimal expected)
-    {
-        // Act
-        var result = values.Average();
-
-        // Assert
-        result.Should().BeApproximately(expected, 1e-12m);
-    }
-
-    /// <summary>
     /// Tests the Variance method using test data provided by VarianceData.
     /// </summary>
     [Theory]
@@ -91,7 +77,6 @@ public class DecimalArrayExtensionsTests
         var exceptionMessage = ExceptionMessages.EmptyOrNullArray;
 
 #pragma warning disable CS8604 // Possible null reference argument.
-        Assert.Throws(exceptionType, () => values.Average()).Message.Should().Be(exceptionMessage);
         Assert.Throws(exceptionType, () => values.Variance()).Message.Should().Be(exceptionMessage);
         Assert.Throws(exceptionType, () => values.StandardDeviation()).Message.Should().Be(exceptionMessage);
 #pragma warning restore CS8604 // Possible null reference argument.
@@ -107,7 +92,6 @@ public class DecimalArrayExtensionsTests
         var exceptionType = typeof(EmptyOrNullArrayException);
         var exceptionMessage = ExceptionMessages.EmptyOrNullArray;
 
-        Assert.Throws(exceptionType, () => values.Average()).Message.Should().Be(exceptionMessage);
         Assert.Throws(exceptionType, () => values.Variance()).Message.Should().Be(exceptionMessage);
         Assert.Throws(exceptionType, () => values.StandardDeviation()).Message.Should().Be(exceptionMessage);
     }

@@ -37,15 +37,15 @@ public static partial class DecimalArrayExtensions
     /// <param name="values">The array of decimal values.</param>
     /// <returns>The average of the values.</returns>
     /// <exception cref="EmptyOrNullArrayException">Thrown when the input array is empty or null.</exception>
-    public static decimal Average(this decimal[] values)
-    {
-        if (values == null || values.Length == 0)
-        {
-            throw new EmptyOrNullArrayException();
-        }
+    //public static decimal Average(this decimal[] values)
+    //{
+    //    if (values == null || values.Length == 0)
+    //    {
+    //        throw new EmptyOrNullArrayException();
+    //    }
 
-        return values.Sum() / values.Length;
-    }
+    //    return values.Sum() / values.Length;
+    //}
 
     /// <summary>
     /// Calculates the variance of an array of decimal values.
