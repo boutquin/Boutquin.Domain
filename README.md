@@ -1,6 +1,6 @@
 # Boutquin.Domain
 
-https://img.shields.io/nuget/vpre/boutquin.domain?style=for-the-badge https://img.shields.io/github/license/boutquin/boutquin.domain?style=for-the-badge
+![Nuget](https://img.shields.io/nuget/vpre/boutquin.domain?style=for-the-badge) ![License](https://img.shields.io/github/license/boutquin/boutquin.domain?style=for-the-badge)
 
 This will contain all entities, enums, exceptions, interfaces, types and logic specific to the domain layer.
 
