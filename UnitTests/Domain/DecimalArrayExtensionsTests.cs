@@ -22,9 +22,15 @@ namespace Boutquin.UnitTests.Domain;
 
 public class DecimalArrayExtensionsTests
 {
+    private const decimal Precision = 1e-12m;
+
     /// <summary>
-    /// Tests the Variance method using test data provided by VarianceData.
+    /// Verifies that the <see cref="DecimalArrayExtensions.Variance(decimal[], CalculationType)"/> extension method 
+    /// correctly calculates the variance of an array of decimal values given a calculation type (sample or population).
     /// </summary>
+    /// <param name="values">The array of decimal values to calculate the standard deviation for.</param>
+    /// <param name="calculationType">The calculation type to use (<see cref="CalculationType.Sample"/> or <see cref="CalculationType.Population"/>).</param>
+    /// <param name="expected">The expected standard deviation.</param>
     [Theory]
     [MemberData(nameof(DecimalArrayExtensionsTestData.VarianceData), MemberType = typeof(DecimalArrayExtensionsTestData))]
     public void Variance_ShouldCalculateCorrectly(decimal[] values, CalculationType calculationType, decimal expected)
@@ -33,12 +39,16 @@ public class DecimalArrayExtensionsTests
         var result = values.Variance(calculationType);
 
         // Assert
-        result.Should().BeApproximately(expected, 1e-12m);
+        result.Should().BeApproximately(expected, Precision);
     }
 
     /// <summary>
-    /// Tests the StandardDeviation method using test data provided by StandardDeviationData.
+    /// Verifies that the <see cref="DecimalArrayExtensions.StandardDeviation(decimal[], CalculationType)"/> extension method 
+    /// correctly calculates the standard deviation of an array of decimal values given a calculation type (sample or population).
     /// </summary>
+    /// <param name="values">The array of decimal values to calculate the standard deviation for.</param>
+    /// <param name="calculationType">The calculation type to use (<see cref="CalculationType.Sample"/> or <see cref="CalculationType.Population"/>).</param>
+    /// <param name="expected">The expected standard deviation.</param>
     [Theory]
     [MemberData(nameof(DecimalArrayExtensionsTestData.StandardDeviationData), MemberType = typeof(DecimalArrayExtensionsTestData))]
     public void StandardDeviation_ShouldCalculateCorrectly(decimal[] values, CalculationType calculationType, decimal expected)
@@ -47,11 +57,12 @@ public class DecimalArrayExtensionsTests
         var result = values.StandardDeviation(calculationType);
 
         // Assert
-        result.Should().BeApproximately(expected, 1e-12m);
+        result.Should().BeApproximately(expected, Precision);
     }
 
     /// <summary>
-    /// Tests the InsufficientDataForSampleCalculation for all extension methods that require sample calculations with an input array containing only one element.
+    /// Tests the <see cref="InsufficientDataException" /> for all extension methods 
+    /// that require <see cref="CalculationType.Sample"/> calculations with an input array containing only one element.
     /// </summary>
     [Fact]
     public void AllMethods_ShouldThrowInsufficientDataForSampleCalculation_WhenArrayHasOneElement()
@@ -60,38 +71,43 @@ public class DecimalArrayExtensionsTests
         var exceptionType = typeof(InsufficientDataException);
         var exceptionMessage = ExceptionMessages.InsufficientDataForSampleCalculation;
 
+        // Act & Assert
         Assert.Throws(exceptionType, () => values.Variance(CalculationType.Sample)).Message.Should().Be(exceptionMessage);
         Assert.Throws(exceptionType, () => values.StandardDeviation(CalculationType.Sample)).Message.Should().Be(exceptionMessage);
     }
 
     /// <summary>
-    /// Tests the EmptyOrNullArrayException for all extension methods with null input arrays.
+    /// Tests the <see cref="EmptyOrNullArrayException" /> for all extension methods with null input arrays.
     /// </summary>
     [Fact]
     public void AllMethods_ShouldThrowEmptyOrNullArrayException_WhenArrayIsNull()
     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+        // Arrange
         decimal[] values = null;
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         var exceptionType = typeof(EmptyOrNullArrayException);
         var exceptionMessage = ExceptionMessages.EmptyOrNullArray;
 
 #pragma warning disable CS8604 // Possible null reference argument.
+        // Act & Assert
         Assert.Throws(exceptionType, () => values.Variance()).Message.Should().Be(exceptionMessage);
         Assert.Throws(exceptionType, () => values.StandardDeviation()).Message.Should().Be(exceptionMessage);
 #pragma warning restore CS8604 // Possible null reference argument.
     }
 
     /// <summary>
-    /// Tests the EmptyOrNullArrayException for all extension methods with empty input arrays.
+    /// Tests the <see cref="EmptyOrNullArrayException" /> for all extension methods with empty input arrays.
     /// </summary>
     [Fact]
     public void AllMethods_ShouldThrowEmptyOrNullArrayException_WhenArrayIsEmpty()
     {
+        // Arrange
         var values = Array.Empty<decimal>();
         var exceptionType = typeof(EmptyOrNullArrayException);
         var exceptionMessage = ExceptionMessages.EmptyOrNullArray;
 
+        // Act & Assert
         Assert.Throws(exceptionType, () => values.Variance()).Message.Should().Be(exceptionMessage);
         Assert.Throws(exceptionType, () => values.StandardDeviation()).Message.Should().Be(exceptionMessage);
     }

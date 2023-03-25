@@ -65,12 +65,4 @@ public sealed class DecimalArrayExtensionsTestData
         new object[] { new decimal[] { -1000m, 0m, 1000m }, CalculationType.Sample, 1000m },
         new object[] { new decimal[] { 100m, 200m, 300m, 400m, 500m, 600m, 700m }, CalculationType.Sample, 216.024689946929m },
         };
-
-    /// <summary>
-    /// Gets a collection of test cases containing empty decimal arrays.
-    /// </summary>
-    public static IEnumerable<object[]> EmptyArrays => new List<object[]>
-    {
-        new object[] { Array.Empty<decimal>() }
-    };
 }
