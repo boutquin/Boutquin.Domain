@@ -176,4 +176,81 @@ public static class Guard
             throw new ArgumentException($"Parameter '{paramName}' exceeds the maximum length of {maxLength}.", paramName);
         }
     }
+
+    /// <summary>
+    /// Checks if the given numeric value is negative and throws an ArgumentOutOfRangeException if it is.
+    /// </summary>
+    /// <typeparam name="T">The type of the value. Must be a numeric type.</typeparam>
+    /// <param name="value">The numeric value to check for negativity.</param>
+    /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given value is negative.</exception>
+    /// <example>
+    /// <code>
+    /// public void SetAge(int age)
+    /// {
+    ///     Guard.AgainstNegative(age, nameof(age));
+    ///     Console.WriteLine($"Age is set to: {age}");
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstNegative<T>(T value, string paramName) where T : IComparable<T>
+    {
+        var zero = default(T);
+        if (value.CompareTo(zero) < 0)
+        {
+            throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' cannot be negative.");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given numeric value is negative or zero and throws an ArgumentOutOfRangeException if it is.
+    /// </summary>
+    /// <typeparam name="T">The type of the value. Must be a numeric type.</typeparam>
+    /// <param name="value">The numeric value to check for negativity or zero.</param>
+    /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given value is negative or zero.</exception>
+    /// <example>
+    /// <code>
+    /// public void SetQuantity(int quantity)
+    /// {
+    ///     Guard.AgainstNegativeOrZero(quantity, nameof(quantity));
+    ///     Console.WriteLine($"Quantity is set to: {quantity}");
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstNegativeOrZero<T>(T value, string paramName) where T : IComparable<T>
+    {
+        var zero = default(T);
+        if (value.CompareTo(zero) <= 0)
+        {
+            throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' cannot be negative or zero.");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given enum value is defined and throws an ArgumentOutOfRangeException if it is not.
+    /// </summary>
+    /// <typeparam name="T">The type of the enum value.</typeparam>
+    /// <param name="value">The enum value to check if it is defined.</param>
+    /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given enum value is not defined.</exception>
+    /// <example>
+    /// <code>
+    /// public enum Colors { Red, Green, Blue }
+    ///
+    /// public void SetColor(Colors color)
+    /// {
+    ///     Guard.AgainstUndefinedEnumValue(color, nameof(color));
+    ///     Console.WriteLine($"Color is set to: {color}");
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstUndefinedEnumValue<T>(T value, string paramName) where T : Enum
+    {
+        if (!Enum.IsDefined(typeof(T), value))
+        {
+            var enumTypeName = typeof(T).Name;
+            throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' has an undefined value '{value}' for enum '{enumTypeName}'.");
+        }
+    }
 }
