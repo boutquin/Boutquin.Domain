@@ -117,12 +117,12 @@ public static class Guard
     /// <code>
     /// public void PrintGreeting(string name, int maxLength)
     /// {
-    ///     Guard.AgainstNullOrEmpty(name, nameof(name), maxLength);
+    ///     Guard.AgainstNullOrEmptyAndOverflow(name, nameof(name), maxLength);
     ///     Console.WriteLine($"Hello, {name}!");
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNullOrEmpty(string value, string paramName, int maxLength)
+    public static void AgainstNullOrEmptyAndOverflow(string value, string paramName, int maxLength)
     {
         if (string.IsNullOrEmpty(value))
         {
@@ -147,7 +147,7 @@ public static class Guard
     /// <code>
     /// public void PrintGreeting(string name, int maxLength)
     /// {
-    ///     Guard.AgainstNullOrWhiteSpace(name, nameof(name), maxLength);
+    ///     Guard.AgainstNullOrWhiteSpaceAndOverflow(name, nameof(name), maxLength);
     ///     Console.WriteLine($"Hello, {name}!");
     /// }
     ///
@@ -164,7 +164,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNullOrWhiteSpace(string value, string paramName, int maxLength)
+    public static void AgainstNullOrWhiteSpaceAndOverflow(string value, string paramName, int maxLength)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -251,6 +251,35 @@ public static class Guard
         {
             var enumTypeName = typeof(T).Name;
             throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' has an undefined value '{value}' for enum '{enumTypeName}'.");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given TimeSpan is within the specified range, inclusive.
+    /// </summary>
+    /// <param name="value">The TimeSpan to check.</param>
+    /// <param name="min">The minimum valid value, inclusive.</param>
+    /// <param name="max">The maximum valid value, inclusive.</param>
+    /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given TimeSpan is not within the specified range.</exception>
+    /// <example>
+    /// This sample shows how to call the <see cref="AgainstOutOfRange"/> method.
+    /// <code>
+    /// class Example
+    /// {
+    ///     public void SetStartTime(TimeSpan startTime)
+    ///     {
+    ///         Guard.AgainstOutOfRange(startTime, TimeSpan.Zero, TimeSpan.FromHours(24), nameof(startTime));
+    ///         // ... rest of the method
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstOutOfRange(TimeSpan value, TimeSpan min, TimeSpan max, string paramName)
+    {
+        if (value < min || value > max)
+        {
+            throw new ArgumentOutOfRangeException(paramName, $"The value of {paramName} must be between {min} and {max}.");
         }
     }
 }
