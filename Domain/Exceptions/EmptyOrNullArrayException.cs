@@ -17,7 +17,7 @@ namespace Boutquin.Domain.Exceptions;
 /// <summary>
 /// Custom exception for when the input array is empty.
 /// </summary>
-public class EmptyOrNullArrayException : Exception
+public sealed class EmptyOrNullArrayException : Exception
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="EmptyOrNullArrayException"/> class.

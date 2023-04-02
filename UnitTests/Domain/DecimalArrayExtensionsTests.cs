@@ -20,7 +20,7 @@ using static Boutquin.Domain.Extensions.DecimalArrayExtensions;
 
 namespace Boutquin.UnitTests.Domain;
 
-public class DecimalArrayExtensionsTests
+public sealed class DecimalArrayExtensionsTests
 {
     private const decimal Precision = 1e-12m;
 

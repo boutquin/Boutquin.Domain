@@ -17,7 +17,7 @@ namespace Boutquin.Domain.Exceptions;
 /// <summary>
 /// Custom exception for when the input array contains less than two elements.
 /// </summary>
-public class InsufficientDataException : Exception
+public sealed class InsufficientDataException : Exception
 {
     /// <summary>
     /// Constructor for the InsufficientDataException class.

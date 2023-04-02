@@ -82,8 +82,5 @@ public static partial class DecimalArrayExtensions
     /// <exception cref="EmptyOrNullArrayException">Thrown when the input array is empty.</exception>
     /// <exception cref="InsufficientDataException">Thrown when the input array contains less than two elements for sample calculation.</exception>
 
-    public static decimal StandardDeviation(this decimal[] values, CalculationType calculationType = CalculationType.Sample)
-    {
-        return (decimal)Math.Sqrt((double)values.Variance(calculationType));
-    }
+    public static decimal StandardDeviation(this decimal[] values, CalculationType calculationType = CalculationType.Sample) => (decimal)Math.Sqrt((double)values.Variance(calculationType));
 }
