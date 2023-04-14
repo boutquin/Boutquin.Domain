@@ -107,6 +107,41 @@ public static class Guard
     }
 
     /// <summary>
+    /// Checks if the given string exceeds the specified maximum length
+    /// and throws an ArgumentException if it does.
+    /// </summary>
+    /// <param name="value">The string to check for exceeding the maximum length.</param>
+    /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
+    /// <param name="maxLength">The maximum length allowed for the string.</param>
+    /// <exception cref="ArgumentException">Thrown when the given string exceeds the maximum length.</exception>
+    /// <example>
+    /// <code>
+    /// public void PrintGreeting(string name, int maxLength)
+    /// {
+    ///     Guard.AgainstOverflow(name, nameof(name), maxLength);
+    ///     Console.WriteLine($"Hello, {name}!");
+    /// }
+    ///
+    /// class Program
+    /// {
+    ///     static void Main(string[] args)
+    ///     {
+    ///         PrintGreeting("John", 10); // Works fine
+    ///         PrintGreeting("John Doe", 5); // Throws ArgumentException: "Parameter 'name' exceeds the maximum length of 5."
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstOverflow(string value, string paramName, int maxLength)
+    {
+        if (value.Length > maxLength)
+        {
+            throw new ArgumentException($"Parameter '{paramName}' exceeds the maximum length of {maxLength}.", paramName);
+        }
+    }
+
+
+    /// <summary>
     /// Checks if the given string is null, empty or exceeds the specified maximum length and throws an ArgumentException if it does.
     /// </summary>
     /// <param name="value">The string to check for null, empty, or exceeding the maximum length.</param>
@@ -124,15 +159,8 @@ public static class Guard
     /// </example>
     public static void AgainstNullOrEmptyAndOverflow(string value, string paramName, int maxLength)
     {
-        if (string.IsNullOrEmpty(value))
-        {
-            throw new ArgumentException($"Parameter '{paramName}' cannot be null or empty.", paramName);
-        }
-            
-        if (value.Length > maxLength)
-        {
-            throw new ArgumentException($"Parameter '{paramName}' exceeds the maximum length of {maxLength}.", paramName);
-        }
+        AgainstNullOrEmpty(value, paramName);            
+        AgainstOverflow(value, paramName, maxLength);
     }
 
     /// <summary>
@@ -166,15 +194,8 @@ public static class Guard
     /// </example>
     public static void AgainstNullOrWhiteSpaceAndOverflow(string value, string paramName, int maxLength)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new ArgumentException($"Parameter '{paramName}' cannot be null, empty or contain only white-space characters.", paramName);
-        }
-
-        if (value.Length > maxLength)
-        {
-            throw new ArgumentException($"Parameter '{paramName}' exceeds the maximum length of {maxLength}.", paramName);
-        }
+        AgainstNullOrWhiteSpace(value, paramName);
+        AgainstOverflow(value, paramName, maxLength);
     }
 
     /// <summary>
