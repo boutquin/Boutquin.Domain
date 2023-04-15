@@ -31,7 +31,7 @@ public sealed class DateTimeConverterExtensionsTests
     public void ConvertTimeZone_ShouldReturnCorrectResult(DateTime sourceDateTime, string sourceTimeZoneId, string targetTimeZoneId, DateTime expectedDateTime)
     {
         // Act
-        DateTime actualDateTime = sourceDateTime.ConvertTimeZone(sourceTimeZoneId, targetTimeZoneId);
+        var actualDateTime = sourceDateTime.ConvertTimeZone(sourceTimeZoneId, targetTimeZoneId);
 
         // Assert
         actualDateTime.Should().Be(expectedDateTime);

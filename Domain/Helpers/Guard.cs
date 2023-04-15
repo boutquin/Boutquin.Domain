@@ -22,9 +22,54 @@ namespace Boutquin.Domain.Helpers;
 public static class Guard
 {
     /// <summary>
-    /// Checks if the given object is null and throws an ArgumentNullException if it is.
+    /// Checks if the given condition is true and throws the specified exception if it is.
     /// </summary>
-    /// <typeparam name="T">The type of the object being checked.</typeparam>
+    /// <example>
+    /// <code>
+    /// public void SetQuantity(int quantity)
+    /// {
+    ///     Guard.Against(quantity <= 0).With<ArgumentException>();
+    ///     Console.WriteLine($"Quantity is set to: {quantity}");
+    /// }
+    /// </code>
+    /// </example>
+    /// <param name="condition">The condition to check.</param>
+    /// <returns>An instance of GuardCondition to chain with With&lt;TException&gt; method.</returns>
+    public static GuardCondition Against(bool condition)
+    {
+        return new GuardCondition(condition);
+    }
+
+    /// <summary>
+    /// Checks if the given reference type value is null and throws an ArgumentNullException if it is.
+    /// This overload accepts a Func&lt;T&gt; that returns the value and extracts its name using nameof.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// public void PrintList(List<string> items)
+    /// {
+    ///     Guard.AgainstNull(() => items);
+    ///     foreach (var item in items)
+    ///     {
+    ///         Console.WriteLine(item);
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    /// <typeparam name="T">The type of the value being checked. Must be a reference type.</typeparam>
+    /// <param name="valueExpression">A Func&lt;T&gt; that returns the value to check for null.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the given value is null.</exception>
+    public static void AgainstNull<T>(Func<T> valueExpression) where T : class
+    {
+        var value = valueExpression();
+        var paramName = GetParameterName(valueExpression);
+        AgainstNull(value, paramName);
+    }
+
+    /// <summary>
+    /// Checks if the given given reference type value is null and throws an ArgumentNullException if it is.
+    /// </summary>
+    /// <typeparam name="T">The type of the value being checked. Must be a reference type.</typeparam>
     /// <param name="value">The object to check for null.</param>
     /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
     /// <exception cref="ArgumentNullException">Thrown when the given object is null.</exception>
@@ -49,6 +94,28 @@ public static class Guard
     }
 
     /// <summary>
+    /// Checks if the given string value is null or empty and throws an ArgumentNullException if it is.
+    /// This overload accepts a Func&lt;string&gt; that returns the value and extracts its name using nameof.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// public void PrintMessage(string message)
+    /// {
+    ///     Guard.AgainstNullOrEmpty(() => message);
+    ///     Console.WriteLine(message);
+    /// }
+    /// </code>
+    /// </example>
+    /// <param name="valueExpression">A Func&lt;string&gt; that returns the value to check for null or empty.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the given string value is null or empty.</exception>
+    public static void AgainstNullOrEmpty(Func<string> valueExpression)
+    {
+        var value = valueExpression();
+        var paramName = GetParameterName(valueExpression);
+        AgainstNullOrEmpty(value, paramName);
+    }
+
+    /// <summary>
     /// Checks if the given string is null or empty and throws an ArgumentException if it is.
     /// </summary>
     /// <param name="value">The string to check for null or empty.</param>
@@ -69,6 +136,28 @@ public static class Guard
         {
             throw new ArgumentException($"Parameter '{paramName}' cannot be null or empty.", paramName);
         }
+    }
+
+    /// <summary>
+    /// Checks if the given string value is null, empty, or contains only whitespace characters and throws an ArgumentNullException if it is.
+    /// This overload accepts a Func&lt;string&gt; that returns the value and extracts its name using nameof.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// public void PrintMessage(string message)
+    /// {
+    ///     Guard.AgainstNullOrWhiteSpace(() => message);
+    ///     Console.WriteLine(message);
+    /// }
+    /// </code>
+    /// </example>
+    /// <param name="valueExpression">A Func&lt;string&gt; that returns the value to check for null, empty, or whitespace.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the given string value is null, empty, or contains only whitespace characters.</exception>
+    public static void AgainstNullOrWhiteSpace(Func<string> valueExpression)
+    {
+        var value = valueExpression();
+        var paramName = GetParameterName(valueExpression);
+        AgainstNullOrWhiteSpace(value, paramName);
     }
 
     /// <summary>
@@ -139,7 +228,6 @@ public static class Guard
             throw new ArgumentException($"Parameter '{paramName}' exceeds the maximum length of {maxLength}.", paramName);
         }
     }
-
 
     /// <summary>
     /// Checks if the given string is null, empty or exceeds the specified maximum length and throws an ArgumentException if it does.
@@ -302,5 +390,65 @@ public static class Guard
         {
             throw new ArgumentOutOfRangeException(paramName, $"The value of {paramName} must be between {min} and {max}.");
         }
+    }
+
+    /// <summary>
+    /// A helper class used to chain the Guard.Against method with the With&lt;TException&gt; method.
+    /// </summary>
+    public class GuardCondition
+    {
+        private readonly bool _condition;
+
+        /// <summary>
+        /// Initializes a new instance of the GuardCondition class.
+        /// </summary>
+        /// <remarks>
+        /// The constructor is marked as internal to prevent direct instantiation and is only used by the Guard class.
+        /// </remarks>
+        /// <param name="condition">The condition to check.</param>
+        internal GuardCondition(bool condition)
+        {
+            _condition = condition;
+        }
+
+        /// <summary>
+        /// Throws the specified exception if the condition is true.
+        /// </summary>
+        /// <typeparam name="TException">The type of the exception to throw.</typeparam>
+        /// <exception cref="TException">Thrown when the condition is true.</exception>
+        public void With<TException>() where TException : Exception, new()
+        {
+            if (_condition)
+            {
+                throw new TException();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Retrieves the parameter name from the given Func&lt;T&gt; expression.
+    /// </summary>
+    /// <remarks>
+    /// This method might not work in all cases, as it relies on the specific implementation of the
+    /// compiler-generated closure classes for the lambda expressions.
+    /// </remarks>
+    /// <typeparam name="T">The type of the value. Must be a reference type.</typeparam>
+    /// <param name="valueExpression">A Func&lt;T&gt; that returns the value whose name to retrieve.</param>
+    /// <returns>The parameter name extracted from the Func&lt;T&gt; expression.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
+    private static string GetParameterName<T>(Func<T> valueExpression)
+    {
+        // Check if the expression's target is null
+        if (valueExpression.Target == null)
+        {
+            throw new InvalidOperationException("Could not extract the parameter name from the expression.");
+        }
+
+        // Try to find the field with the same type as the value
+        var fieldInfo = valueExpression.Target.GetType().GetFields().FirstOrDefault(field => field.FieldType == typeof(T)) 
+            ?? throw new InvalidOperationException("Could not extract the parameter name from the expression.");
+
+        // Return the name of the field
+        return fieldInfo.Name;
     }
 }
