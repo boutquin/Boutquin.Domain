@@ -87,6 +87,10 @@ public static class Guard
     /// </example>
     public static void AgainstNull<T>(T value, string paramName) where T : class
     {
+        // Validate parameters
+        AgainstNullOrWhiteSpace(() => paramName);
+
+        // Guard logic
         if (value == null)
         {
             throw new ArgumentNullException(paramName, $"Parameter '{paramName}' cannot be null.");
@@ -132,6 +136,10 @@ public static class Guard
     /// </example>
     public static void AgainstNullOrEmpty(string value, string paramName)
     {
+        // Validate parameters
+        AgainstNullOrWhiteSpace(() => paramName);
+
+        // Guard logic
         if (string.IsNullOrEmpty(value))
         {
             throw new ArgumentException($"Parameter '{paramName}' cannot be null or empty.", paramName);
@@ -189,10 +197,55 @@ public static class Guard
     /// </example>
     public static void AgainstNullOrWhiteSpace(string value, string paramName)
     {
+        // Validate parameters
+        if (string.IsNullOrWhiteSpace(paramName))
+        {
+            throw new ArgumentException("Parameter 'paramName' cannot be null, empty or contain only white-space characters.");
+        }
+
+        // Guard logic
         if (string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException($"Parameter '{paramName}' cannot be null, empty or contain only white-space characters.", paramName);
         }
+    }
+
+    /// <summary>
+    /// Ensures that the length of the string returned by the given <see cref="Func{T}"/> expression is less than or equal to the specified maxLength.
+    /// </summary>
+    /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the string value to be checked.</param>
+    /// <param name="maxLength">The maximum length allowed for the string value. Must be greater than zero.</param>
+    /// <example>
+    /// This sample shows how to call the <see cref="AgainstOverflow"/> method.
+    /// <code>
+    /// class Example
+    /// {
+    ///     static void Main()
+    ///     {
+    ///         string name = "This is a very long string that exceeds the maximum length.";
+    ///         int maxLength = 50;
+    ///         Guard.AgainstOverflow(() => name, maxLength);
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the length of the string value exceeds the specified maxLength or when maxLength is less than or equal to zero.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
+    public static void AgainstOverflow(Func<string> valueExpression, int maxLength)
+    {
+        // Ensure maxLength is greater than zero
+        AgainstNegativeOrZero(() => maxLength);
+
+        // Get the string value from the expression
+        var value = valueExpression();
+
+        // Use the GetParameterName method to extract the parameter name from the expression
+        var paramName = GetParameterName(valueExpression);
+
+        // Check if the length of the string value exceeds the maxLength
+        AgainstOverflow(value, paramName, maxLength);
     }
 
     /// <summary>
@@ -223,9 +276,15 @@ public static class Guard
     /// </example>
     public static void AgainstOverflow(string value, string paramName, int maxLength)
     {
+        // Validate parameters
+        AgainstNullOrWhiteSpace(() => paramName);
+        AgainstNegativeOrZero(() => maxLength);
+
+        // Check if the length of the string value exceeds the maxLength
         if (value.Length > maxLength)
         {
-            throw new ArgumentException($"Parameter '{paramName}' exceeds the maximum length of {maxLength}.", paramName);
+            // Throw an ArgumentOutOfRangeException if the length of the string value exceeds the maxLength
+            throw new ArgumentOutOfRangeException(paramName, $"The length of the parameter '{paramName}' cannot exceed {maxLength} characters.");
         }
     }
 
@@ -247,8 +306,57 @@ public static class Guard
     /// </example>
     public static void AgainstNullOrEmptyAndOverflow(string value, string paramName, int maxLength)
     {
+        // Validate parameters
+        AgainstNullOrWhiteSpace(() => paramName);
+        AgainstNegativeOrZero(() => maxLength);
+
+        // Guard logic
         AgainstNullOrEmpty(value, paramName);            
         AgainstOverflow(value, paramName, maxLength);
+    }
+
+    /// <summary>
+    /// Checks if the string returned by the given <see cref="Func{T}"/> expression is null, empty, consists only of white-space characters, or exceeds the specified maximum length
+    /// and throws an ArgumentException if it does.
+    /// </summary>
+    /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the string to check for null, empty, white-space characters, or exceeding the maximum length.</param>
+    /// <param name="maxLength">The maximum length allowed for the string.</param>
+    /// <exception cref="ArgumentException">Thrown when the given string is null, empty, consists only of white-space characters, or exceeds the maximum length.</exception>
+    /// <example>
+    /// <code>
+    /// public void PrintGreeting(string name, int maxLength)
+    /// {
+    ///     Guard.AgainstNullOrWhiteSpaceAndOverflow(() => name, maxLength);
+    ///     Console.WriteLine($"Hello, {name}!");
+    /// }
+    ///
+    /// class Program
+    /// {
+    ///     static void Main(string[] args)
+    ///     {
+    ///         PrintGreeting("John", 10); // Works fine
+    ///         PrintGreeting(null, 10); // Throws ArgumentException: "Parameter 'name' cannot be null, empty or contain only white-space characters."
+    ///         PrintGreeting("", 10); // Throws ArgumentException: "Parameter 'name' cannot be null, empty or contain only white-space characters."
+    ///         PrintGreeting("   ", 10); // Throws ArgumentException: "Parameter 'name' cannot be null, empty or contain only white-space characters."
+    ///         PrintGreeting("John Doe", 5); // Throws ArgumentException: "Parameter 'name' exceeds the maximum length of 5."
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
+    public static void AgainstNullOrWhiteSpaceAndOverflow(Func<string> valueExpression, int maxLength)
+    {
+        // Validate parameters
+        AgainstNegativeOrZero(() => maxLength);
+
+        // Get the string value from the expression
+        var value = valueExpression();
+
+        // Use the GetParameterName method to extract the parameter name from the expression
+        var paramName = GetParameterName(valueExpression);
+
+        // Guard logic
+        AgainstNullOrWhiteSpaceAndOverflow(value, paramName, maxLength);
     }
 
     /// <summary>
@@ -282,8 +390,54 @@ public static class Guard
     /// </example>
     public static void AgainstNullOrWhiteSpaceAndOverflow(string value, string paramName, int maxLength)
     {
+        // Validate parameters
+        AgainstNullOrWhiteSpace(() => paramName);
+        AgainstNegativeOrZero(() => maxLength);
+        
+        // Guard logic
         AgainstNullOrWhiteSpace(value, paramName);
         AgainstOverflow(value, paramName, maxLength);
+    }
+
+    /// <summary>
+    /// Checks if the value returned by the given <see cref="Func{T}"/> expression is negative and throws an ArgumentOutOfRangeException if it is.
+    /// </summary>
+    /// <typeparam name="T">The type of the value. Must be a comparable value type.</typeparam>
+    /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value to check for negativity.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given value is negative.</exception>
+    /// <example>
+    /// <code>
+    /// public void SetLength(int length)
+    /// {
+    ///     Guard.AgainstNegative(() => length, nameof(length));
+    ///     Console.WriteLine($"Length is set to: {length}");
+    /// }
+    ///
+    /// class Program
+    /// {
+    ///     static void Main(string[] args)
+    ///     {
+    ///         SetLength(10); // Works fine
+    ///         SetLength(-5); // Throws ArgumentOutOfRangeException: "Parameter 'length' cannot be negative."
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
+    public static void AgainstNegative<T>(Func<T> valueExpression) where T : IComparable<T>
+    {
+        // Get the value from the expression
+        var value = valueExpression();
+
+        // Use the GetParameterName method to extract the parameter name from the expression
+        var paramName = GetParameterName(valueExpression);
+
+        // Guard logic
+        var zero = default(T);
+        if (value.CompareTo(zero) < 0)
+        {
+            throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' cannot be negative.");
+        }
     }
 
     /// <summary>
@@ -304,11 +458,47 @@ public static class Guard
     /// </example>
     public static void AgainstNegative<T>(T value, string paramName) where T : IComparable<T>
     {
+        // Validate parameters
+        AgainstNullOrWhiteSpace(() => paramName);
+
+        // Guard logic
         var zero = default(T);
         if (value.CompareTo(zero) < 0)
         {
             throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' cannot be negative.");
         }
+    }
+
+    /// <summary>
+    /// Ensures that the value returned by the given <see cref="Func{T}"/> expression is greater than zero.
+    /// </summary>
+    /// <typeparam name="T">The type of the value. Must be a comparable type.</typeparam>
+    /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value to be checked.</param>
+    /// <example>
+    /// This sample shows how to call the <see cref="AgainstNegativeOrZero{T}"/> method.
+    /// <code>
+    /// class Example
+    /// {
+    ///     static void Main()
+    ///     {
+    ///         int quantity = -5;
+    ///         Guard.AgainstNegativeOrZero(() => quantity);
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is negative or zero.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
+    public static void AgainstNegativeOrZero<T>(Func<T> valueExpression) where T : IComparable<T>
+    {
+        // Get the value from the expression
+        var value = valueExpression();
+
+        // Use the GetParameterName method to extract the parameter name from the expression
+        var paramName = GetParameterName(valueExpression);
+
+        // Compare the value with zero
+        AgainstNegativeOrZero(value, paramName);
     }
 
     /// <summary>
@@ -329,11 +519,44 @@ public static class Guard
     /// </example>
     public static void AgainstNegativeOrZero<T>(T value, string paramName) where T : IComparable<T>
     {
+        // Validate parameters
+        AgainstNullOrWhiteSpace(() => paramName);
+
+        // Guard logic
         var zero = default(T);
         if (value.CompareTo(zero) <= 0)
         {
             throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' cannot be negative or zero.");
         }
+    }
+
+    /// <summary>
+    /// Checks if the enum value returned by the given <see cref="Func{T}"/> expression is defined and throws an ArgumentOutOfRangeException if it is not.
+    /// </summary>
+    /// <typeparam name="T">The type of the enum value.</typeparam>
+    /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the enum value to check if it is defined.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given enum value is not defined.</exception>
+    /// <example>
+    /// <code>
+    /// public enum Colors { Red, Green, Blue }
+    ///
+    /// public void SetColor(Colors color)
+    /// {
+    ///     Guard.AgainstUndefinedEnumValue(() => color);
+    ///     Console.WriteLine($"Color is set to: {color}");
+    /// }
+    /// </code>
+    /// </example>
+    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
+    public static void AgainstUndefinedEnumValue<T>(Func<T> valueExpression) where T : Enum
+    {
+        // Get the enum value from the expression
+        var value = valueExpression();
+
+        // Use the GetParameterName method to extract the parameter name from the expression
+        var paramName = GetParameterName(valueExpression);
+
+        AgainstUndefinedEnumValue(value, paramName);
     }
 
     /// <summary>
@@ -356,10 +579,62 @@ public static class Guard
     /// </example>
     public static void AgainstUndefinedEnumValue<T>(T value, string paramName) where T : Enum
     {
+        // Validate parameters
+        AgainstNullOrWhiteSpace(() => paramName);
+
+        // Guard logic
         if (!Enum.IsDefined(typeof(T), value))
         {
             var enumTypeName = typeof(T).Name;
             throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' has an undefined value '{value}' for enum '{enumTypeName}'.");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the value returned by the given <see cref="Func{T}"/> expression is within the specified range, inclusive.
+    /// </summary>
+    /// <typeparam name="T">The type of the value. Must be a comparable value type.</typeparam>
+    /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value to check for range.</param>
+    /// <param name="min">The minimum valid value, inclusive.</param>
+    /// <param name="max">The maximum valid value, inclusive.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given value is not within the specified range.</exception>
+    /// <example>
+    /// <code>
+    /// public void SetPercentage(int percentage)
+    /// {
+    ///     Guard.AgainstOutOfRange(() => percentage, 0, 100);
+    ///     Console.WriteLine($"Percentage is set to: {percentage}");
+    /// }
+    ///
+    /// class Program
+    /// {
+    ///     static void Main(string[] args)
+    ///     {
+    ///         SetPercentage(50); // Works fine
+    ///         SetPercentage(-10); // Throws ArgumentOutOfRangeException: "The value of 'percentage' must be between 0 and 100."
+    ///         SetPercentage(110); // Throws ArgumentOutOfRangeException: "The value of 'percentage' must be between 0 and 100."
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
+    public static void AgainstOutOfRange<T>(Func<T> valueExpression, T min, T max) where T : IComparable<T>
+    {
+        // Validate parameters
+        Against(min.CompareTo(max) >= 0)
+            .With<ArgumentException>($"The value of parameter 'max' {max} must be greater than the value of parameter 'min' {min}");
+
+        // Get the value from the expression
+        var value = valueExpression();
+
+        // Use the GetParameterName method to extract the parameter name from the expression
+        var paramName = GetParameterName(valueExpression);
+
+
+        // Guard logic
+        if (value.CompareTo(min) < 0 || value.CompareTo(max) > 0)
+        {
+            throw new ArgumentOutOfRangeException(paramName, $"The value of {paramName} must be between {min} and {max}.");
         }
     }
 
@@ -384,8 +659,14 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstOutOfRange(TimeSpan value, TimeSpan min, TimeSpan max, string paramName)
+    public static void AgainstOutOfRange(TimeSpan value, string paramName, TimeSpan min, TimeSpan max)
     {
+        // Validate parameters
+        AgainstNullOrWhiteSpace(() => paramName);
+        Against(min >= max)
+            .With<ArgumentException>($"The value of parameter {nameof(max)} {max} must be greater than the value of parameter {nameof(min)} {min}");
+
+        // Guard logic
         if (value < min || value > max)
         {
             throw new ArgumentOutOfRangeException(paramName, $"The value of {paramName} must be between {min} and {max}.");
@@ -438,8 +719,10 @@ public static class Guard
         /// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter.</exception>
         public void With<TException>(string exceptionMessage) where TException : Exception
         {
-            Guard.AgainstNullOrWhiteSpace(() => exceptionMessage);
+            // Validate parameters
+            AgainstNullOrWhiteSpace(() => exceptionMessage);
 
+            // Guard logic
             if (_condition)
             {
                 TException exception;
@@ -472,9 +755,11 @@ public static class Guard
         /// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter and an Exception parameter.</exception>
         public void With<TException>(string exceptionMessage, Exception innerException) where TException : Exception
         {
-            Guard.AgainstNullOrWhiteSpace(() => exceptionMessage);
-            Guard.AgainstNull(() => innerException);
+            // Validate parameters
+            AgainstNullOrWhiteSpace(() => exceptionMessage);
+            AgainstNull(() => innerException);
 
+            // Guard logic
             if (_condition)
             {
                 TException exception;
