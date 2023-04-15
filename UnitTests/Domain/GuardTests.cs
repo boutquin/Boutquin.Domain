@@ -246,7 +246,9 @@ public sealed class GuardTests
         var condition = true;
 
         // Act
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         Action act = () => Guard.Against(condition).With<CustomException>("Test message", null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
         // Assert
         act.Should().Throw<ArgumentNullException>().WithMessage("Parameter 'innerException' cannot be null. (Parameter 'innerException')");
