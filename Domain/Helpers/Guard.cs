@@ -423,6 +423,73 @@ public static class Guard
                 throw new TException();
             }
         }
+
+        /// <summary>
+        /// Throws the specified exception with the provided message if the condition is true.
+        /// </summary>
+        /// <remarks>
+        /// If the exceptionMessage is null, empty, or contains only whitespace characters,
+        /// an ArgumentException will be thrown.
+        /// </remarks>
+        /// <typeparam name="TException">The type of the exception to throw.</typeparam>
+        /// <param name="exceptionMessage">The message for the exception.</param>
+        /// <exception cref="TException">Thrown when the condition is true, with the provided exception message.</exception>
+        /// <exception cref="ArgumentException">Thrown when the exceptionMessage is null, empty, or contains only whitespace characters.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter.</exception>
+        public void With<TException>(string exceptionMessage) where TException : Exception
+        {
+            Guard.AgainstNullOrWhiteSpace(() => exceptionMessage);
+
+            if (_condition)
+            {
+                TException exception;
+                try
+                {
+                    exception = (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+                }
+                catch (MissingMethodException)
+                {
+                    throw new InvalidOperationException(
+                        $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
+                }
+                throw exception;
+            }
+        }
+
+        /// <summary>
+        /// Throws the specified exception with the provided message and inner exception if the condition is true.
+        /// </summary>
+        /// <remarks>
+        /// If the exceptionMessage is null, empty, or contains only whitespace characters,
+        /// an ArgumentException will be thrown. If the innerException is null, an ArgumentNullException will be thrown.
+        /// </remarks>
+        /// <typeparam name="TException">The type of the exception to throw.</typeparam>
+        /// <param name="exceptionMessage">The message for the exception.</param>
+        /// <param name="innerException">The inner exception to be included.</param>
+        /// <exception cref="TException">Thrown when the condition is true, with the provided exception message and inner exception.</exception>
+        /// <exception cref="ArgumentException">Thrown when the exceptionMessage is null, empty, or contains only whitespace characters.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the innerException is null.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter and an Exception parameter.</exception>
+        public void With<TException>(string exceptionMessage, Exception innerException) where TException : Exception
+        {
+            Guard.AgainstNullOrWhiteSpace(() => exceptionMessage);
+            Guard.AgainstNull(() => innerException);
+
+            if (_condition)
+            {
+                TException exception;
+                try
+                {
+                    exception = (TException)Activator.CreateInstance(typeof(TException), exceptionMessage, innerException);
+                }
+                catch (MissingMethodException)
+                {
+                    throw new InvalidOperationException(
+                        $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter and an Exception parameter.");
+                }
+                throw exception;
+            }
+        }
     }
 
     /// <summary>
