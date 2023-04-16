@@ -33,7 +33,9 @@ public sealed class GuardTests
 
         // Act
 #pragma warning disable CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
-        Action act = () => Guard.AgainstNull(nullValue, nameof(nullValue));
+#pragma warning disable CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
+        Action act = () => Guard.AgainstNull(() => nullValue);
+#pragma warning restore CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
 #pragma warning restore CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
 
         // Assert
@@ -52,7 +54,7 @@ public sealed class GuardTests
         var nonNullValue = "Some value";
 
         // Act
-        Action act = () => Guard.AgainstNull(nonNullValue, nameof(nonNullValue));
+        Action act = () => Guard.AgainstNull(() => nonNullValue);
 
         // Assert
         act.Should().NotThrow();

@@ -38,8 +38,8 @@ public static class DateTimeExtensions
     public static DateTime ConvertTimeZone(this DateTime dateTime, string sourceTimeZoneId, string targetTimeZoneId)
     {
         // Validate input parameters
-        Guard.AgainstNull(sourceTimeZoneId, nameof(sourceTimeZoneId));
-        Guard.AgainstNull(targetTimeZoneId, nameof(targetTimeZoneId));
+        Guard.AgainstNull(() => sourceTimeZoneId);
+        Guard.AgainstNull(() => targetTimeZoneId);
 
         // Find the source and target time zones
         var sourceTimeZone = TimeZoneInfo.FindSystemTimeZoneById(sourceTimeZoneId);
