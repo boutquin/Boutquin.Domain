@@ -20,7 +20,7 @@ namespace Boutquin.Domain.Extensions;
 /// <summary>
 /// Provides extension methods for calculating statistical measures on an array of decimal values.
 /// </summary>
-public static partial class DecimalArrayExtensions
+public static class DecimalArrayExtensions
 {
     /// <summary>
     /// Enum to represent the calculation type for variance and standard deviation.

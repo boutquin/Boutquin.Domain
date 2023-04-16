@@ -6,6 +6,8 @@
 
 This will contain all entities, enums, exceptions, interfaces, types and logic specific to the domain layer.
 
+The [Guard class](https://github.com/boutquin/Boutquin.Domain/blob/master/Domain/doc/Guard.md) is a utility class that provides static methods to validate the preconditions for parameters in a method. It helps to ensure that input values are valid and appropriate for the given context.
+
 A key extension class here is the [DecimalArrayExtensions class](https://github.com/boutquin/Boutquin.Domain/blob/master/Domain/doc/DecimalArrayExtensions.md), a static class that provides extension methods for working with arrays of decimal values. It includes methods for calculating the variance and standard deviation of an array of decimal values.
 
 ## Contributing
