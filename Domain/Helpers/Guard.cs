@@ -472,6 +472,93 @@ public static class Guard
                 throw exception;
             }
         }
+
+/// <summary>
+/// Throws the specified exception with the provided formatted message if the condition is true.
+/// </summary>
+/// <remarks>
+/// If the exceptionMessage is null, empty, or contains only whitespace characters,
+/// an ArgumentException will be thrown.
+/// </remarks>
+/// <typeparam name="TException">The type of the exception to throw.</typeparam>
+/// <param name="exceptionMessage">The format string for the exception message.</param>
+/// <param name="args">The arguments for the format string.</param>
+/// <exception cref="TException">Thrown when the condition is true, with the provided formatted exception message.</exception>
+/// <exception cref="ArgumentException">Thrown when the exceptionMessage is null, empty, or contains only whitespace characters.</exception>
+/// <exception cref="FormatException">Thrown when the format string or the arguments are invalid.</exception>
+/// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter.</exception>
+public void With<TException>(string exceptionMessage, params object[] args) where TException : Exception
+{
+    // Check if the exceptionMessage is null, empty, or contains only whitespace characters
+    Guard.AgainstNullOrWhiteSpace(() => exceptionMessage);
+
+    // Format the exception message
+    string formattedMessage;
+    try
+    {
+        formattedMessage = string.Format(exceptionMessage, args);
+    }
+    catch (FormatException formatException)
+    {
+        throw new FormatException("The format string or the arguments provided are invalid.", formatException);
+    }
+
+    if (_condition)
+    {
+        // Try to create an instance of the specified exception type with the formatted message
+        TException exception;
+        try
+        {
+            exception = (TException)Activator.CreateInstance(typeof(TException), formattedMessage);
+        }
+        catch (MissingMethodException)
+        {
+            throw new InvalidOperationException(
+                $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
+        }
+
+        // Throw the created exception
+        throw exception;
+    }
+}
+
+
+/// <summary>
+/// Throws the specified exception if the condition is true, with the provided constructor arguments.
+/// </summary>
+/// <typeparam name="TException">The type of the exception to throw.</typeparam>
+/// <param name="args">The arguments for the exception constructor.</param>
+/// <exception cref="TException">Thrown when the condition is true, with the provided constructor arguments.</exception>
+/// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that matches the provided arguments.</exception>
+public void With<TException>(params object[] args) where TException : Exception
+{
+    if (_condition)
+    {
+        // Try to create an instance of the specified exception type with the provided arguments
+        TException exception;
+        try
+        {
+            exception = (TException)Activator.CreateInstance(typeof(TException), args);
+        }
+        catch (MissingMethodException)
+        {
+            throw new InvalidOperationException(
+                $"The exception type '{typeof(TException).FullName}' must have a constructor that matches the provided arguments.");
+        }
+        catch (TargetInvocationException tie)
+        {
+            if (tie.InnerException != null)
+            {
+                throw tie.InnerException;
+            }
+            throw;
+        }
+
+        // Throw the created exception
+        throw exception;
+    }
+}
+
     }
 
     /// <summary>
