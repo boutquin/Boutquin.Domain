@@ -13,6 +13,9 @@
 //  limitations under the License.
 //
 
+using System.Globalization;
+using System.Reflection;
+
 namespace Boutquin.Domain.Helpers;
 
 /// <summary>
@@ -28,7 +31,8 @@ public static class Guard
     /// <code>
     /// public void SetQuantity(int quantity)
     /// {
-    ///     Guard.Against(quantity <= 0).With<ArgumentException>();
+    ///     Guard.Against(quantity <= 0)
+    ///         .With<ArgumentException>();
     ///     Console.WriteLine($"Quantity is set to: {quantity}");
     /// }
     /// </code>
@@ -39,9 +43,17 @@ public static class Guard
         => new(condition);
 
     /// <summary>
-    /// Checks if the given reference type value is null and throws an ArgumentNullException if it is.
+    /// Checks if the given reference type value is null and throws an <see cref="ArgumentNullException"> if it is.
     /// This overload accepts a Func&lt;T&gt; that returns the value and extracts its name using nameof.
     /// </summary>
+    /// <typeparam name="T">The type of the value being checked. Must be a reference type.</typeparam>
+    /// <param name="valueExpression">A Func&lt;T&gt; that returns the value to check for null.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when the given value is null (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// <code>
     /// public void PrintList(List<string> items)
@@ -54,9 +66,6 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    /// <typeparam name="T">The type of the value being checked. Must be a reference type.</typeparam>
-    /// <param name="valueExpression">A Func&lt;T&gt; that returns the value to check for null.</param>
-    /// <exception cref="ArgumentNullException">Thrown when the given value is null.</exception>
     public static void AgainstNull<T>(Func<T> valueExpression) where T : class
     {
         // Get the value and extract the parameter name from the expression
@@ -70,9 +79,16 @@ public static class Guard
     }
 
     /// <summary>
-    /// Checks if the given string value is null or empty and throws an ArgumentNullException if it is.
+    /// Checks if the given string value is null or empty and throws an <see cref="ArgumentNullException"> if it is.
     /// This overload accepts a Func&lt;string&gt; that returns the value and extracts its name using nameof.
     /// </summary>
+    /// <param name="valueExpression">A Func&lt;string&gt; that returns the value to check for null or empty.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when the given string value is null or empty (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// <code>
     /// public void PrintMessage(string message)
@@ -82,8 +98,6 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    /// <param name="valueExpression">A Func&lt;string&gt; that returns the value to check for null or empty.</param>
-    /// <exception cref="ArgumentNullException">Thrown when the given string value is null or empty.</exception>
     public static void AgainstNullOrEmpty(Func<string> valueExpression)
     {
         // Get the value and extract the parameter name from the expression
@@ -97,9 +111,15 @@ public static class Guard
     }
 
     /// <summary>
-    /// Checks if the given string value is null, empty, or contains only whitespace characters and throws an ArgumentNullException if it is.
-    /// This overload accepts a Func&lt;string&gt; that returns the value and extracts its name using nameof.
+    /// Checks if the given string value is null, empty, or contains only whitespace characters and throws an <see cref="ArgumentNullException"> if it is.
     /// </summary>
+    /// <param name="valueExpression">A Func&lt;string&gt; that returns the value to check for null, empty, or whitespace.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when the given string value is null, empty, or contains only whitespace characters (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// <code>
     /// public void PrintMessage(string message)
@@ -109,8 +129,6 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    /// <param name="valueExpression">A Func&lt;string&gt; that returns the value to check for null, empty, or whitespace.</param>
-    /// <exception cref="ArgumentNullException">Thrown when the given string value is null, empty, or contains only whitespace characters.</exception>
     public static void AgainstNullOrWhiteSpace(Func<string> valueExpression)
     {
         // Get the value and extract the parameter name from the expression
@@ -125,6 +143,16 @@ public static class Guard
     /// </summary>
     /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the string value to be checked.</param>
     /// <param name="maxLength">The maximum length allowed for the string value. Must be greater than zero.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the length of the string value exceeds the specified maxLength or when maxLength is 
+    /// less than or equal to zero (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <param name="maxLength"> is negative or zero.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// This sample shows how to call the <see cref="AgainstOverflow"/> method.
     /// <code>
@@ -139,10 +167,6 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when the length of the string value exceeds the specified maxLength or when maxLength is less than or equal to zero.
-    /// </exception>
-    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
     public static void AgainstOverflow(Func<string> valueExpression, int maxLength)
     {
         // Ensure maxLength is greater than zero
@@ -156,11 +180,20 @@ public static class Guard
     }
 
     /// <summary>
-    /// Checks if the string returned by the given <see cref="Func{T}"/> expression is null, empty or exceeds the specified maximum length and throws an ArgumentException if it does.
+    /// Checks if the string returned by the given <see cref="Func{T}"/> expression is null, empty or exceeds the specified maximum length 
+    /// and throws an <see cref="ArgumentException"> if it does.
     /// </summary>
     /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the string to check for null, empty, or exceeding the maximum length.</param>
     /// <param name="maxLength">The maximum length allowed for the string.</param>
-    /// <exception cref="ArgumentException">Thrown when the given string is null, empty, or exceeds the maximum length.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the given string is null, empty, or exceeds the maximum length (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <param name="maxLength"> is negative or zero.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// <code>
     /// public void PrintGreeting(string name, int maxLength)
@@ -186,11 +219,19 @@ public static class Guard
 
     /// <summary>
     /// Checks if the string returned by the given <see cref="Func{T}"/> expression is null, empty, consists only of white-space characters, or exceeds the specified maximum length
-    /// and throws an ArgumentException if it does.
+    /// and throws an <see cref="ArgumentException"> if it does.
     /// </summary>
     /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the string to check for null, empty, white-space characters, or exceeding the maximum length.</param>
     /// <param name="maxLength">The maximum length allowed for the string.</param>
-    /// <exception cref="ArgumentException">Thrown when the given string is null, empty, consists only of white-space characters, or exceeds the maximum length.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the given string is null, empty, consists only of white-space characters, or exceeds the maximum length (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <param name="maxLength"> is negative or zero.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// <code>
     /// public void PrintGreeting(string name, int maxLength)
@@ -212,7 +253,6 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
     public static void AgainstNullOrWhiteSpaceAndOverflow(Func<string> valueExpression, int maxLength)
     {
         // Ensure maxLength is greater than zero
@@ -228,11 +268,16 @@ public static class Guard
     }
 
     /// <summary>
-    /// Checks if the value returned by the given <see cref="Func{T}"/> expression is negative and throws an ArgumentOutOfRangeException if it is.
+    /// Checks if the value returned by the given <see cref="Func{T}"/> expression is negative and throws an <see cref="ArgumentOutOfRangeException"> if it is.
     /// </summary>
     /// <typeparam name="T">The type of the value. Must be a comparable value type.</typeparam>
     /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value to check for negativity.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given value is negative.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the given value is negative (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// <code>
     /// public void SetLength(int length)
@@ -251,7 +296,6 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
     public static void AgainstNegative<T>(Func<T> valueExpression) where T : IComparable<T>
     {
         // Get the value and extract the parameter name from the expression
@@ -270,6 +314,12 @@ public static class Guard
     /// </summary>
     /// <typeparam name="T">The type of the value. Must be a comparable type.</typeparam>
     /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value to be checked.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the value is negative or zero (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// This sample shows how to call the <see cref="AgainstNegativeOrZero{T}"/> method.
     /// <code>
@@ -283,8 +333,6 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is negative or zero.</exception>
-    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
     public static void AgainstNegativeOrZero<T>(Func<T> valueExpression) where T : IComparable<T>
     {
         // Get the value and extract the parameter name from the expression
@@ -299,11 +347,16 @@ public static class Guard
     }
 
     /// <summary>
-    /// Checks if the enum value returned by the given <see cref="Func{T}"/> expression is defined and throws an ArgumentOutOfRangeException if it is not.
+    /// Checks if the enum value returned by the given <see cref="Func{T}"/> expression is defined and throws an <see cref="ArgumentOutOfRangeException"> if it is not.
     /// </summary>
     /// <typeparam name="T">The type of the enum value.</typeparam>
     /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the enum value to check if it is defined.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given enum value is not defined.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the given enum value is not defined (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// <code>
     /// public enum Colors { Red, Green, Blue }
@@ -315,7 +368,6 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
     public static void AgainstUndefinedEnumValue<T>(Func<T> valueExpression) where T : Enum
     {
         // Get the value and extract the parameter name from the expression
@@ -335,7 +387,15 @@ public static class Guard
     /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value to check for range.</param>
     /// <param name="min">The minimum valid value, inclusive.</param>
     /// <param name="max">The maximum valid value, inclusive.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when the given value is not within the specified range.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the given value is not within the specified range (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the given <param name="max"> value is not greater than the given <param name="min"> value.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     /// <example>
     /// <code>
     /// public void SetPercentage(int percentage)
@@ -355,7 +415,6 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
     public static void AgainstOutOfRange<T>(Func<T> valueExpression, T min, T max) where T : IComparable<T>
     {
         // Validate parameters
@@ -392,8 +451,31 @@ public static class Guard
         /// <summary>
         /// Throws the specified exception if the condition is true.
         /// </summary>
-        /// <typeparam name="TException">The type of the exception to throw.</typeparam>
-        /// <exception cref="TException">Thrown when the condition is true.</exception>
+        /// <typeparam name="TException">The type of the exception to throw. The exception type must have a parameterless constructor.</typeparam>
+        /// <exception cref="TException">
+        /// Thrown when the Guard condition is true (violation of Guard logic).
+        /// </exception>
+        /// <example>
+        /// <code>
+        /// public class CustomException : Exception
+        /// {
+        ///     public CustomException() : base("An error occurred.")
+        ///     {
+        ///     }
+        /// }
+        ///
+        /// class Example
+        /// {
+        ///     public void ProcessData(int data)
+        ///     {
+        ///         Guard.Against(data < 0)
+        ///              .With<CustomException>();
+        ///
+        ///         // ... rest of the method
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
         public void With<TException>() where TException : Exception, new()
         {
             if (_condition)
@@ -406,14 +488,45 @@ public static class Guard
         /// Throws the specified exception with the provided message if the condition is true.
         /// </summary>
         /// <remarks>
-        /// If the exceptionMessage is null, empty, or contains only whitespace characters,
-        /// an ArgumentException will be thrown.
+        /// If the exceptionMessage is null, empty, or contains only whitespace characters, an <see cref="ArgumentException"> will be thrown.
         /// </remarks>
         /// <typeparam name="TException">The type of the exception to throw.</typeparam>
         /// <param name="exceptionMessage">The message for the exception.</param>
-        /// <exception cref="TException">Thrown when the condition is true, with the provided exception message.</exception>
-        /// <exception cref="ArgumentException">Thrown when the exceptionMessage is null, empty, or contains only whitespace characters.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter.</exception>
+        /// <exception cref="TException">
+        /// Thrown when the Guard condition is true, with the provided exception message (violation of Guard logic).
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the <param name="exceptionMessage"> is null, empty, or contains only whitespace characters.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter.
+        /// </exception>
+        /// <exception cref="TargetInvocationException">
+        /// Thrown when the constructor of the specified exception type throws an exception. The actual 
+        /// exception thrown by the constructor can be found in the InnerException property.
+        /// </exception>
+        /// <example>
+        /// <code>
+        /// public class CustomException : Exception
+        /// {
+        ///     public CustomException(string message)
+        ///         : base(message)
+        ///     {
+        ///     }
+        /// }
+        ///
+        /// class Example
+        /// {
+        ///     public void ProcessData(int data)
+        ///     {
+        ///         Guard.Against(data < 0)
+        ///              .With<CustomException>("Data cannot be negative.");
+        ///
+        ///         // ... rest of the method
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
         public void With<TException>(string exceptionMessage) where TException : Exception
         {
             // Validate parameters
@@ -432,133 +545,178 @@ public static class Guard
                     throw new InvalidOperationException(
                         $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
                 }
+                catch (TargetInvocationException tie) 
+                { 
+                    if (tie.InnerException != null) 
+                    { 
+                        throw tie.InnerException; 
+                    } 
+                    throw; 
+                }
+
+                // Throw the created exception
                 throw exception;
             }
         }
 
         /// <summary>
-        /// Throws the specified exception with the provided message and inner exception if the condition is true.
+        /// Throws the specified exception with a formatted message if the condition is true, using the provided exception message and format arguments.
         /// </summary>
         /// <remarks>
-        /// If the exceptionMessage is null, empty, or contains only whitespace characters,
-        /// an ArgumentException will be thrown. If the innerException is null, an ArgumentNullException will be thrown.
+        /// If the exceptionMessage is null, empty, or contains only whitespace characters, a <see cref="FormatException"> will be thrown.
         /// </remarks>
         /// <typeparam name="TException">The type of the exception to throw.</typeparam>
-        /// <param name="exceptionMessage">The message for the exception.</param>
-        /// <param name="innerException">The inner exception to be included.</param>
-        /// <exception cref="TException">Thrown when the condition is true, with the provided exception message and inner exception.</exception>
-        /// <exception cref="ArgumentException">Thrown when the exceptionMessage is null, empty, or contains only whitespace characters.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when the innerException is null.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter and an Exception parameter.</exception>
-        public void With<TException>(string exceptionMessage, Exception innerException) where TException : Exception
+        /// <param name="exceptionMessage">The format string for the exception message.</param>
+        /// <param name="args">The arguments to format the exception message.</param>
+        /// <exception cref="TException">
+        /// Thrown when the Guard condition is true, with the formatted exception message (violation of Guard logic).
+        /// </exception>
+        /// <exception cref="FormatException">
+        /// Thrown when the format string or the arguments provided are invalid.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter.
+        /// </exception>
+        /// <exception cref="TargetInvocationException">
+        /// Thrown when the constructor of the specified exception type throws an exception. The actual 
+        /// exception thrown by the constructor can be found in the InnerException property.
+        /// </exception>
+        /// <example>
+        /// <code>
+        /// public class CustomException : Exception
+        /// {
+        ///     public CustomException(string message)
+        ///         : base(message)
+        ///     {
+        ///     }
+        /// }
+        ///
+        /// class Example
+        /// {
+        ///     public void ProcessData(int data)
+        ///     {
+        ///         Guard.Against(data < 0)
+        ///              .With<CustomException>("Data cannot be negative. Value: {0}", data);
+        ///
+        ///         // ... rest of the method
+        ///     }
+        /// }
+        /// </code>
+        /// </example>        
+        public void With<TException>(string exceptionMessage, params object[] args) where TException : Exception
         {
-            // Validate parameters
-            AgainstNullOrWhiteSpace(() => exceptionMessage);
-            AgainstNull(() => innerException);
+            // Check if the exceptionMessage is null, empty, or contains only whitespace characters
+            Guard.AgainstNullOrWhiteSpace(() => exceptionMessage);
 
-            // Guard logic
+            // Format the exception message
+            string formattedMessage;
+            try
+            {
+                formattedMessage = string.Format(CultureInfo.InvariantCulture, exceptionMessage, args);
+            }
+            catch (FormatException formatException)
+            {
+                throw new FormatException("The format string or the arguments provided are invalid.", formatException);
+            }
+
             if (_condition)
             {
+                // Try to create an instance of the specified exception type with the formatted message
                 TException exception;
                 try
                 {
-                    exception = (TException)Activator.CreateInstance(typeof(TException), exceptionMessage, innerException);
+                    exception = (TException)Activator.CreateInstance(typeof(TException), formattedMessage);
                 }
                 catch (MissingMethodException)
                 {
                     throw new InvalidOperationException(
-                        $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter and an Exception parameter.");
+                        $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
                 }
+                catch (TargetInvocationException tie)
+                {
+                    if (tie.InnerException != null)
+                    {
+                        throw tie.InnerException;
+                    }
+                    throw;
+                }
+
+                // Throw the created exception
                 throw exception;
             }
         }
 
-/// <summary>
-/// Throws the specified exception with the provided formatted message if the condition is true.
-/// </summary>
-/// <remarks>
-/// If the exceptionMessage is null, empty, or contains only whitespace characters,
-/// an ArgumentException will be thrown.
-/// </remarks>
-/// <typeparam name="TException">The type of the exception to throw.</typeparam>
-/// <param name="exceptionMessage">The format string for the exception message.</param>
-/// <param name="args">The arguments for the format string.</param>
-/// <exception cref="TException">Thrown when the condition is true, with the provided formatted exception message.</exception>
-/// <exception cref="ArgumentException">Thrown when the exceptionMessage is null, empty, or contains only whitespace characters.</exception>
-/// <exception cref="FormatException">Thrown when the format string or the arguments are invalid.</exception>
-/// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter.</exception>
-public void With<TException>(string exceptionMessage, params object[] args) where TException : Exception
-{
-    // Check if the exceptionMessage is null, empty, or contains only whitespace characters
-    Guard.AgainstNullOrWhiteSpace(() => exceptionMessage);
-
-    // Format the exception message
-    string formattedMessage;
-    try
-    {
-        formattedMessage = string.Format(exceptionMessage, args);
-    }
-    catch (FormatException formatException)
-    {
-        throw new FormatException("The format string or the arguments provided are invalid.", formatException);
-    }
-
-    if (_condition)
-    {
-        // Try to create an instance of the specified exception type with the formatted message
-        TException exception;
-        try
+        /// <summary>
+        /// Throws the specified exception if the condition is true, with the provided constructor arguments.
+        /// </summary>
+        /// <remarks>
+        /// If no arguments are provided, the method will attempt to use the parameterless constructor of the specified exception type.
+        /// </remarks>
+        /// <typeparam name="TException">The type of the exception to throw.</typeparam>
+        /// <param name="args">The arguments for the exception constructor.</param>
+        /// <exception cref="TException">
+        /// Thrown when the Guard condition is true, with the provided constructor arguments (violation of Guard logic).
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the specified exception type doesn't have a constructor that matches the provided arguments.
+        /// </exception>
+        /// <exception cref="TargetInvocationException">
+        /// Thrown when the constructor of the specified exception type throws an exception. The actual 
+        /// exception thrown by the constructor can be found in the InnerException property.
+        /// </exception>
+        /// <example>
+        /// <code>
+        /// public class CustomException : Exception
+        /// {
+        ///     public CustomException(string message, int errorCode)
+        ///         : base(message)
+        ///     {
+        ///         ErrorCode = errorCode;
+        ///     }
+        ///
+        ///     public int ErrorCode { get; }
+        /// }
+        ///
+        /// class Example
+        /// {
+        ///     public void ProcessData(int data)
+        ///     {
+        ///         Guard.Against(data < 0)
+        ///              .With<CustomException>("Data cannot be negative.", 1001);
+        ///
+        ///         // ... rest of the method
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public void With<TException>(params object[] args) where TException : Exception
         {
-            exception = (TException)Activator.CreateInstance(typeof(TException), formattedMessage);
-        }
-        catch (MissingMethodException)
-        {
-            throw new InvalidOperationException(
-                $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
-        }
-
-        // Throw the created exception
-        throw exception;
-    }
-}
-
-
-/// <summary>
-/// Throws the specified exception if the condition is true, with the provided constructor arguments.
-/// </summary>
-/// <typeparam name="TException">The type of the exception to throw.</typeparam>
-/// <param name="args">The arguments for the exception constructor.</param>
-/// <exception cref="TException">Thrown when the condition is true, with the provided constructor arguments.</exception>
-/// <exception cref="InvalidOperationException">Thrown when the specified exception type doesn't have a constructor that matches the provided arguments.</exception>
-public void With<TException>(params object[] args) where TException : Exception
-{
-    if (_condition)
-    {
-        // Try to create an instance of the specified exception type with the provided arguments
-        TException exception;
-        try
-        {
-            exception = (TException)Activator.CreateInstance(typeof(TException), args);
-        }
-        catch (MissingMethodException)
-        {
-            throw new InvalidOperationException(
-                $"The exception type '{typeof(TException).FullName}' must have a constructor that matches the provided arguments.");
-        }
-        catch (TargetInvocationException tie)
-        {
-            if (tie.InnerException != null)
+            if (_condition)
             {
-                throw tie.InnerException;
+                // Try to create an instance of the specified exception type with the provided arguments
+                TException exception;
+                try
+                {
+                    exception = (TException)Activator.CreateInstance(typeof(TException), args);
+                }
+                catch (MissingMethodException)
+                {
+                    throw new InvalidOperationException(
+                        $"The exception type '{typeof(TException).FullName}' must have a constructor that matches the provided arguments.");
+                }
+                catch (TargetInvocationException tie)
+                {
+                    if (tie.InnerException != null)
+                    {
+                        throw tie.InnerException;
+                    }
+                    throw;
+                }
+
+                // Throw the created exception
+                throw exception;
             }
-            throw;
         }
-
-        // Throw the created exception
-        throw exception;
-    }
-}
-
     }
 
     /// <summary>
@@ -567,7 +725,9 @@ public void With<TException>(params object[] args) where TException : Exception
     /// <typeparam name="T">The type of the value. Must be a reference type.</typeparam>
     /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value whose name and value to retrieve.</param>
     /// <returns>A tuple containing the extracted parameter value and parameter name.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when the parameter name cannot be extracted from the expression.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression">.
+    /// </exception>
     private static (T value, string paramName) ExtractParameterInfo<T>(Func<T> valueExpression)
     {
         // Check if the expression's target is null
@@ -588,11 +748,13 @@ public void With<TException>(params object[] args) where TException : Exception
     }
 
     /// <summary>
-    /// Checks if the given string is null or empty and throws an ArgumentException if it is.
+    /// Checks if the given string is null or empty and throws an <see cref="ArgumentException"> if it is.
     /// </summary>
     /// <param name="value">The string to check for null or empty.</param>
     /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
-    /// <exception cref="ArgumentException">Thrown when the given string is null or empty.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the given string is null or empty (private violation of Guard logic).
+    /// </exception>
     private static void AgainstNullOrEmpty(string value, string paramName)
     {
         // Check if the given string is null or empty 
@@ -604,11 +766,13 @@ public void With<TException>(params object[] args) where TException : Exception
 
     /// <summary>
     /// Checks if the given string is null, empty, or consists only of white-space characters
-    /// and throws an ArgumentException if it is.
+    /// and throws an <see cref="ArgumentException"> if it is.
     /// </summary>
     /// <param name="value">The string to check for null, empty or white-space characters.</param>
     /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
-    /// <exception cref="ArgumentException">Thrown when the given string is null, empty or consists only of white-space characters.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the given string is null, empty or consists only of white-space characters (private violation of Guard logic).
+    /// </exception>
     private static void AgainstNullOrWhiteSpace(string value, string paramName)
     {
         // Check if the given string is null, empty, or consists only of white-space characters
@@ -620,18 +784,20 @@ public void With<TException>(params object[] args) where TException : Exception
 
     /// <summary>
     /// Checks if the given string exceeds the specified maximum length
-    /// and throws an ArgumentException if it does.
+    /// and throws an <see cref="ArgumentException"> if it does.
     /// </summary>
     /// <param name="value">The string to check for exceeding the maximum length.</param>
     /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
     /// <param name="maxLength">The maximum length allowed for the string.</param>
-    /// <exception cref="ArgumentException">Thrown when the given string exceeds the maximum length.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the given string exceeds the maximum length (private violation of Guard logic).
+    /// </exception>
     private static void AgainstOverflow(string value, string paramName, int maxLength)
     {
         // Check if the length of the string value exceeds the maxLength
         if (value.Length > maxLength)
         {
-            // Throw an ArgumentOutOfRangeException if the length of the string value exceeds the maxLength
+            // Throw an <see cref="ArgumentOutOfRangeException"> if the length of the string value exceeds the maxLength
             throw new ArgumentOutOfRangeException(paramName, $"The length of the parameter '{paramName}' cannot exceed {maxLength} characters.");
         }
     }
