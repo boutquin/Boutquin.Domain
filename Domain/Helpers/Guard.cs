@@ -19,9 +19,29 @@ using System.Reflection;
 namespace Boutquin.Domain.Helpers;
 
 /// <summary>
-/// The Guard class is a utility class that provides static methods to validate the preconditions for parameters
-/// in a method. It helps to ensure that input values are valid and appropriate for the given context.
+/// The Guard class provides a set of static methods to simplify the validation of method arguments and other conditions.
+/// It helps prevent bugs by throwing exceptions when conditions are not met.
 /// </summary>
+/// <remarks>
+/// The Guard class is designed to make it easier to implement guard clauses and other validation checks
+/// in your code. It provides a fluent API that allows for simple and expressive validation code.
+///
+/// When using the Guard class, you can use the static methods to check conditions, and then use
+/// the With methods to throw a specific exception if the condition is not met.
+///
+/// The Guard class supports a wide range of validation scenarios, including null or empty strings,
+/// out-of-range values, invalid enum values, and more.
+/// </remarks>
+/// <example>
+/// This sample shows how to use the Guard class to validate method arguments:
+/// <code>
+/// public void SetName(string name)
+/// {
+///     Guard.AgainstNullOrWhiteSpace(name, nameof(name));
+///     // ... rest of the method
+/// }
+/// </code>
+/// </example>
 public static class Guard
 {
     /// <summary>
@@ -499,7 +519,8 @@ public static class Guard
         /// Thrown when the <param name="exceptionMessage"> is null, empty, or contains only whitespace characters.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter.
+        /// Thrown when the exception type does not have a constructor that accepts a single string parameter 
+        /// or when the constructor fails to create a valid instance with the provided exception message.
         /// </exception>
         /// <exception cref="TargetInvocationException">
         /// Thrown when the constructor of the specified exception type throws an exception. The actual 
@@ -554,6 +575,13 @@ public static class Guard
                     throw; 
                 }
 
+                // Check if the created exception instance is null
+                if (exception == null)
+                {
+                    throw new InvalidOperationException(
+                        $"The exception type '{typeof(TException).FullName}' failed to create a valid instance with the provided exception message.");
+                }
+
                 // Throw the created exception
                 throw exception;
             }
@@ -575,7 +603,8 @@ public static class Guard
         /// Thrown when the format string or the arguments provided are invalid.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter.
+        /// Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter        
+        /// or when the constructor fails to create a valid instance with the provided provided arguments.
         /// </exception>
         /// <exception cref="TargetInvocationException">
         /// Thrown when the constructor of the specified exception type throws an exception. The actual 
@@ -641,6 +670,14 @@ public static class Guard
                     throw;
                 }
 
+
+                // Check if the created exception instance is null
+                if (exception == null)
+                {
+                    throw new InvalidOperationException(
+                        $"The exception type '{typeof(TException).FullName}' failed to create a valid instance with the provided parameters.");
+                }
+
                 // Throw the created exception
                 throw exception;
             }
@@ -659,6 +696,7 @@ public static class Guard
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when the specified exception type doesn't have a constructor that matches the provided arguments.
+        /// or when the constructor fails to create a valid instance with the provided provided arguments.
         /// </exception>
         /// <exception cref="TargetInvocationException">
         /// Thrown when the constructor of the specified exception type throws an exception. The actual 
@@ -711,6 +749,14 @@ public static class Guard
                         throw tie.InnerException;
                     }
                     throw;
+                }
+
+
+                // Check if the created exception instance is null
+                if (exception == null)
+                {
+                    throw new InvalidOperationException(
+                        $"The exception type '{typeof(TException).FullName}' failed to create a valid instance with the provided arguments.");
                 }
 
                 // Throw the created exception
