@@ -14,6 +14,7 @@
 //
 
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Boutquin.Domain.Extensions;
@@ -21,6 +22,7 @@ namespace Boutquin.Domain.Extensions;
 /// <summary>
 /// EnumExtensions class provides extension methods to work with enums.
 /// </summary>
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class EnumExtensions
 {
     /// <summary>

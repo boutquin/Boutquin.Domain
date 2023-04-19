@@ -67,13 +67,13 @@ public sealed class DecimalArrayExtensionsTests
     [Fact]
     public void AllMethods_ShouldThrowInsufficientDataForSampleCalculation_WhenArrayHasOneElement()
     {
-        var values = new decimal[] { 0.01m };
+        var values = new[] { 0.01m };
         var exceptionType = typeof(InsufficientDataException);
         var exceptionMessage = ExceptionMessages.InsufficientDataForSampleCalculation;
 
         // Act & Assert
-        Assert.Throws(exceptionType, () => values.Variance(CalculationType.Sample)).Message.Should().Be(exceptionMessage);
-        Assert.Throws(exceptionType, () => values.StandardDeviation(CalculationType.Sample)).Message.Should().Be(exceptionMessage);
+        Assert.Throws(exceptionType, () => values.Variance()).Message.Should().Be(exceptionMessage);
+        Assert.Throws(exceptionType, () => values.StandardDeviation()).Message.Should().Be(exceptionMessage);
     }
 
     /// <summary>

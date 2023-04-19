@@ -13,6 +13,7 @@
 //  limitations under the License.
 //
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace Boutquin.Domain.Extensions;
@@ -20,6 +21,7 @@ namespace Boutquin.Domain.Extensions;
 /// <summary>
 /// Provides extension methods for the <see cref="string"/> class.
 /// </summary>
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class StringExtensions
 {
     /// <summary>

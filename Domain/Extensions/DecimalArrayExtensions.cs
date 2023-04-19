@@ -13,6 +13,7 @@
 //  limitations under the License.
 //
 
+using System.Diagnostics.CodeAnalysis;
 using Boutquin.Domain.Exceptions;
 
 namespace Boutquin.Domain.Extensions;
@@ -20,6 +21,7 @@ namespace Boutquin.Domain.Extensions;
 /// <summary>
 /// Provides extension methods for calculating statistical measures on an array of decimal values.
 /// </summary>
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class DecimalArrayExtensions
 {
     /// <summary>
@@ -30,22 +32,6 @@ public static class DecimalArrayExtensions
         Sample,
         Population
     }
-
-    /// <summary>
-    /// Calculates the average of an array of decimal values.
-    /// </summary>
-    /// <param name="values">The array of decimal values.</param>
-    /// <returns>The average of the values.</returns>
-    /// <exception cref="EmptyOrNullArrayException">Thrown when the input array is empty or null.</exception>
-    //public static decimal Average(this decimal[] values)
-    //{
-    //    if (values == null || values.Length == 0)
-    //    {
-    //        throw new EmptyOrNullArrayException();
-    //    }
-
-    //    return values.Sum() / values.Length;
-    //}
 
     /// <summary>
     /// Calculates the variance of an array of decimal values.

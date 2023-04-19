@@ -45,11 +45,13 @@ public sealed class DateTimeConverterExtensionsTests
     {
         // Arrange
         var sourceDateTime = new DateTime(2023, 3, 28, 12, 0, 0);
-        var sourceTimeZoneId = "UTC";
-        string targetTimeZoneId = null;
+        const string SourceTimeZoneId = "UTC";
+        string? targetTimeZoneId = null;
 
         // Act and Assert
-        Assert.Throws<ArgumentNullException>(() => sourceDateTime.ConvertTimeZone(sourceTimeZoneId, targetTimeZoneId));
+#pragma warning disable CS8604
+        Assert.Throws<ArgumentNullException>(() => sourceDateTime.ConvertTimeZone(SourceTimeZoneId, targetTimeZoneId));
+#pragma warning restore CS8604
     }
 
     /// <summary>

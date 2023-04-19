@@ -34,7 +34,7 @@ public sealed class GuardTests
         // Act
 #pragma warning disable CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
 #pragma warning disable CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
-        Action act = () => Guard.AgainstNull(() => nullValue);
+        var act = () => Guard.AgainstNull(() => nullValue);
 #pragma warning restore CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
 #pragma warning restore CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
 
@@ -54,7 +54,7 @@ public sealed class GuardTests
         var nonNullValue = "Some value";
 
         // Act
-        Action act = () => Guard.AgainstNull(() => nonNullValue);
+        var act = () => Guard.AgainstNull(() => nonNullValue);
 
         // Assert
         act.Should().NotThrow();
@@ -71,7 +71,7 @@ public sealed class GuardTests
 
         // Act
 #pragma warning disable CS8603 // Possible null reference return.
-        Action act = () => Guard.AgainstNullOrEmpty(() => nullValue);
+        var act = () => Guard.AgainstNullOrEmpty(() => nullValue);
 #pragma warning restore CS8603 // Possible null reference return.
 
         // Assert
@@ -90,7 +90,7 @@ public sealed class GuardTests
         var emptyValue = string.Empty;
 
         // Act
-        Action act = () => Guard.AgainstNullOrEmpty(() => emptyValue);
+        var act = () => Guard.AgainstNullOrEmpty(() => emptyValue);
 
         // Assert
         act.Should().Throw<ArgumentException>()
@@ -108,7 +108,7 @@ public sealed class GuardTests
         var nonEmptyValue = "Some value";
 
         // Act
-        Action act = () => Guard.AgainstNullOrEmpty(() => nonEmptyValue);
+        var act = () => Guard.AgainstNullOrEmpty(() => nonEmptyValue);
 
         // Assert
         act.Should().NotThrow();
@@ -124,7 +124,7 @@ public sealed class GuardTests
         var condition = true;
 
         // Act
-        Action act = () => Guard.Against(condition).With<InvalidOperationException>();
+        var act = () => Guard.Against(condition).With<InvalidOperationException>();
 
         // Assert
         act.Should().Throw<InvalidOperationException>();
@@ -140,7 +140,7 @@ public sealed class GuardTests
         var condition = false;
 
         // Act
-        Action act = () => Guard.Against(condition).With<InvalidOperationException>();
+        var act = () => Guard.Against(condition).With<InvalidOperationException>();
 
         // Assert
         act.Should().NotThrow();
@@ -157,7 +157,7 @@ public sealed class GuardTests
         var exceptionMessage = "An error occurred.";
 
         // Act
-        Action act = () => Guard.Against(condition).With<InvalidOperationException>(exceptionMessage);
+        var act = () => Guard.Against(condition).With<InvalidOperationException>(exceptionMessage);
 
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage(exceptionMessage);
@@ -174,7 +174,7 @@ public sealed class GuardTests
         var exceptionMessage = "An error occurred.";
 
         // Act
-        Action act = () => Guard.Against(condition).With<InvalidOperationException>(exceptionMessage);
+        var act = () => Guard.Against(condition).With<InvalidOperationException>(exceptionMessage);
 
         // Assert
         act.Should().NotThrow();
@@ -190,14 +190,14 @@ public sealed class GuardTests
     public void WithMessage_WhenExceptionMessageIsNullOrWhiteSpace_ThrowsArgumentException(string invalidMessage)
     {
         // Arrange
-        var condition = true;
+        const bool Condition = true;
 
         // Act
-        Action act = () => Guard.Against(condition).With<InvalidOperationException>(invalidMessage);
+        var act = () => Guard.Against(Condition).With<InvalidOperationException>(invalidMessage);
 
         // Assert
         act.Should().Throw<ArgumentException>()
-            .WithMessage($"Parameter 'exceptionMessage' cannot be null, empty or contain only white-space characters. (Parameter 'exceptionMessage')")
+            .WithMessage("Parameter 'exceptionMessage' cannot be null, empty or contain only white-space characters. (Parameter 'exceptionMessage')")
             .And.ParamName.Should().Be("exceptionMessage");
     }
 
@@ -208,11 +208,11 @@ public sealed class GuardTests
     public void WithMessage_WhenExceptionTypeHasNoStringConstructor_ThrowsInvalidOperationException()
     {
         // Arrange
-        var condition = true;
-        var exceptionMessage = "An error occurred.";
+        const bool Condition = true;
+        const string ExceptionMessage = "An error occurred.";
 
         // Act
-        Action act = () => Guard.Against(condition).With<ExceptionWithoutStringConstructor>(exceptionMessage);
+        var act = () => Guard.Against(Condition).With<ExceptionWithoutStringConstructor>(ExceptionMessage);
 
         // Assert
         act.Should().Throw<InvalidOperationException>()
