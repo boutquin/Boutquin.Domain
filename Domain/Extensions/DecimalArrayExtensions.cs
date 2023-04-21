@@ -15,6 +15,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Boutquin.Domain.Exceptions;
+using Boutquin.Domain.Helpers;
 
 namespace Boutquin.Domain.Extensions;
 
@@ -43,19 +44,23 @@ public static class DecimalArrayExtensions
     /// <exception cref="InsufficientDataException">Thrown when the input array contains less than two elements for sample calculation.</exception>
     public static decimal Variance(this decimal[] values, CalculationType calculationType = CalculationType.Sample)
     {
-        if (values == null || values.Length == 0)
-        {
-            throw new EmptyOrNullArrayException();
-        }
+        // Ensure the input array is not null or empty
+        Guard.AgainstNullOrEmptyArray(() => values);
 
-        if (calculationType == CalculationType.Sample && values.Length == 1)
-        {
-            throw new InsufficientDataException(ExceptionMessages.InsufficientDataForSampleCalculation);
-        }
+        // Ensure there is enough data for sample variance calculation
+        Guard.Against(calculationType == CalculationType.Sample && values.Length == 1)
+            .With<InsufficientDataException>(ExceptionMessages.InsufficientDataForSampleCalculation);
 
+        // Calculate the average (mean) of the input values
         var avg = values.Average();
+
+        // Calculate the sum of squared differences between each value and the average
         var sumOfSquares = values.Sum(x => (x - avg) * (x - avg));
+
+        // Choose the denominator based on the calculation type (sample or population)
         var denominator = calculationType == CalculationType.Sample ? values.Length - 1 : values.Length;
+
+        // Calculate and return the variance
         return sumOfSquares / denominator;
     }
 
@@ -68,5 +73,6 @@ public static class DecimalArrayExtensions
     /// <exception cref="EmptyOrNullArrayException">Thrown when the input array is empty.</exception>
     /// <exception cref="InsufficientDataException">Thrown when the input array contains less than two elements for sample calculation.</exception>
 
-    public static decimal StandardDeviation(this decimal[] values, CalculationType calculationType = CalculationType.Sample) => (decimal)Math.Sqrt((double)values.Variance(calculationType));
+    public static decimal StandardDeviation(this decimal[] values, CalculationType calculationType = CalculationType.Sample) 
+        => (decimal)Math.Sqrt((double)values.Variance(calculationType));
 }

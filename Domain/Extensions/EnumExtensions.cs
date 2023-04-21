@@ -16,6 +16,7 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Boutquin.Domain.Helpers;
 
 namespace Boutquin.Domain.Extensions;
 
@@ -58,10 +59,7 @@ public static class EnumExtensions
     public static string GetDescription<T>(this T enumValue) where T : Enum
     {
         // Check if the provided type is an enum.
-        if (!typeof(T).IsEnum)
-        {
-            throw new ArgumentException("The type parameter T must be an enum.");
-        }
+        Guard.AgainstNonEnumType<T>();
 
         // Get the field information for the given enum value.
         var field = enumValue.GetType().GetField(enumValue.ToString()) ?? throw new ArgumentException("The provided enum value is not a valid member of the enum type.");

@@ -15,6 +15,7 @@
 
 using System.Globalization;
 using System.Reflection;
+using Boutquin.Domain.Exceptions;
 // ReSharper disable UnusedMember.Global
 
 namespace Boutquin.Domain.Helpers;
@@ -96,6 +97,34 @@ public static class Guard
         if (value == null)
         {
             throw new ArgumentNullException(paramName, $"Parameter '{paramName}' cannot be null.");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given array is null or empty and throws an ArgumentException if it is.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the array.</typeparam>
+    /// <param name="valueExpression">A function expression returning the array to check for null or empty.</param>
+    /// <exception cref="ArgumentException">Thrown when the given array is null or empty.</exception>
+    /// <example>
+    /// This sample shows how to call the <see cref="AgainstNullOrEmptyArray{T}"/> method.
+    /// <code>
+    /// public void ProcessData(int[] data)
+    /// {
+    ///     Guard.AgainstNullOrEmptyArray(() => data);
+    ///     // ... rest of the method
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstNullOrEmptyArray<T>(Func<T[]> valueExpression)
+    {
+        // Get the array value and extract the parameter name from the expression
+        var (value, paramName) = ExtractParameterInfo(valueExpression);
+
+        // Guard logic
+        if (value == null || value.Length == 0)
+        {
+            throw new EmptyOrNullArrayException($"Parameter '{paramName}' cannot be null or an empty array.");
         }
     }
 
@@ -364,6 +393,28 @@ public static class Guard
         if (value.CompareTo(zero) <= 0)
         {
             throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' cannot be negative or zero.");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the type parameter T is an enum and throws an ArgumentException if it is not.
+    /// </summary>
+    /// <typeparam name="T">The type to check if it is an enum.</typeparam>
+    /// <exception cref="ArgumentException">Thrown when the type parameter T is not an enum.</exception>
+    /// <example>
+    /// <code>
+    /// public void EnumOperation&lt;T&gt;() where T : Enum
+    /// {
+    ///     Guard.AgainstNonEnumType&lt;T&gt;();
+    ///     // ... rest of the method
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstNonEnumType<T>()
+    {
+        if (!typeof(T).IsEnum)
+        {
+            throw new ArgumentException($"The type parameter '{typeof(T).Name}' must be an enum.");
         }
     }
 

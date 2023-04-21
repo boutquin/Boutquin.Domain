@@ -87,12 +87,12 @@ public sealed class DecimalArrayExtensionsTests
         decimal[] values = null;
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         var exceptionType = typeof(EmptyOrNullArrayException);
-        var exceptionMessage = ExceptionMessages.EmptyOrNullArray;
+        const string ExceptionMessage = $"Parameter '{nameof(values)}' cannot be null or an empty array.";
 
 #pragma warning disable CS8604 // Possible null reference argument.
         // Act & Assert
-        Assert.Throws(exceptionType, () => values.Variance()).Message.Should().Be(exceptionMessage);
-        Assert.Throws(exceptionType, () => values.StandardDeviation()).Message.Should().Be(exceptionMessage);
+        Assert.Throws(exceptionType, () => values.Variance()).Message.Should().Be(ExceptionMessage);
+        Assert.Throws(exceptionType, () => values.StandardDeviation()).Message.Should().Be(ExceptionMessage);
 #pragma warning restore CS8604 // Possible null reference argument.
     }
 
@@ -105,10 +105,10 @@ public sealed class DecimalArrayExtensionsTests
         // Arrange
         var values = Array.Empty<decimal>();
         var exceptionType = typeof(EmptyOrNullArrayException);
-        var exceptionMessage = ExceptionMessages.EmptyOrNullArray;
+        const string ExceptionMessage = $"Parameter '{nameof(values)}' cannot be null or an empty array.";
 
         // Act & Assert
-        Assert.Throws(exceptionType, () => values.Variance()).Message.Should().Be(exceptionMessage);
-        Assert.Throws(exceptionType, () => values.StandardDeviation()).Message.Should().Be(exceptionMessage);
+        Assert.Throws(exceptionType, () => values.Variance()).Message.Should().Be(ExceptionMessage);
+        Assert.Throws(exceptionType, () => values.StandardDeviation()).Message.Should().Be(ExceptionMessage);
     }
 }

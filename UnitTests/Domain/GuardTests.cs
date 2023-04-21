@@ -13,6 +13,7 @@
 //  limitations under the License.
 //
 
+using Boutquin.Domain.Exceptions;
 using Boutquin.Domain.Helpers;
 
 namespace Boutquin.UnitTests.Domain;
@@ -58,6 +59,54 @@ public sealed class GuardTests
 
         // Assert
         act.Should().NotThrow();
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrEmptyArray method does not throw an exception when the array is not null or empty.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrEmptyArray_WhenArrayIsNotNullOrEmpty_DoesNotThrow()
+    {
+        // Arrange
+        var nonEmptyArray = new[] { 1, 2, 3 };
+
+        // Act
+        var act = () => Guard.AgainstNullOrEmptyArray(() => nonEmptyArray);
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrEmptyArray method throws an ArgumentException when the array is null.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrEmptyArray_WhenArrayIsNull_ThrowsArgumentException()
+    {
+        // Arrange
+        int[] nullArray = null;
+
+        // Act
+        var act = () => Guard.AgainstNullOrEmptyArray(() => nullArray);
+
+        // Assert
+        act.Should().Throw<EmptyOrNullArrayException>().WithMessage($"Parameter '{nameof(nullArray)}' cannot be null or an empty array.");
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrEmptyArray method throws an ArgumentException when the array is empty.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrEmptyArray_WhenArrayIsEmpty_ThrowsArgumentException()
+    {
+        // Arrange
+        var emptyArray = Array.Empty<int>();
+
+        // Act
+        var act = () => Guard.AgainstNullOrEmptyArray(() => emptyArray);
+
+        // Assert
+        act.Should().Throw<EmptyOrNullArrayException>().WithMessage($"Parameter '{nameof(emptyArray)}' cannot be null or an empty array.");
     }
 
     /// <summary>
@@ -112,6 +161,47 @@ public sealed class GuardTests
 
         // Assert
         act.Should().NotThrow();
+    }
+
+    // Define a sample enum for testing purposes
+    private enum SampleEnum
+    {
+        Value1,
+        Value2,
+        Value3
+    }
+
+    // Define a non-enum type for testing purposes
+    private class SampleClass
+    {
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNonEnumType method does not throw an exception when the type parameter is an enum.
+    /// </summary>
+    [Fact]
+    public void AgainstNonEnumType_WhenTypeIsEnum_DoesNotThrow()
+    {
+        // Act
+        var act = () => Guard.AgainstNonEnumType<SampleEnum>();
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNonEnumType method throws an ArgumentException when the type parameter is not an enum.
+    /// </summary>
+    [Fact]
+    public void AgainstNonEnumType_WhenTypeIsNotEnum_ThrowsArgumentException()
+    {
+        // Act
+        var act = () => Guard.AgainstNonEnumType<SampleClass>();
+
+        // Assert
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage($"The type parameter '{nameof(SampleClass)}' must be an enum.");
     }
 
     /// <summary>

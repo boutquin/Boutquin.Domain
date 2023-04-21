@@ -15,6 +15,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Boutquin.Domain.Helpers;
 
 namespace Boutquin.Domain.Extensions;
 
@@ -48,7 +49,8 @@ public static class StringExtensions
     /// result = testString.IsNullOrEmpty(); // result will be false
     /// </code>
     /// </example>
-    public static bool IsNullOrEmpty(this string value) => string.IsNullOrEmpty(value);
+    public static bool IsNullOrEmpty(this string value) 
+        => string.IsNullOrEmpty(value);
 
     /// <summary>
     /// Determines whether the specified string is null, empty, or consists only of white-space characters.
@@ -57,7 +59,8 @@ public static class StringExtensions
     /// <returns>
     ///   <c>true</c> if the specified string is null, empty, or consists only of white-space characters; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsNullOrWhiteSpace(this string value) => string.IsNullOrWhiteSpace(value);
+    public static bool IsNullOrWhiteSpace(this string value) 
+        => string.IsNullOrWhiteSpace(value);
 
     /// <summary>
     /// Converts the first character of the specified string to uppercase using the rules of the current culture.
@@ -69,10 +72,8 @@ public static class StringExtensions
     /// <exception cref="ArgumentNullException">Thrown when the input object is not a string.</exception>
     public static string ToUppercaseFirst(this string value)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value), "The input value must be a string.");
-        }
+        // Ensure the string value is not null
+        Guard.AgainstNull(() => value);
 
         if (value.Length == 0)
         {
@@ -92,10 +93,8 @@ public static class StringExtensions
     /// <exception cref="ArgumentNullException">Thrown when the input object is not a string.</exception>
     public static string ToLowerCaseFirst(this string value)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value), "The input value must be a string.");
-        }
+        // Ensure the string value is not null
+        Guard.AgainstNull(() => value);
 
         if (value.Length == 0)
         {
