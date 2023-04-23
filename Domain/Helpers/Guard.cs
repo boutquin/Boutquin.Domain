@@ -474,11 +474,13 @@ public static class Guard
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
 
-        if (!Enum.IsDefined(typeof(T), value))
+        if (Enum.IsDefined(typeof(T), value))
         {
-            var enumTypeName = typeof(T).Name;
-            throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' has an undefined value '{value}' for enum '{enumTypeName}'.");
+            return;
         }
+
+        var enumTypeName = typeof(T).Name;
+        throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' has an undefined value '{value}' for enum '{enumTypeName}'.");
     }
 
     /// <summary>
@@ -635,39 +637,41 @@ public static class Guard
             AgainstNullOrWhiteSpace(() => exceptionMessage);
 
             // Guard logic
-            if (_condition)
+            if (!_condition)
             {
-                TException exception;
-                try
-                {
-#pragma warning disable CS8600
-                    exception = (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
-#pragma warning restore CS8600
-                }
-                catch (MissingMethodException)
-                {
-                    throw new InvalidOperationException(
-                        $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
-                }
-                catch (TargetInvocationException tie) 
-                { 
-                    if (tie.InnerException != null) 
-                    { 
-                        throw tie.InnerException; 
-                    } 
-                    throw; 
-                }
-
-                // Check if the created exception instance is null
-                if (exception == null)
-                {
-                    throw new InvalidOperationException(
-                        $"The exception type '{typeof(TException).FullName}' failed to create a valid instance with the provided exception message.");
-                }
-
-                // Throw the created exception
-                throw exception;
+                return;
             }
+
+            TException exception;
+            try
+            {
+#pragma warning disable CS8600
+                exception = (TException)Activator.CreateInstance(typeof(TException), exceptionMessage);
+#pragma warning restore CS8600
+            }
+            catch (MissingMethodException)
+            {
+                throw new InvalidOperationException(
+                    $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
+            }
+            catch (TargetInvocationException tie) 
+            { 
+                if (tie.InnerException != null) 
+                { 
+                    throw tie.InnerException; 
+                } 
+                throw; 
+            }
+
+            // Check if the created exception instance is null
+            if (exception == null)
+            {
+                throw new InvalidOperationException(
+                    $"The exception type '{typeof(TException).FullName}' failed to create a valid instance with the provided exception message.");
+            }
+
+            // Throw the created exception
+            throw exception;
         }
 
         /// <summary>
@@ -731,41 +735,43 @@ public static class Guard
                 throw new FormatException("The format string or the arguments provided are invalid.", formatException);
             }
 
-            if (_condition)
+            if (!_condition)
             {
-                // Try to create an instance of the specified exception type with the formatted message
-                TException exception;
-                try
-                {
-#pragma warning disable CS8600
-                    exception = (TException)Activator.CreateInstance(typeof(TException), formattedMessage);
-#pragma warning restore CS8600
-                }
-                catch (MissingMethodException)
-                {
-                    throw new InvalidOperationException(
-                        $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
-                }
-                catch (TargetInvocationException tie)
-                {
-                    if (tie.InnerException != null)
-                    {
-                        throw tie.InnerException;
-                    }
-                    throw;
-                }
-
-
-                // Check if the created exception instance is null
-                if (exception == null)
-                {
-                    throw new InvalidOperationException(
-                        $"The exception type '{typeof(TException).FullName}' failed to create a valid instance with the provided parameters.");
-                }
-
-                // Throw the created exception
-                throw exception;
+                return;
             }
+
+            // Try to create an instance of the specified exception type with the formatted message
+            TException exception;
+            try
+            {
+#pragma warning disable CS8600
+                exception = (TException)Activator.CreateInstance(typeof(TException), formattedMessage);
+#pragma warning restore CS8600
+            }
+            catch (MissingMethodException)
+            {
+                throw new InvalidOperationException(
+                    $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
+            }
+            catch (TargetInvocationException tie)
+            {
+                if (tie.InnerException != null)
+                {
+                    throw tie.InnerException;
+                }
+                throw;
+            }
+
+
+            // Check if the created exception instance is null
+            if (exception == null)
+            {
+                throw new InvalidOperationException(
+                    $"The exception type '{typeof(TException).FullName}' failed to create a valid instance with the provided parameters.");
+            }
+
+            // Throw the created exception
+            throw exception;
         }
 
         /// <summary>
@@ -814,40 +820,42 @@ public static class Guard
         /// </example>
         public void With<TException>(params object[] args) where TException : Exception
         {
-            if (_condition)
+            if (!_condition)
             {
-                // Try to create an instance of the specified exception type with the provided arguments
-                TException exception;
-                try
-                {
-#pragma warning disable CS8600
-                    exception = (TException)Activator.CreateInstance(typeof(TException), args);
-#pragma warning restore CS8600
-                }
-                catch (MissingMethodException)
-                {
-                    throw new InvalidOperationException(
-                        $"The exception type '{typeof(TException).FullName}' must have a constructor that matches the provided arguments.");
-                }
-                catch (TargetInvocationException tie)
-                {
-                    if (tie.InnerException != null)
-                    {
-                        throw tie.InnerException;
-                    }
-                    throw;
-                }
-
-                // Check if the created exception instance is null
-                if (exception == null)
-                {
-                    throw new InvalidOperationException(
-                        $"The exception type '{typeof(TException).FullName}' failed to create a valid instance with the provided arguments.");
-                }
-
-                // Throw the created exception
-                throw exception;
+                return;
             }
+
+            // Try to create an instance of the specified exception type with the provided arguments
+            TException exception;
+            try
+            {
+#pragma warning disable CS8600
+                exception = (TException)Activator.CreateInstance(typeof(TException), args);
+#pragma warning restore CS8600
+            }
+            catch (MissingMethodException)
+            {
+                throw new InvalidOperationException(
+                    $"The exception type '{typeof(TException).FullName}' must have a constructor that matches the provided arguments.");
+            }
+            catch (TargetInvocationException tie)
+            {
+                if (tie.InnerException != null)
+                {
+                    throw tie.InnerException;
+                }
+                throw;
+            }
+
+            // Check if the created exception instance is null
+            if (exception == null)
+            {
+                throw new InvalidOperationException(
+                    $"The exception type '{typeof(TException).FullName}' failed to create a valid instance with the provided arguments.");
+            }
+
+            // Throw the created exception
+            throw exception;
         }
     }
 
