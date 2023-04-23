@@ -130,6 +130,34 @@ public static class Guard
     }
 
     /// <summary>
+    /// Throws an <see cref="EmptyOrNullCollectionException"/> if the specified collection is null or empty.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the collection.</typeparam>
+    /// <param name="collectionExpression">An expression returning the collection to be checked.</param>
+    /// <exception cref="EmptyOrNullCollectionException">Thrown if the collection is null or empty.</exception>
+    /// <example>
+    /// <code>
+    /// public void SomeMethod(List&lt;int&gt; inputList)
+    /// {
+    ///     Guard.AgainstEmptyOrNullCollection(() => inputList);
+    ///     // ... continue processing ...
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstEmptyOrNullCollection<T>(Expression<Func<ICollection<T>>> collectionExpression)
+    {
+        var collection = collectionExpression.Compile().Invoke();
+
+        if (collection != null && collection.Count != 0)
+        {
+            return;
+        }
+
+        var paramName = ((MemberExpression)collectionExpression.Body).Member.Name;
+        throw new EmptyOrNullCollectionException($"Parameter '{paramName}' cannot be null or an empty collection.");
+    }
+
+    /// <summary>
     /// Throws an <see cref="EmptyOrNullDictionaryException"/> if the specified dictionary is null or empty.
     /// </summary>
     /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
@@ -145,7 +173,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstEmptyOrNullDictionary<TKey, TValue>(Expression<Func<Dictionary<TKey, TValue>>> dictionaryExpression) where TKey : notnull
+    public static void AgainstEmptyOrNullDictionary<TKey, TValue>(Expression<Func<IDictionary<TKey, TValue>>> dictionaryExpression) where TKey : notnull
     {
         var dictionary = dictionaryExpression.Compile().Invoke();
 
@@ -157,6 +185,7 @@ public static class Guard
         var paramName = ((MemberExpression)dictionaryExpression.Body).Member.Name;
         throw new EmptyOrNullDictionaryException($"Parameter '{paramName}' cannot be null or an empty dictionary.");
     }
+
     /// <summary>
     /// Checks if the given string value is null or empty and throws an <see cref="ArgumentNullException"/> if it is.
     /// This overload accepts a Func&lt;string&gt; that returns the value and extracts its name using nameof.

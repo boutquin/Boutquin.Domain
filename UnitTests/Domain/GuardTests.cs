@@ -108,7 +108,47 @@ public sealed class GuardTests
         // Assert
         act.Should().Throw<EmptyOrNullArrayException>().WithMessage($"Parameter '{nameof(emptyArray)}' cannot be null or an empty array.");
     }
-    
+
+
+    [Fact]
+    public void AgainstEmptyOrNullCollection_WhenCollectionIsNotNullOrEmpty_DoesNotThrow()
+    {
+        // Arrange
+        var nonEmptyList = new List<int> { 1, 2, 3 };
+
+        // Act
+        var act = () => Guard.AgainstEmptyOrNullCollection(() => nonEmptyList);
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public void AgainstEmptyOrNullCollection_WhenCollectionIsNull_ThrowsEmptyOrNullCollectionException()
+    {
+        // Arrange
+        List<int> nullList = null;
+
+        // Act
+        var act = () => Guard.AgainstEmptyOrNullCollection(() => nullList);
+
+        // Assert
+        act.Should().Throw<EmptyOrNullCollectionException>().WithMessage($"Parameter '{nameof(nullList)}' cannot be null or an empty collection.");
+    }
+
+    [Fact]
+    public void AgainstEmptyOrNullCollection_WhenCollectionIsEmpty_ThrowsEmptyOrNullCollectionException()
+    {
+        // Arrange
+        var emptyList = new List<int>();
+
+        // Act
+        var act = () => Guard.AgainstEmptyOrNullCollection(() => emptyList);
+
+        // Assert
+        act.Should().Throw<EmptyOrNullCollectionException>().WithMessage($"Parameter '{nameof(emptyList)}' cannot be null or an empty collection.");
+    }
+
     /// <summary>
     /// Tests that the Guard.AgainstEmptyOrNullDictionary method does not throw an exception when the dictionary is not null or empty.
     /// </summary>
