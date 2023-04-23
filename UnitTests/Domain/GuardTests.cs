@@ -108,6 +108,54 @@ public sealed class GuardTests
         // Assert
         act.Should().Throw<EmptyOrNullArrayException>().WithMessage($"Parameter '{nameof(emptyArray)}' cannot be null or an empty array.");
     }
+    
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullDictionary method does not throw an exception when the dictionary is not null or empty.
+    /// </summary>
+    [Fact]
+    public void AgainstEmptyOrNullDictionary_WhenDictionaryIsNotNullOrEmpty_DoesNotThrow()
+    {
+        // Arrange
+        var nonEmptyDictionary = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
+
+        // Act
+        var act = () => Guard.AgainstEmptyOrNullDictionary(() => nonEmptyDictionary);
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullDictionary method throws an EmptyOrNullDictionaryException when the dictionary is null.
+    /// </summary>
+    [Fact]
+    public void AgainstEmptyOrNullDictionary_WhenDictionaryIsNull_ThrowsEmptyOrNullDictionaryException()
+    {
+        // Arrange
+        Dictionary<int, string> nullDictionary = null;
+
+        // Act
+        var act = () => Guard.AgainstEmptyOrNullDictionary(() => nullDictionary);
+
+        // Assert
+        act.Should().Throw<EmptyOrNullDictionaryException>().WithMessage($"Parameter '{nameof(nullDictionary)}' cannot be null or an empty dictionary.");
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullDictionary method throws an EmptyOrNullDictionaryException when the dictionary is empty.
+    /// </summary>
+    [Fact]
+    public void AgainstEmptyOrNullDictionary_WhenDictionaryIsEmpty_ThrowsEmptyOrNullDictionaryException()
+    {
+        // Arrange
+        var emptyDictionary = new Dictionary<int, string>();
+
+        // Act
+        var act = () => Guard.AgainstEmptyOrNullDictionary(() => emptyDictionary);
+
+        // Assert
+        act.Should().Throw<EmptyOrNullDictionaryException>().WithMessage($"Parameter '{nameof(emptyDictionary)}' cannot be null or an empty dictionary.");
+    }
 
     /// <summary>
     /// Tests that the Guard.AgainstNullOrEmpty method throws an ArgumentException when the value is null.

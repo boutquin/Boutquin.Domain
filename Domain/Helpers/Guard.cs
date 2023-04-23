@@ -14,6 +14,7 @@
 //
 
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Reflection;
 using Boutquin.Domain.Exceptions;
 // ReSharper disable UnusedMember.Global
@@ -128,6 +129,34 @@ public static class Guard
         }
     }
 
+    /// <summary>
+    /// Throws an <see cref="EmptyOrNullDictionaryException"/> if the specified dictionary is null or empty.
+    /// </summary>
+    /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
+    /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
+    /// <param name="dictionaryExpression">An expression returning the dictionary to be checked.</param>
+    /// <exception cref="EmptyOrNullDictionaryException">Thrown if the dictionary is null or empty.</exception>
+    /// <example>
+    /// <code>
+    /// public void SomeMethod(Dictionary&lt;int, string&gt; inputDict)
+    /// {
+    ///     Guard.AgainstEmptyOrNullDictionary(() => inputDict);
+    ///     // ... continue processing ...
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstEmptyOrNullDictionary<TKey, TValue>(Expression<Func<Dictionary<TKey, TValue>>> dictionaryExpression) where TKey : notnull
+    {
+        var dictionary = dictionaryExpression.Compile().Invoke();
+
+        if (dictionary != null && dictionary.Count != 0)
+        {
+            return;
+        }
+
+        var paramName = ((MemberExpression)dictionaryExpression.Body).Member.Name;
+        throw new EmptyOrNullDictionaryException($"Parameter '{paramName}' cannot be null or an empty dictionary.");
+    }
     /// <summary>
     /// Checks if the given string value is null or empty and throws an <see cref="ArgumentNullException"/> if it is.
     /// This overload accepts a Func&lt;string&gt; that returns the value and extracts its name using nameof.
