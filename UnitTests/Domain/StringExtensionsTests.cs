@@ -29,10 +29,14 @@ public sealed class StringExtensionsTests
     public void IsNullOrEmpty_WhenStringIsNull_ReturnsTrue()
     {
         // Arrange
+#pragma warning disable CS8600
         string nullString = null;
+#pragma warning restore CS8600
 
         // Act
+#pragma warning disable CS8604
         var result = nullString.IsNullOrEmpty();
+#pragma warning restore CS8604
 
         // Assert
         result.Should().BeTrue();
@@ -77,10 +81,14 @@ public sealed class StringExtensionsTests
     public void IsNullOrWhiteSpace_WhenStringIsNull_ReturnsTrue()
     {
         // Arrange
+#pragma warning disable CS8600
         string nullString = null;
+#pragma warning restore CS8600
 
         // Act
+#pragma warning disable CS8604
         var result = nullString.IsNullOrWhiteSpace();
+#pragma warning restore CS8604
 
         // Assert
         result.Should().BeTrue();
@@ -141,10 +149,14 @@ public sealed class StringExtensionsTests
     public void ToUppercaseFirst_WhenStringIsNull_ThrowsArgumentNullException()
     {
         // Arrange
+#pragma warning disable CS8600
         string nullString = null;
+#pragma warning restore CS8600
 
         // Act
+#pragma warning disable CS8604
         var act = () => nullString.ToUppercaseFirst();
+#pragma warning restore CS8604
 
         // Assert
         act.Should().Throw<ArgumentNullException>().WithMessage("*value*");
@@ -221,7 +233,7 @@ public sealed class StringExtensionsTests
     public void ToLowerCaseFirst_WhenStringIsEmpty_DoesNotThrow()
     {
         // Arrange
-        string emptyString = string.Empty;
+        var emptyString = string.Empty;
 
         // Act
         var act = () => emptyString.ToLowerCaseFirst();
@@ -237,10 +249,14 @@ public sealed class StringExtensionsTests
     public void ToLowerCaseFirst_WhenStringIsNull_ThrowsArgumentNullException()
     {
         // Arrange
+#pragma warning disable CS8600
         string nullString = null;
+#pragma warning restore CS8600
 
         // Act
+#pragma warning disable CS8604
         var act = () => nullString.ToLowerCaseFirst();
+#pragma warning restore CS8604
 
         // Assert
         act.Should().Throw<ArgumentNullException>().WithMessage("*value*");

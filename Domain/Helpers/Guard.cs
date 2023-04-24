@@ -148,6 +148,7 @@ public static class Guard
     {
         var collection = collectionExpression.Compile().Invoke();
 
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (collection != null && collection.Count != 0)
         {
             return;
@@ -177,6 +178,7 @@ public static class Guard
     {
         var dictionary = dictionaryExpression.Compile().Invoke();
 
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (dictionary != null && dictionary.Count != 0)
         {
             return;

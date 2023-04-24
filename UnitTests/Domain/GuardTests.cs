@@ -13,6 +13,7 @@
 //  limitations under the License.
 //
 
+using System.Diagnostics.CodeAnalysis;
 using Boutquin.Domain.Exceptions;
 using Boutquin.Domain.Helpers;
 
@@ -84,10 +85,14 @@ public sealed class GuardTests
     public void AgainstNullOrEmptyArray_WhenArrayIsNull_ThrowsArgumentException()
     {
         // Arrange
+#pragma warning disable CS8600
         int[] nullArray = null;
+#pragma warning restore CS8600
 
         // Act
+#pragma warning disable CS8603
         var act = () => Guard.AgainstNullOrEmptyArray(() => nullArray);
+#pragma warning restore CS8603
 
         // Assert
         act.Should().Throw<EmptyOrNullArrayException>().WithMessage($"Parameter '{nameof(nullArray)}' cannot be null or an empty array.");
@@ -127,10 +132,14 @@ public sealed class GuardTests
     public void AgainstEmptyOrNullCollection_WhenCollectionIsNull_ThrowsEmptyOrNullCollectionException()
     {
         // Arrange
+#pragma warning disable CS8600
         List<int> nullList = null;
+#pragma warning restore CS8600
 
         // Act
+#pragma warning disable CS8603
         var act = () => Guard.AgainstEmptyOrNullCollection(() => nullList);
+#pragma warning restore CS8603
 
         // Assert
         act.Should().Throw<EmptyOrNullCollectionException>().WithMessage($"Parameter '{nameof(nullList)}' cannot be null or an empty collection.");
@@ -172,10 +181,14 @@ public sealed class GuardTests
     public void AgainstEmptyOrNullDictionary_WhenDictionaryIsNull_ThrowsEmptyOrNullDictionaryException()
     {
         // Arrange
+#pragma warning disable CS8600
         Dictionary<int, string> nullDictionary = null;
+#pragma warning restore CS8600
 
         // Act
+#pragma warning disable CS8603
         var act = () => Guard.AgainstEmptyOrNullDictionary(() => nullDictionary);
+#pragma warning restore CS8603
 
         // Assert
         act.Should().Throw<EmptyOrNullDictionaryException>().WithMessage($"Parameter '{nameof(nullDictionary)}' cannot be null or an empty dictionary.");
@@ -252,6 +265,7 @@ public sealed class GuardTests
     }
 
     // Define a sample enum for testing purposes
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private enum SampleEnum
     {
         Value1,
@@ -260,6 +274,7 @@ public sealed class GuardTests
     }
 
     // Define a non-enum type for testing purposes
+    // ReSharper disable once ClassNeverInstantiated.Local
     private class SampleClass
     {
     }
@@ -271,7 +286,7 @@ public sealed class GuardTests
     public void AgainstNonEnumType_WhenTypeIsEnum_DoesNotThrow()
     {
         // Act
-        var act = () => Guard.AgainstNonEnumType<SampleEnum>();
+        var act = Guard.AgainstNonEnumType<SampleEnum>;
 
         // Assert
         act.Should().NotThrow();
@@ -284,7 +299,7 @@ public sealed class GuardTests
     public void AgainstNonEnumType_WhenTypeIsNotEnum_ThrowsArgumentException()
     {
         // Act
-        var act = () => Guard.AgainstNonEnumType<SampleClass>();
+        var act = Guard.AgainstNonEnumType<SampleClass>;
 
         // Assert
         act.Should()
@@ -299,10 +314,10 @@ public sealed class GuardTests
     public void With_WhenConditionIsTrue_ThrowsSpecifiedException()
     {
         // Arrange
-        var condition = true;
+        const bool Condition = true;
 
         // Act
-        var act = () => Guard.Against(condition).With<InvalidOperationException>();
+        var act = () => Guard.Against(Condition).With<InvalidOperationException>();
 
         // Assert
         act.Should().Throw<InvalidOperationException>();
@@ -315,10 +330,10 @@ public sealed class GuardTests
     public void With_WhenConditionIsFalse_DoesNotThrow()
     {
         // Arrange
-        var condition = false;
+        const bool Condition = false;
 
         // Act
-        var act = () => Guard.Against(condition).With<InvalidOperationException>();
+        var act = () => Guard.Against(Condition).With<InvalidOperationException>();
 
         // Assert
         act.Should().NotThrow();
@@ -331,14 +346,14 @@ public sealed class GuardTests
     public void WithMessage_WhenConditionIsTrue_ThrowsSpecifiedExceptionWithMessage()
     {
         // Arrange
-        var condition = true;
-        var exceptionMessage = "An error occurred.";
+        const bool Condition = true;
+        const string ExceptionMessage = "An error occurred.";
 
         // Act
-        var act = () => Guard.Against(condition).With<InvalidOperationException>(exceptionMessage);
+        var act = () => Guard.Against(Condition).With<InvalidOperationException>(ExceptionMessage);
 
         // Assert
-        act.Should().Throw<InvalidOperationException>().WithMessage(exceptionMessage);
+        act.Should().Throw<InvalidOperationException>().WithMessage(ExceptionMessage);
     }
 
     /// <summary>
@@ -348,11 +363,11 @@ public sealed class GuardTests
     public void WithMessage_WhenConditionIsFalse_DoesNotThrow()
     {
         // Arrange
-        var condition = false;
-        var exceptionMessage = "An error occurred.";
+        const bool Condition = false;
+        const string ExceptionMessage = "An error occurred.";
 
         // Act
-        var act = () => Guard.Against(condition).With<InvalidOperationException>(exceptionMessage);
+        var act = () => Guard.Against(Condition).With<InvalidOperationException>(ExceptionMessage);
 
         // Assert
         act.Should().NotThrow();
