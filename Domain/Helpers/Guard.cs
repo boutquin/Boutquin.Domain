@@ -753,7 +753,7 @@ public static class Guard
         public void With<TException>(string exceptionMessage, params object[] args) where TException : Exception
         {
             // Check if the exceptionMessage is null, empty, or contains only whitespace characters
-            Guard.AgainstNullOrWhiteSpace(() => exceptionMessage);
+            AgainstNullOrWhiteSpace(() => exceptionMessage);
 
             // Format the exception message
             string formattedMessage;

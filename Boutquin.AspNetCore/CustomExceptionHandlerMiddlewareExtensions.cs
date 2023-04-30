@@ -13,6 +13,7 @@
 //  limitations under the License.
 //
 
+using Boutquin.Domain.Helpers;
 using Microsoft.AspNetCore.Builder;
 
 namespace Boutquin.AspNetCore;
@@ -48,10 +49,7 @@ public static class CustomExceptionHandlerMiddlewareExtensions
     /// </example>
     public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder app)
     {
-        if (app == null)
-        {
-            throw new ArgumentNullException(nameof(app));
-        }
+        Guard.AgainstNull(() => app);
 
         return app.UseMiddleware<CustomExceptionHandlerMiddleware>();
     }

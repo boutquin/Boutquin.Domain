@@ -13,11 +13,15 @@
 //  limitations under the License.
 //
 
-using Boutquin.Domain.Exceptions;
+namespace Boutquin.AspNetCore;
+
+using System.Net;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Boutquin.AspNetCore;
+using Domain.Exceptions;
+using Validation.Exceptions;
 
 /// <summary>
 /// A custom exception handler middleware that catches exceptions, maps them to the appropriate HTTP status codes, and creates ProblemDetails responses.
@@ -67,6 +71,17 @@ public sealed class CustomExceptionHandlerMiddleware
         // Map each custom exception to its corresponding status code and update problemDetails
         switch (exception)
         {
+            case ValidationException validationException:
+                statusCode = (int)HttpStatusCode.BadRequest;
+                problemDetails.Title = "One or more validation errors occurred.";
+                problemDetails.Detail = validationException.Message;
+                problemDetails.Extensions["errors"] = validationException.Errors
+                    .GroupBy(x => x.PropertyName)
+                    .ToDictionary(
+                        group => group.Key,
+                        group => group.Select(x => x.ErrorMessage).ToArray());
+                break;
+
             case BadRequestException badRequestException:
                 statusCode = StatusCodes.Status400BadRequest;
                 problemDetails.Title = "Bad Request";
@@ -122,6 +137,10 @@ public sealed class CustomExceptionHandlerMiddleware
                 break;
         }
 
+        // Set the status code and instance
+        problemDetails.Status = statusCode;
+        problemDetails.Instance = context.Request.Path;
+
         // Set the response status code and content type
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/problem+json";
@@ -129,5 +148,4 @@ public sealed class CustomExceptionHandlerMiddleware
         // Serialize the problemDetails object and write it to the response
         await context.Response.WriteAsJsonAsync(problemDetails);
     }
-
 }
