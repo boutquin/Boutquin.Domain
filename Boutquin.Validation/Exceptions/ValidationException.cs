@@ -13,7 +13,6 @@
 //  limitations under the License.
 //
 
-using System;
 using Boutquin.Domain.Helpers;
 using FluentValidation.Results;
 
