@@ -17,15 +17,15 @@ using System.Runtime.Serialization;
 namespace Boutquin.Domain.Exceptions;
 
 /// <summary>
-/// The exception that is thrown when an entity is not found.
+/// The exception that is thrown when the requested resource is not found.
 /// </summary>
 [Serializable]
 public sealed class NotFoundException : Exception
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotFoundException"/> class with a default error message.
+    /// Initializes a new instance of the <see cref="NotFoundException"/> class.
     /// </summary>
-    public NotFoundException() : base(ExceptionMessages.EmptyOrNullArray)
+    public NotFoundException()
     {
     }
 
@@ -33,7 +33,8 @@ public sealed class NotFoundException : Exception
     /// Initializes a new instance of the <see cref="NotFoundException"/> class with a specified error message.
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
-    public NotFoundException(string message) : base(message)
+    public NotFoundException(string message)
+        : base(message)
     {
     }
 
@@ -42,7 +43,8 @@ public sealed class NotFoundException : Exception
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="inner">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
-    public NotFoundException(string message, Exception inner) : base(message, inner)
+    public NotFoundException(string message, Exception inner)
+        : base(message, inner)
     {
     }
 
@@ -51,7 +53,8 @@ public sealed class NotFoundException : Exception
     /// </summary>
     /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
     /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
-    private NotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
+    private NotFoundException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
     {
     }
 }
