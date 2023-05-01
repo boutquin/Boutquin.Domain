@@ -18,7 +18,7 @@ namespace Boutquin.UnitTests.Domain;
 /// <summary>
 /// Represents a custom exception used for testing purposes in the GuardTests class.
 /// </summary>
-public class CustomException : Exception
+public sealed class CustomException : Exception
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CustomException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.

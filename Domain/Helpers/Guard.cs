@@ -568,7 +568,7 @@ public static class Guard
     /// <summary>
     /// A helper class used to chain the Guard.Against method with the With&lt;TException&gt; method.
     /// </summary>
-    public class GuardCondition
+    public sealed class GuardCondition
     {
         private readonly bool _condition;
 
@@ -591,7 +591,7 @@ public static class Guard
         /// </exception>
         /// <example>
         /// <code>
-        /// public class CustomException : Exception
+        /// public sealed class CustomException : Exception
         /// {
         ///     public CustomException() : base("An error occurred.")
         ///     {
@@ -642,7 +642,7 @@ public static class Guard
         /// </exception>
         /// <example>
         /// <code>
-        /// public class CustomException : Exception
+        /// public sealed class CustomException : Exception
         /// {
         ///     public CustomException(string message)
         ///         : base(message)
@@ -730,7 +730,7 @@ public static class Guard
         /// </exception>
         /// <example>
         /// <code>
-        /// public class CustomException : Exception
+        /// public sealed class CustomException : Exception
         /// {
         ///     public CustomException(string message)
         ///         : base(message)
@@ -826,7 +826,7 @@ public static class Guard
         /// </exception>
         /// <example>
         /// <code>
-        /// public class CustomException : Exception
+        /// public sealed class CustomException : Exception
         /// {
         ///     public CustomException(string message, int errorCode)
         ///         : base(message)

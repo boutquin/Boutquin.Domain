@@ -18,7 +18,7 @@ namespace Boutquin.UnitTests.Domain;
 /// <summary>
 /// Represents an exception without a constructor accepting a single string parameter, used for testing purposes in the GuardTests class.
 /// </summary>
-public class ExceptionWithoutStringConstructor : Exception
+public sealed class ExceptionWithoutStringConstructor : Exception
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ExceptionWithoutStringConstructor"/> class.
