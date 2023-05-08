@@ -228,12 +228,12 @@ public static class Guard
     /// <code>
     /// public void SomeMethod(Dictionary&lt;int, string&gt; inputDict)
     /// {
-    ///     Guard.AgainstEmptyOrNullDictionary(() => inputDict);
+    ///     Guard.AgainstEmptyOrNullReadOnlyDictionary(() => inputDict);
     ///     // ... continue processing ...
     /// }
     /// </code>
     /// </example>
-    public static void AgainstEmptyOrNullDictionary<TKey, TValue>(Expression<Func<IReadOnlyDictionary<TKey, TValue>>> dictionaryExpression) where TKey : notnull
+    public static void AgainstEmptyOrNullReadOnlyDictionary<TKey, TValue>(Expression<Func<IReadOnlyDictionary<TKey, TValue>>> dictionaryExpression) where TKey : notnull
     {
         var dictionary = dictionaryExpression.Compile().Invoke();
 
