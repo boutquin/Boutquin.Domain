@@ -102,6 +102,35 @@ public static class Guard
     }
 
     /// <summary>
+    /// Throws an <see cref="ArgumentException"/> if the specified enumerable is null or empty.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the enumerable.</typeparam>
+    /// <param name="enumerableExpression">An expression returning the enumerable to be checked.</param>
+    /// <exception cref="ArgumentException">Thrown if the enumerable is null or empty.</exception>
+    /// <example>
+    /// <code>
+    /// public void ProcessData(IEnumerable&lt;string&gt; data)
+    /// {
+    ///     Guard.AgainstEmptyOrNullEnumerable(() => assets);
+    ///     // ... rest of the method
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstEmptyOrNullEnumerable<T>(Func<IEnumerable<T>>enumerableExpression)
+    {
+        // Get the array value and extract the parameter name from the expression
+        var (enumerable, paramName) = ExtractParameterInfo(enumerableExpression);
+
+        if (enumerable != null && enumerable.Any())
+        {
+            return;
+        }
+
+        throw new ArgumentException("At least one element must be provided.", paramName);
+    }
+
+
+    /// <summary>
     /// Checks if the given array is null or empty and throws an ArgumentException if it is.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the array.</typeparam>
@@ -175,6 +204,36 @@ public static class Guard
     /// </code>
     /// </example>
     public static void AgainstEmptyOrNullDictionary<TKey, TValue>(Expression<Func<IDictionary<TKey, TValue>>> dictionaryExpression) where TKey : notnull
+    {
+        var dictionary = dictionaryExpression.Compile().Invoke();
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (dictionary != null && dictionary.Count != 0)
+        {
+            return;
+        }
+
+        var paramName = ((MemberExpression)dictionaryExpression.Body).Member.Name;
+        throw new EmptyOrNullDictionaryException($"Parameter '{paramName}' cannot be null or an empty dictionary.");
+    }
+
+    /// <summary>
+    /// Throws an <see cref="EmptyOrNullDictionaryException"/> if the specified dictionary is null or empty.
+    /// </summary>
+    /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
+    /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
+    /// <param name="dictionaryExpression">An expression returning the dictionary to be checked.</param>
+    /// <exception cref="EmptyOrNullDictionaryException">Thrown if the dictionary is null or empty.</exception>
+    /// <example>
+    /// <code>
+    /// public void SomeMethod(Dictionary&lt;int, string&gt; inputDict)
+    /// {
+    ///     Guard.AgainstEmptyOrNullDictionary(() => inputDict);
+    ///     // ... continue processing ...
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstEmptyOrNullDictionary<TKey, TValue>(Expression<Func<IReadOnlyDictionary<TKey, TValue>>> dictionaryExpression) where TKey : notnull
     {
         var dictionary = dictionaryExpression.Compile().Invoke();
 

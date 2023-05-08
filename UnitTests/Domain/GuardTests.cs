@@ -16,6 +16,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Boutquin.Domain.Exceptions;
 using Boutquin.Domain.Helpers;
+using Newtonsoft.Json.Linq;
 
 namespace Boutquin.UnitTests.Domain;
 
@@ -165,7 +166,7 @@ public sealed class GuardTests
     public void AgainstEmptyOrNullDictionary_WhenDictionaryIsNotNullOrEmpty_DoesNotThrow()
     {
         // Arrange
-        var nonEmptyDictionary = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
+        IDictionary<int, string> nonEmptyDictionary = new Dictionary<int, string> { { 1, "one" }, { 2, "two" } };
 
         // Act
         var act = () => Guard.AgainstEmptyOrNullDictionary(() => nonEmptyDictionary);
@@ -182,7 +183,7 @@ public sealed class GuardTests
     {
         // Arrange
 #pragma warning disable CS8600
-        Dictionary<int, string> nullDictionary = null;
+        IDictionary<int, string> nullDictionary = null;
 #pragma warning restore CS8600
 
         // Act
@@ -201,7 +202,7 @@ public sealed class GuardTests
     public void AgainstEmptyOrNullDictionary_WhenDictionaryIsEmpty_ThrowsEmptyOrNullDictionaryException()
     {
         // Arrange
-        var emptyDictionary = new Dictionary<int, string>();
+        IDictionary<int, string> emptyDictionary = new Dictionary<int, string>();
 
         // Act
         var act = () => Guard.AgainstEmptyOrNullDictionary(() => emptyDictionary);
