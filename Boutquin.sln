@@ -15,9 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boutquin.Validation", "Boutquin.Validation\Boutquin.Validation.csproj", "{1A9B956F-D3C7-4E30-9AB9-DB312874A828}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boutquin.Validation", "Boutquin.Validation\Boutquin.Validation.csproj", "{1A9B956F-D3C7-4E30-9AB9-DB312874A828}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boutquin.AspNetCore", "Boutquin.AspNetCore\Boutquin.AspNetCore.csproj", "{86A0FCAB-3015-4E06-90EF-6AB4D03C56F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boutquin.AspNetCore", "Boutquin.AspNetCore\Boutquin.AspNetCore.csproj", "{86A0FCAB-3015-4E06-90EF-6AB4D03C56F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boutquin.Events", "Boutquin.Events\Boutquin.Events.csproj", "{C2ACCAEE-79D4-40C5-9179-31B677EE1834}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{86A0FCAB-3015-4E06-90EF-6AB4D03C56F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86A0FCAB-3015-4E06-90EF-6AB4D03C56F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86A0FCAB-3015-4E06-90EF-6AB4D03C56F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2ACCAEE-79D4-40C5-9179-31B677EE1834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2ACCAEE-79D4-40C5-9179-31B677EE1834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2ACCAEE-79D4-40C5-9179-31B677EE1834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2ACCAEE-79D4-40C5-9179-31B677EE1834}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
