@@ -12,10 +12,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+namespace Boutquin.Domain.Abstractions;
 
 using MediatR;
-
-namespace Boutquin.Events.Abstractions;
 
 /// <summary>
 /// Represents a domain event within the system.
