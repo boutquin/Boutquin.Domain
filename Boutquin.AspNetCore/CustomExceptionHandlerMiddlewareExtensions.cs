@@ -12,11 +12,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-
-using Boutquin.Domain.Helpers;
-using Microsoft.AspNetCore.Builder;
-
 namespace Boutquin.AspNetCore;
+
+using Microsoft.AspNetCore.Builder;
+using Domain.Helpers;
 
 /// <summary>
 /// Extension methods for <see cref="IApplicationBuilder"/> to add the <see cref="CustomExceptionHandlerMiddleware"/> to the application pipeline.

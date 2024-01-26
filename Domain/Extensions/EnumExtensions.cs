@@ -12,13 +12,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+namespace Boutquin.Domain.Extensions;
 
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using Boutquin.Domain.Helpers;
-
-namespace Boutquin.Domain.Extensions;
+using Helpers;
 
 /// <summary>
 /// EnumExtensions class provides extension methods to work with enums.

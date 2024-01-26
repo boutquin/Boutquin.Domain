@@ -12,12 +12,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+namespace Boutquin.Domain.Converters;
 
 using System.Text.Json.Serialization;
 using System.Text.Json;
-
-namespace Boutquin.Domain.Converters;
-
 
 /// <summary>
 /// A custom JsonConverterFactory to handle SortedDictionaries with DateOnly keys.

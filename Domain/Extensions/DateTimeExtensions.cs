@@ -12,10 +12,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-
-using Boutquin.Domain.Helpers;
-
 namespace Boutquin.Domain.Extensions;
+
+using Helpers;
 
 /// <summary>
 /// DateTimeExtensions provides extension methods to convert date/time between different time zones.

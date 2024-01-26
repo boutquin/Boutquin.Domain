@@ -182,7 +182,7 @@ public class Result
     /// {
     ///     string userName = GetUserFromDatabase(userId); // Assume this method returns null if user not found
     ///     return Result.Create(userName);
-    ///     // Returns a success result with the user name if found, otherwise a failure result.
+    ///     // Returns a success result with the username if found, otherwise a failure result.
     /// }
     /// </code>
     /// </example>

@@ -12,13 +12,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+namespace Boutquin.UnitTests.Domain;
 
 using System.Diagnostics.CodeAnalysis;
 using Boutquin.Domain.Exceptions;
 using Boutquin.Domain.Helpers;
-using Newtonsoft.Json.Linq;
-
-namespace Boutquin.UnitTests.Domain;
 
 /// <summary>
 /// Test class for the Guard class methods.

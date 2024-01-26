@@ -12,14 +12,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+namespace Boutquin.Domain.Helpers;
+
+// ReSharper disable UnusedMember.Global
 
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
-using Boutquin.Domain.Exceptions;
-// ReSharper disable UnusedMember.Global
-
-namespace Boutquin.Domain.Helpers;
+using Exceptions;
 
 /// <summary>
 /// The Guard class provides a set of static methods to simplify the validation of method arguments and other conditions.

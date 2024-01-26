@@ -12,12 +12,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+namespace Boutquin.Domain.Extensions;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Boutquin.Domain.Helpers;
-
-namespace Boutquin.Domain.Extensions;
+using Helpers;
 
 /// <summary>
 /// Provides extension methods for the <see cref="string"/> class.

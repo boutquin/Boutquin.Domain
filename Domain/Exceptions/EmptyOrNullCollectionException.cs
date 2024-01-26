@@ -12,9 +12,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-
-using System.Runtime.Serialization;
-
 namespace Boutquin.Domain.Exceptions;
 
 /// <summary>
@@ -46,16 +43,6 @@ public sealed class EmptyOrNullCollectionException : Exception
     /// <param name="inner">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
     public EmptyOrNullCollectionException(string message, Exception inner)
         : base(message, inner)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EmptyOrNullCollectionException"/> class with serialized data.
-    /// </summary>
-    /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-    /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
-    private EmptyOrNullCollectionException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }

@@ -12,11 +12,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-
-using Boutquin.Domain.Helpers;
-using FluentValidation.Results;
-
 namespace Boutquin.Validation.Exceptions;
+
+using FluentValidation.Results;
+using Domain.Helpers;
 
 /// <summary>
 /// The exception that is thrown when validation fails in the FluentValidation library.

@@ -12,12 +12,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+namespace Boutquin.Domain.Extensions;
 
 using System.Diagnostics.CodeAnalysis;
-using Boutquin.Domain.Exceptions;
-using Boutquin.Domain.Helpers;
-
-namespace Boutquin.Domain.Extensions;
+using Exceptions;
+using Helpers;
 
 /// <summary>
 /// Provides extension methods for calculating statistical measures on an array of decimal values.
