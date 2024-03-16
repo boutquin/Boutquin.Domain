@@ -51,10 +51,7 @@ public abstract class Entity<TEntityId> : IEntity
     /// Initializes a new instance of the Entity class with the specified identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the entity.</param>
-    protected Entity(TEntityId id)
-    {
-        Id = id;
-    }
+    protected Entity(TEntityId id) => Id = id;
 
     /// <summary>
     /// Initializes a new instance of the Entity class without an identifier.
@@ -72,10 +69,8 @@ public abstract class Entity<TEntityId> : IEntity
     /// Retrieves the list of domain events raised by the entity.
     /// </summary>
     /// <returns>A read-only list of domain events.</returns>
-    public IReadOnlyList<IDomainEvent> GetDomainEvents()
-    {
-        return _domainEvents.ToList();
-    }
+    public IReadOnlyList<IDomainEvent> GetDomainEvents() 
+        => _domainEvents.AsReadOnly();
 
     /// <summary>
     /// Clears the list of domain events.
@@ -83,10 +78,8 @@ public abstract class Entity<TEntityId> : IEntity
     /// <remarks>
     /// This method should typically be called after the domain events have been processed to prevent the events from being processed again.
     /// </remarks>
-    public void ClearDomainEvents()
-    {
-        _domainEvents.Clear();
-    }
+    public void ClearDomainEvents() 
+        => _domainEvents.Clear();
 
     /// <summary>
     /// Raises a domain event.
@@ -95,8 +88,6 @@ public abstract class Entity<TEntityId> : IEntity
     /// <remarks>
     /// This method adds the provided domain event to the list of domain events to be processed.
     /// </remarks>
-    protected void RaiseDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Add(domainEvent);
-    }
+    protected void RaiseDomainEvent(IDomainEvent domainEvent) 
+        => _domainEvents.Add(domainEvent);
 }
