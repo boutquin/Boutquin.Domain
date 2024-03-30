@@ -71,20 +71,19 @@ public class Result
     /// <exception cref="InvalidOperationException">
     /// Thrown if an error is provided for a successful result or no error is provided for a failed result.
     /// </exception>
-    protected internal Result(bool isSuccess, Error error)
+    protected Result(bool isSuccess, Error error)
     {
-        if (isSuccess && error != Error.None)
+        switch (isSuccess)
         {
-            throw new InvalidOperationException("A successful result should not have an error.");
+            case true when error != Error.None:
+                throw new InvalidOperationException("A successful result should not have an error.");
+            case false when error == Error.None:
+                throw new InvalidOperationException("A failed result must have an error.");
+            default:
+                IsSuccess = isSuccess;
+                Error = error;
+                break;
         }
-
-        if (!isSuccess && error == Error.None)
-        {
-            throw new InvalidOperationException("A failed result must have an error.");
-        }
-
-        IsSuccess = isSuccess;
-        Error = error;
     }
 
     /// <summary>
@@ -106,14 +105,16 @@ public class Result
     /// Creates a success result.
     /// </summary>
     /// <returns>A successful result.</returns>
-    public static Result Success() => new(true, Error.None);
+    public static Result Success() 
+        => new(true, Error.None);
 
     /// <summary>
     /// Creates a failure result with the specified error.
     /// </summary>
     /// <param name="error">The error associated with the failure.</param>
     /// <returns>A failed result with the given error.</returns>
-    public static Result Failure(Error error) => new(false, error);
+    public static Result Failure(Error error) 
+        => new(false, error);
 
     /// <summary>
     /// Creates a success result with the specified value.
@@ -134,7 +135,8 @@ public class Result
     /// }
     /// </code>
     /// </example>
-    public static Result<TValue> Success<TValue>(TValue value) => new(value, true, Error.None);
+    public static Result<TValue> Success<TValue>(TValue value) 
+        => new(value, true, Error.None);
 
     /// <summary>
     /// Creates a failure result with the specified error for operations that also produce a value.
@@ -159,7 +161,8 @@ public class Result
     /// }
     /// </code>
     /// </example>
-    public static Result<TValue> Failure<TValue>(Error error) => new(default, false, error);
+    public static Result<TValue> Failure<TValue>(Error error) 
+        => new(default, false, error);
 
     /// <summary>
     /// Creates a result based on the provided value.

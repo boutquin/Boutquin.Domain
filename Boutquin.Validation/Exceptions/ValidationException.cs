@@ -53,8 +53,6 @@ public sealed class ValidationException : Exception
     /// </summary>
     /// <param name="failures">The collection of validation failures.</param>
     /// <returns>A string containing the concatenated error messages.</returns>
-    private static string BuildErrorMessage(IEnumerable<ValidationFailure> failures)
-    {
-        return string.Join(Environment.NewLine, failures.Select(f => f.ErrorMessage));
-    }
+    private static string BuildErrorMessage(IEnumerable<ValidationFailure> failures) 
+        => string.Join(Environment.NewLine, failures.Select(f => f.ErrorMessage));
 }

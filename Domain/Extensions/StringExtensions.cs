@@ -79,7 +79,7 @@ public static class StringExtensions
             return value;
         }
 
-        return char.ToUpper(value[0], CultureInfo.CurrentCulture) + value.Substring(1);
+        return char.ToUpper(value[0], CultureInfo.CurrentCulture) + value[1..];
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public static class StringExtensions
             return value;
         }
 
-        return char.ToLower(value[0], CultureInfo.CurrentCulture) + value.Substring(1);
+        return char.ToLower(value[0], CultureInfo.CurrentCulture) + value[1..];
     }
 
     /// <summary>
@@ -110,10 +110,8 @@ public static class StringExtensions
     /// <param name="strB">The second string to compare.</param>
     /// <param name="comparisonType">One of the enumeration values that specifies the rules for the comparison.</param>
     /// <returns>A signed integer that indicates the relative values of value and strB.</returns>
-    public static int Compare(this string value, string strB, StringComparison comparisonType)
-    {
-        return string.Compare(value, strB, comparisonType);
-    }
+    public static int Compare(this string value, string strB, StringComparison comparisonType) 
+        => string.Compare(value, strB, comparisonType);
 
     /// <summary>
     /// Compares two strings using ordinal (binary) sort rules.
@@ -121,10 +119,8 @@ public static class StringExtensions
     /// <param name="value">The first string to compare.</param>
     /// <param name="strB">The second string to compare.</param>
     /// <returns>A signed integer that indicates the lexical relationship between the two comparands.</returns>
-    public static int CompareOrdinal(this string value, string strB)
-    {
-        return string.CompareOrdinal(value, strB);
-    }
+    public static int CompareOrdinal(this string value, string strB) 
+        => string.CompareOrdinal(value, strB);
 
     /// <summary>
     /// Replaces the format items in a specified string with the string representation of corresponding objects in a specified array.
@@ -132,8 +128,6 @@ public static class StringExtensions
     /// <param name="format">A composite format string.</param>
     /// <param name="args">An object array that contains zero or more objects to format.</param>
     /// <returns>A copy of format in which the format items have been replaced by the string representation of the corresponding objects in args.</returns>
-    public static string Format(this string format, params object[] args)
-    {
-        return string.Format(format, args);
-    }
+    public static string Format(this string format, params object[] args) 
+        => string.Format(format, args);
 }

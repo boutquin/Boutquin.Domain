@@ -21,8 +21,7 @@ namespace Boutquin.UnitTests.Domain;
 public static class DateTimeConverterExtensionsTestData
 {
     public static IEnumerable<object[]> ConvertTimeZoneCases =>
-        new List<object[]>
-        {
+        [
             // Test case 1: Normal case
             new object[] { new DateTime(2023, 3, 28, 12, 0, 0), "UTC", "America/New_York", new DateTime(2023, 3, 28, 8, 0, 0) },
 
@@ -34,5 +33,5 @@ public static class DateTimeConverterExtensionsTestData
 
             // Test case 4: Daylight saving time transition
             new object[] { new DateTime(2023, 3, 10, 2, 0, 0), "America/New_York", "UTC", new DateTime(2023, 3, 10, 7, 0, 0) }
-        };
+        ];
 }

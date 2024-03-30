@@ -129,7 +129,6 @@ public static class Guard
         throw new ArgumentException("At least one element must be provided.", paramName);
     }
 
-
     /// <summary>
     /// Checks if the given array is null or empty and throws an ArgumentException if it is.
     /// </summary>
@@ -781,7 +780,7 @@ public static class Guard
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when the specified exception type doesn't have a constructor that accepts a single string parameter        
-        /// or when the constructor fails to create a valid instance with the provided provided arguments.
+        /// or when the constructor fails to create a valid instance with the provided arguments.
         /// </exception>
         /// <exception cref="TargetInvocationException">
         /// Thrown when the constructor of the specified exception type throws an exception. The actual 

@@ -20,6 +20,16 @@ using static Boutquin.Domain.Extensions.DecimalArrayExtensions;
 
 namespace Boutquin.UnitTests.Domain;
 
+/// <summary>
+/// Contains unit tests for the DecimalArrayExtensions class.
+/// </summary>
+/// <remarks>
+/// This test class provides test cases for the Variance and StandardDeviation methods of the DecimalArrayExtensions class.
+/// It includes tests for various scenarios such as:
+/// - Correct calculation of variance and standard deviation for a given array of decimal values and calculation type.
+/// - Handling of insufficient data for sample calculation when the input array contains only one element.
+/// - Handling of null or empty input arrays.
+/// </remarks>
 public sealed class DecimalArrayExtensionsTests
 {
     private const decimal Precision = 1e-12m;

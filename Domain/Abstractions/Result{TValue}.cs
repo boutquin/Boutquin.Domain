@@ -15,6 +15,7 @@
 namespace Boutquin.Domain.Abstractions;
 
 using System.Diagnostics.CodeAnalysis;
+
 /// <summary>
 /// Represents the outcome of an operation that returns a value, which can be either success or failure.
 /// </summary>
@@ -72,10 +73,8 @@ public class Result<TValue> : Result
     /// <param name="isSuccess">Indicates whether the operation was successful.</param>
     /// <param name="error">The error associated with a failed operation.</param>
     protected internal Result(TValue? value, bool isSuccess, Error error)
-        : base(isSuccess, error)
-    {
+        : base(isSuccess, error) =>
         _value = value;
-    }
 
     /// <summary>
     /// Gets the value of the operation if it was successful.
@@ -87,9 +86,10 @@ public class Result<TValue> : Result
     /// Thrown if attempting to access the value of a failed result.
     /// </exception>
     [NotNull]
-    public TValue Value => IsSuccess
-        ? _value!
-        : throw new InvalidOperationException("The value of a failure result cannot be accessed.");
+    public TValue Value 
+        => IsSuccess
+            ? _value!
+            : throw new InvalidOperationException("The value of a failure result cannot be accessed.");
 
     /// <summary>
     /// Implicitly converts a value to a successful Result&lt;TValue&gt;.

@@ -20,6 +20,13 @@ namespace Boutquin.UnitTests.Domain;
 /// <summary>
 /// Contains unit tests for the <see cref="StringExtensions"/> class.
 /// </summary>
+/// <remarks>
+/// This test class provides test cases for various string extension methods such as:
+/// - IsNullOrEmpty: Tests for null or empty strings.
+/// - IsNullOrWhiteSpace: Tests for null, empty, or whitespace strings.
+/// - ToUppercaseFirst: Tests for converting the first character of a string to uppercase.
+/// - ToLowerCaseFirst: Tests for converting the first character of a string to lowercase.
+/// </remarks>
 public sealed class StringExtensionsTests
 {
     /// <summary>

@@ -27,12 +27,10 @@ public sealed class DateOnlyDictionaryConverterFactory : JsonConverterFactory
     /// </summary>
     /// <param name="typeToConvert">The type of the object to check for compatibility with SortedDictionary&lt;DateOnly, TValue&gt;.</param>
     /// <returns>True if the specified type is compatible with SortedDictionary&lt;DateOnly, TValue&gt;; otherwise, false.</returns>
-    public override bool CanConvert(Type typeToConvert)
-    {
-        return typeToConvert.IsGenericType &&
-               typeToConvert.GetGenericTypeDefinition() == typeof(SortedDictionary<,>) &&
-               typeToConvert.GetGenericArguments()[0] == typeof(DateOnly);
-    }
+    public override bool CanConvert(Type typeToConvert) =>
+        typeToConvert.IsGenericType &&
+        typeToConvert.GetGenericTypeDefinition() == typeof(SortedDictionary<,>) &&
+        typeToConvert.GetGenericArguments()[0] == typeof(DateOnly);
 
     /// <summary>
     /// Creates a JsonConverter that can read and write SortedDictionary&lt;DateOnly, TValue&gt; instances.
@@ -40,12 +38,22 @@ public sealed class DateOnlyDictionaryConverterFactory : JsonConverterFactory
     /// <param name="typeToConvert">The type of the object to create a converter for. Must be SortedDictionary&lt;DateOnly, TValue&gt;.</param>
     /// <param name="options">The serializer options to use for the converter.</param>
     /// <returns>A JsonConverter that can read and write SortedDictionary&lt;DateOnly, TValue&gt; instances.</returns>
+    /// <exception cref="ArgumentException">Thrown when the typeToConvert is not a SortedDictionary&lt;DateOnly, TValue&gt;.</exception>
+    /// <exception cref="MissingMethodException">Thrown when the converter type does not have a constructor that takes a JsonSerializerOptions parameter.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the created converter is null.</exception>
     public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     {
+        if (!CanConvert(typeToConvert))
+        {
+            throw new ArgumentException($"Invalid type to convert: {typeToConvert}.", nameof(typeToConvert));
+        }
+
         var valueType = typeToConvert.GetGenericArguments()[1];
         var converterType = typeof(DateOnlyDictionaryConverter<>).MakeGenericType(valueType);
 
-        return (JsonConverter)Activator.CreateInstance(converterType, options);
+        return Activator.CreateInstance(converterType, options) is not JsonConverter converter
+            ? throw new InvalidOperationException($"The converter for type {converterType} could not be created.")
+            : converter;
     }
 
     /// <summary>
@@ -75,6 +83,7 @@ public sealed class DateOnlyDictionaryConverterFactory : JsonConverterFactory
         /// <param name="typeToConvert">The type of object to convert. Must be SortedDictionary&lt;DateOnly, TValue&gt;.</param>
         /// <param name="options">The serializer options to use for the conversion.</param>
         /// <returns>A SortedDictionary&lt;DateOnly, TValue&gt; instance read from JSON.</returns>
+        /// <exception cref="JsonException">Thrown when the value is null or the JSON is invalid.</exception>
         public override SortedDictionary<DateOnly, TValue> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var dictionary = new SortedDictionary<DateOnly, TValue>();
@@ -89,6 +98,11 @@ public sealed class DateOnlyDictionaryConverterFactory : JsonConverterFactory
                 var key = _dateOnlyConverter.Read(ref reader, typeof(DateOnly), options);
                 reader.Read();
                 var value = _valueConverter.Read(ref reader, typeof(TValue), options);
+
+                if (value == null)
+                {
+                    throw new JsonException("Null value cannot be added to the dictionary.");
+                }
 
                 dictionary.Add(key, value);
             }

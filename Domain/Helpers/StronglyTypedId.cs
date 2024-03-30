@@ -41,5 +41,6 @@ public abstract record StronglyTypedId<TValue>(TValue Value)
     /// debugging, or displaying the identifier in a user interface.
     /// </summary>
     /// <returns>A string that represents the value of the strongly typed ID.</returns>
-    public override sealed string ToString() => $"{Value}";
+    public sealed override string ToString() 
+        => $"{Value}";
 }

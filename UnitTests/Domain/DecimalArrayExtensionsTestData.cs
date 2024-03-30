@@ -17,15 +17,21 @@ using static Boutquin.Domain.Extensions.DecimalArrayExtensions;
 
 namespace Boutquin.UnitTests.Domain;
 
-// DecimalArrayExtensionsTestData.cs
+/// <summary>
+/// Provides test data for the DecimalArrayExtensions unit tests.
+/// </summary>
+/// <remarks>
+/// This class generates two sets of test data:
+/// - VarianceData: Provides decimal arrays along with their expected variance values for both population and sample calculation types.
+/// - StandardDeviationData: Provides decimal arrays along with their expected standard deviation values for both population and sample calculation types.
+/// </remarks>
 public sealed class DecimalArrayExtensionsTestData
 {
     /// <summary>
     /// Gets a collection of test cases containing varied decimal arrays and their corresponding variance values.
     /// </summary>
     public static IEnumerable<object[]> VarianceData =>
-        new List<object[]>
-        {
+        [
         // CalculationType.Population
         new object[] { new[] { 1m, 2m, 3m, 4m, 5m }, CalculationType.Population, 2m },
         new object[] { new[] { 10m, 20m, 30m, 40m, 50m }, CalculationType.Population, 200m },
@@ -41,14 +47,13 @@ public sealed class DecimalArrayExtensionsTestData
         new object[] { new[] { 0.01m, 0.02m, 0.03m, 0.04m, 0.05m }, CalculationType.Sample, 0.00025m },
         new object[] { new[] { -1000m, 0m, 1000m }, CalculationType.Sample, 1000000m },
         new object[] { new[] { 100m, 200m, 300m, 400m, 500m, 600m, 700m }, CalculationType.Sample, 46666.666666666666666666666667m },
-        };
+        ];
 
     /// <summary>
     /// Gets a collection of test cases containing varied decimal arrays and their corresponding standard deviation values.
     /// </summary>
     public static IEnumerable<object[]> StandardDeviationData =>
-        new List<object[]>
-        {
+        [
         // CalculationType.Population
         new object[] { new[] { 1m, 2m, 3m, 4m, 5m }, CalculationType.Population, 1.414213562373095m },
         new object[] { new[] { 10m, 20m, 30m, 40m, 50m }, CalculationType.Population, 14.14213562373095m },
@@ -64,5 +69,5 @@ public sealed class DecimalArrayExtensionsTestData
         new object[] { new[] { 0.01m, 0.02m, 0.03m, 0.04m, 0.05m }, CalculationType.Sample, 0.015811388300m },
         new object[] { new[] { -1000m, 0m, 1000m }, CalculationType.Sample, 1000m },
         new object[] { new[] { 100m, 200m, 300m, 400m, 500m, 600m, 700m }, CalculationType.Sample, 216.024689946929m },
-        };
+        ];
 }

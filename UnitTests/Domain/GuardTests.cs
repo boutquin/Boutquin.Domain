@@ -19,8 +19,18 @@ using Boutquin.Domain.Exceptions;
 using Boutquin.Domain.Helpers;
 
 /// <summary>
-/// Test class for the Guard class methods.
+/// Contains unit tests for the Guard class.
 /// </summary>
+/// <remarks>
+/// This test class provides test cases for various guard methods such as:
+/// - AgainstNull: Tests for null values.
+/// - AgainstNullOrEmptyArray: Tests for null or empty arrays.
+/// - AgainstEmptyOrNullCollection: Tests for null or empty collections.
+/// - AgainstEmptyOrNullDictionary: Tests for null or empty dictionaries.
+/// - AgainstNullOrEmpty: Tests for null or empty strings.
+/// - AgainstNonEnumType: Tests for non-enum types.
+/// - With: Tests for conditions that should throw exceptions.
+/// </remarks>
 public sealed class GuardTests
 {
     /// <summary>
@@ -59,6 +69,41 @@ public sealed class GuardTests
 
         // Assert
         act.Should().NotThrow();
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullEnumerable method throws an exception when the enumerable is null.
+    /// </summary>
+    [Fact]
+    public void AgainstEmptyOrNullEnumerable_WhenEnumerableIsNull_ThrowsArgumentException()
+    {
+        IEnumerable<int> nullEnumerable = null;
+
+        Assert.Throws<ArgumentException>(() => Guard.AgainstEmptyOrNullEnumerable(() => nullEnumerable));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullEnumerable method throws an exception when the enumerable is empty.
+    /// </summary>
+    [Fact]
+    public void AgainstEmptyOrNullEnumerable_WhenEnumerableIsEmpty_ThrowsInvalidOperationException()
+    {
+        var emptyEnumerable = new List<int>();
+
+        Assert.Throws<InvalidOperationException>(() => Guard.AgainstEmptyOrNullEnumerable(() => emptyEnumerable));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullEnumerable method does not throw an exception when the enumerable is not empty.
+    /// </summary>
+    [Fact]
+    public void AgainstEmptyOrNullEnumerable_WhenEnumerableIsNotEmpty_DoesNotThrow()
+    {
+        IEnumerable<int> notEmptyEnumerable = [1];
+
+        var exception = Record.Exception(() => Guard.AgainstEmptyOrNullEnumerable(() => notEmptyEnumerable.ToArray()));
+
+        Assert.Null(exception);
     }
 
     /// <summary>
@@ -113,7 +158,9 @@ public sealed class GuardTests
         act.Should().Throw<EmptyOrNullArrayException>().WithMessage($"Parameter '{nameof(emptyArray)}' cannot be null or an empty array.");
     }
 
-
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullCollection method does not throw an exception when the collection is not null or empty.
+    /// </summary>
     [Fact]
     public void AgainstEmptyOrNullCollection_WhenCollectionIsNotNullOrEmpty_DoesNotThrow()
     {
@@ -127,6 +174,9 @@ public sealed class GuardTests
         act.Should().NotThrow();
     }
 
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullCollection method throws an EmptyOrNullCollectionException when the collection is null.
+    /// </summary>
     [Fact]
     public void AgainstEmptyOrNullCollection_WhenCollectionIsNull_ThrowsEmptyOrNullCollectionException()
     {
@@ -144,6 +194,9 @@ public sealed class GuardTests
         act.Should().Throw<EmptyOrNullCollectionException>().WithMessage($"Parameter '{nameof(nullList)}' cannot be null or an empty collection.");
     }
 
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullCollection method throws an EmptyOrNullCollectionException when the collection is empty.
+    /// </summary>
     [Fact]
     public void AgainstEmptyOrNullCollection_WhenCollectionIsEmpty_ThrowsEmptyOrNullCollectionException()
     {
@@ -210,6 +263,41 @@ public sealed class GuardTests
     }
 
     /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullReadOnlyDictionary method throws an exception when the dictionary is null.
+    /// </summary>
+    [Fact]
+    public void AgainstEmptyOrNullReadOnlyDictionary_WhenDictionaryIsNull_ThrowsEmptyOrNullDictionaryException()
+    {
+        IReadOnlyDictionary<int, string> nullDictionary = null;
+
+        Assert.Throws<EmptyOrNullDictionaryException>(() => Guard.AgainstEmptyOrNullReadOnlyDictionary(() => nullDictionary));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullReadOnlyDictionary method throws an exception when the dictionary is empty.
+    /// </summary>
+    [Fact]
+    public void AgainstEmptyOrNullReadOnlyDictionary_WhenDictionaryIsEmpty_ThrowsEmptyOrNullDictionaryException()
+    {
+        var emptyDictionary = new Dictionary<int, string>();
+
+        Assert.Throws<EmptyOrNullDictionaryException>(() => Guard.AgainstEmptyOrNullReadOnlyDictionary(() => emptyDictionary));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstEmptyOrNullReadOnlyDictionary method does not throw an exception when the dictionary is not empty.
+    /// </summary>
+    [Fact]
+    public void AgainstEmptyOrNullReadOnlyDictionary_WhenDictionaryIsNotEmpty_DoesNotThrow()
+    {
+        var notEmptyDictionary = new Dictionary<int, string> { { 1, "value" } };
+
+        var exception = Record.Exception(() => Guard.AgainstEmptyOrNullReadOnlyDictionary(() => notEmptyDictionary));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
     /// Tests that the Guard.AgainstNullOrEmpty method throws an ArgumentException when the value is null.
     /// </summary>
     [Fact]
@@ -263,7 +351,12 @@ public sealed class GuardTests
         act.Should().NotThrow();
     }
 
-    // Define a sample enum for testing purposes
+    /// <summary>
+    /// Defines the SampleEnum enumeration.
+    /// </summary>
+    /// <remarks>
+    /// This enumeration represents different sample values that can be used for testing purposes.
+    /// </remarks>
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private enum SampleEnum
     {
@@ -272,7 +365,12 @@ public sealed class GuardTests
         Value3
     }
 
-    // Define a non-enum type for testing purposes
+    /// <summary>
+    /// Defines a sample class for testing purposes.
+    /// </summary>
+    /// <remarks>
+    /// This class is used in the GuardTests to test the AgainstNonEnumType method.
+    /// </remarks>
     // ReSharper disable once ClassNeverInstantiated.Local
     private class SampleClass
     {
@@ -304,6 +402,54 @@ public sealed class GuardTests
         act.Should()
             .Throw<ArgumentException>()
             .WithMessage($"The type parameter '{nameof(SampleClass)}' must be an enum.");
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNull method throws an ArgumentNullException when the argument is null.
+    /// </summary>
+    [Fact]
+    public void AgainstNull_WhenArgumentIsNull_ThrowsArgumentNullException()
+    {
+        object nullObject = null;
+
+        Assert.Throws<ArgumentNullException>(() => Guard.AgainstNull(() => nullObject));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNull method does not throw an exception when the argument is not null.
+    /// </summary>
+    [Fact]
+    public void AgainstNull_WhenArgumentIsNotNull_DoesNotThrow()
+    {
+        var notNullObject = new object();
+
+        var exception = Record.Exception(() => Guard.AgainstNull(() => notNullObject));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrEmptyArray method throws an EmptyOrNullArrayException when the array is null.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrEmptyArray_WhenArrayIsNull_ThrowsEmptyOrNullArrayException()
+    {
+        int[] nullArray = null;
+
+        Assert.Throws<EmptyOrNullArrayException>(() => Guard.AgainstNullOrEmptyArray(() => nullArray));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrEmptyArray method does not throw an exception when the array is not empty.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrEmptyArray_WhenArrayIsNotEmpty_DoesNotThrow()
+    {
+        var notEmptyArray = new int[1];
+
+        var exception = Record.Exception(() => Guard.AgainstNullOrEmptyArray(() => notEmptyArray));
+
+        Assert.Null(exception);
     }
 
     /// <summary>
@@ -409,5 +555,29 @@ public sealed class GuardTests
         // Assert
         act.Should().Throw<InvalidOperationException>()
             .WithMessage($"The exception type '{typeof(ExceptionWithoutStringConstructor).FullName}' must have a constructor that accepts a single string parameter.");
+    }
+
+    /// <summary>
+    /// Tests that the GuardCondition.With method throws the specified exception when the condition is true.
+    /// </summary>
+    [Fact]
+    public void GenericWith_WhenConditionIsTrue_ThrowsSpecifiedException()
+    {
+        var guardCondition = Guard.Against(true);
+
+        Assert.Throws<InvalidOperationException>(() => guardCondition.With<InvalidOperationException>());
+    }
+
+    /// <summary>
+    /// Tests that the GuardCondition.With method does not throw an exception when the condition is false.
+    /// </summary>
+    [Fact]
+    public void GenericWith_WhenConditionIsFalse_DoesNotThrow()
+    {
+        var guardCondition = Guard.Against(false);
+
+        var exception = Record.Exception(() => guardCondition.With<InvalidOperationException>());
+
+        Assert.Null(exception);
     }
 }

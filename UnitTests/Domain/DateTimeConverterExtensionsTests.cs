@@ -12,11 +12,20 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+namespace Boutquin.UnitTests.Domain;
 
 using Boutquin.Domain.Extensions;
 
-namespace Boutquin.UnitTests.Domain;
-
+/// <summary>
+/// Contains unit tests for the DateTimeConverterExtensions class.
+/// </summary>
+/// <remarks>
+/// This test class provides test cases for the ConvertTimeZone method of the DateTimeConverterExtensions class.
+/// It includes tests for various scenarios such as:
+/// - Valid conversion of date and time from one time zone to another.
+/// - Handling of null target time zone identifier.
+/// - Handling of invalid source and target time zone identifiers.
+/// </remarks>
 public sealed class DateTimeConverterExtensionsTests
 {
     /// <summary>

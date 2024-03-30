@@ -45,13 +45,14 @@ namespace Boutquin.Domain.Abstractions;
 /// </example>
 public abstract class Entity<TEntityId> : IEntity
 {
-    private readonly List<IDomainEvent> _domainEvents = new();
+    private readonly List<IDomainEvent> _domainEvents = [];
 
     /// <summary>
     /// Initializes a new instance of the Entity class with the specified identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the entity.</param>
-    protected Entity(TEntityId id) => Id = id;
+    protected Entity(TEntityId id) 
+        => Id = id;
 
     /// <summary>
     /// Initializes a new instance of the Entity class without an identifier.
