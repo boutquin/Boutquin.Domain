@@ -298,6 +298,80 @@ public sealed class GuardTests
     }
 
     /// <summary>
+    /// Tests that the Guard.AgainstNegative method throws an exception when the number is negative.
+    /// </summary>
+    [Fact]
+    public void AgainstNegative_WhenNumberIsNegative_ThrowsException()
+    {
+        int negativeNumber = -1;
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNegative(() => negativeNumber));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNegative method does not throw an exception when the number is not negative.
+    /// </summary>
+    [Fact]
+    public void AgainstNegative_WhenNumberIsNotNegative_DoesNotThrow()
+    {
+        int notNegativeNumber = 1;
+
+        var exception = Record.Exception(() => Guard.AgainstNegative(() =>notNegativeNumber));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstOutOfRange method throws an exception when the number is out of range.
+    /// </summary>
+    [Fact]
+    public void AgainstOutOfRange_WhenNumberIsOutOfRange_ThrowsException()
+    {
+        int outOfRangeNumber = 11;
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstOutOfRange(() => outOfRangeNumber, 1, 10));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstOutOfRange method does not throw an exception when the number is within range.
+    /// </summary>
+    [Fact]
+    public void AgainstOutOfRange_WhenNumberIsWithinRange_DoesNotThrow()
+    {
+        int withinRangeNumber = 5;
+
+        var exception = Record.Exception(() => Guard.AgainstOutOfRange(() => withinRangeNumber, 1, 10));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNegativeOrZero method throws an ArgumentOutOfRangeException when the number is negative or zero.
+    /// </summary>
+    [Fact]
+    public void AgainstNegativeOrZero_WhenNumberIsNegativeOrZero_ThrowsException()
+    {
+        int negativeNumber = -1;
+        int zeroNumber = 0;
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNegativeOrZero(() => negativeNumber));
+        Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNegativeOrZero(() => zeroNumber));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNegativeOrZero method does not throw an exception when the number is positive.
+    /// </summary>
+    [Fact]
+    public void AgainstNegativeOrZero_WhenNumberIsPositive_DoesNotThrow()
+    {
+        int positiveNumber = 1;
+
+        var exception = Record.Exception(() => Guard.AgainstNegativeOrZero(() => positiveNumber));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
     /// Tests that the Guard.AgainstNullOrEmpty method throws an ArgumentException when the value is null.
     /// </summary>
     [Fact]
@@ -352,6 +426,126 @@ public sealed class GuardTests
     }
 
     /// <summary>
+    /// Tests that the Guard.AgainstNullOrWhiteSpace method throws an exception when the string is null or whitespace.
+    /// </summary>
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void AgainstNullOrWhiteSpace_WhenStringIsNullOrWhiteSpace_ThrowsException(string value)
+    {
+        Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpace(() => value));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrWhiteSpace method does not throw an exception when the string is not null or whitespace.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrWhiteSpace_WhenStringIsNotNullOrWhiteSpace_DoesNotThrow()
+    {
+        string value = "test";
+
+        var exception = Record.Exception(() => Guard.AgainstNullOrWhiteSpace(() => value));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstOverflow method throws an exception when the string length is greater than the max length.
+    /// </summary>
+    [Fact]
+    public void AgainstOverflow_WhenStringLengthIsGreaterThanMaxLength_ThrowsException()
+    {
+        string value = "this is a very long string";
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstOverflow(() => value, 10));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstOverflow method does not throw an exception when the string length is less than or equal to the max length.
+    /// </summary>
+    [Fact]
+    public void AgainstOverflow_WhenStringLengthIsLessThanOrEqualToMaxLength_DoesNotThrow()
+    {
+        string value = "short";
+
+        var exception = Record.Exception(() => Guard.AgainstOverflow(() => value, 10));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrEmptyAndOverflow method throws an exception when the string is null, or empty.
+    /// </summary>
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void AgainstNullOrEmptyAndOverflow_WhenStringIsNullOrEmpty_ThrowsException(string value)
+    {
+        Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrEmptyAndOverflow(() => value, 10));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrEmptyAndOverflow method throws an exception when the string exceeds the max length.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrEmptyAndOverflow_WhenOverflow_ThrowsException()
+    {
+        string value = "this is a very long string";
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNullOrEmptyAndOverflow(() => value, 10));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrEmptyAndOverflow method does not throw an exception when the string is not null, not empty and does not exceed the max length.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrEmptyAndOverflow_WhenStringIsValid_DoesNotThrow()
+    {
+        string value = "test";
+
+        var exception = Record.Exception(() => Guard.AgainstNullOrEmptyAndOverflow(() => value, 10));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrWhiteSpaceAndOverflow method throws an exception when the string is null, or whitespace.
+    /// </summary>
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void AgainstNullOrWhiteSpaceAndOverflow_WhenStringIsNullOrWhiteSpaceOrOverflow_ThrowsException(string value)
+    {
+        Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpaceAndOverflow(() => value, 10));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrWhiteSpaceAndOverflow method throws an exception when the string exceeds the max length.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrWhiteSpaceAndOverflow_WhenOverflow_ThrowsException()
+    {
+        string value = "this is a very long string";
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNullOrWhiteSpaceAndOverflow(() => value, 10));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstNullOrWhiteSpaceAndOverflow method does not throw an exception when the string is not null, not whitespace and does not exceed the max length.
+    /// </summary>
+    [Fact]
+    public void AgainstNullOrWhiteSpaceAndOverflow_WhenStringIsValid_DoesNotThrow()
+    {
+        string value = "test";
+
+        var exception = Record.Exception(() => Guard.AgainstNullOrWhiteSpaceAndOverflow(() => value, 10));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
     /// Defines the SampleEnum enumeration.
     /// </summary>
     /// <remarks>
@@ -373,6 +567,7 @@ public sealed class GuardTests
     /// </remarks>
     // ReSharper disable once ClassNeverInstantiated.Local
     private class SampleClass
+    // ReSharper disable once RedundantTypeDeclarationBody
     {
     }
 
@@ -402,6 +597,30 @@ public sealed class GuardTests
         act.Should()
             .Throw<ArgumentException>()
             .WithMessage($"The type parameter '{nameof(SampleClass)}' must be an enum.");
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstUndefinedEnumValue method throws an exception when the enum value is undefined.
+    /// </summary>
+    [Fact]
+    public void AgainstUndefinedEnumValue_WhenEnumValueIsUndefined_ThrowsException()
+    {
+        DayOfWeek undefinedEnumValue = (DayOfWeek)8;
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstUndefinedEnumValue(() => undefinedEnumValue));
+    }
+
+    /// <summary>
+    /// Tests that the Guard.AgainstUndefinedEnumValue method does not throw an exception when the enum value is defined.
+    /// </summary>
+    [Fact]
+    public void AgainstUndefinedEnumValue_WhenEnumValueIsDefined_DoesNotThrow()
+    {
+        DayOfWeek definedEnumValue = DayOfWeek.Monday;
+
+        var exception = Record.Exception(() => Guard.AgainstUndefinedEnumValue(() => definedEnumValue));
+
+        Assert.Null(exception);
     }
 
     /// <summary>
@@ -577,6 +796,58 @@ public sealed class GuardTests
         var guardCondition = Guard.Against(false);
 
         var exception = Record.Exception(() => guardCondition.With<InvalidOperationException>());
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
+    /// Tests that the GuardCondition.With method throws the specified exception with the provided arguments when the condition is true.
+    /// </summary>
+    [Fact]
+    public void StringWithArgs_WhenConditionIsTrue_ThrowsSpecifiedExceptionWithArgs()
+    {
+        var guardCondition = Guard.Against(true);
+        const string ExpectedMessage = "Invalid argument";
+
+        var exception = Assert.Throws<ArgumentException>(() => guardCondition.With<ArgumentException>(ExpectedMessage, "arg1"));
+        Assert.Equal(ExpectedMessage, exception.Message);
+    }
+
+    /// <summary>
+    /// Tests that the GuardCondition.With method does not throw an exception when the condition is false.
+    /// </summary>
+    [Fact]
+    public void StringWithArgs_WhenConditionIsFalse_DoesNotThrow()
+    {
+        var guardCondition = Guard.Against(false);
+
+        var exception = Record.Exception(() => guardCondition.With<ArgumentException>("Invalid argument", "arg1"));
+
+        Assert.Null(exception);
+    }
+
+    /// <summary>
+    /// Tests that the GuardCondition.With method throws the specified exception with the provided arguments when the condition is true.
+    /// </summary>
+    [Fact]
+    public void WithArgs_WhenConditionIsTrue_ThrowsSpecifiedExceptionWithArgs()
+    {
+        var guardCondition = Guard.Against(true);
+
+        var exception = Assert.Throws<ArgumentException>(() => guardCondition.With<ArgumentException>(["arg1", "arg2"]));
+        Assert.Contains("arg1", exception.Message);
+        Assert.Contains("arg2", exception.Message);
+    }
+
+    /// <summary>
+    /// Tests that the GuardCondition.With method does not throw an exception when the condition is false.
+    /// </summary>
+    [Fact]
+    public void WithArgs_WhenConditionIsFalse_DoesNotThrow()
+    {
+        var guardCondition = Guard.Against(false);
+
+        var exception = Record.Exception(() => guardCondition.With<ArgumentException>(["arg1", "arg2"]));
 
         Assert.Null(exception);
     }

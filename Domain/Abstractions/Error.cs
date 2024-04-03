@@ -53,7 +53,7 @@ public record Error(string Code, string Name)
     /// <remarks>
     /// This static member can be used to represent a lack of errors, or a successful operation.
     /// </remarks>
-    public static Error None = new(string.Empty, string.Empty);
+    public static readonly Error None = new(string.Empty, string.Empty);
 
     /// <summary>
     /// Represents an error caused by a null value.
@@ -61,5 +61,5 @@ public record Error(string Code, string Name)
     /// <remarks>
     /// This static member can be used when a null value is provided where it is not allowed.
     /// </remarks>
-    public static Error NullValue = new("Error.NullValue", "Null value was provided");
+    public static readonly Error NullValue = new("Error.NullValue", "Null value was provided");
 }

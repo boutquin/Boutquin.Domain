@@ -51,9 +51,7 @@ public sealed class DateOnlyDictionaryConverterFactory : JsonConverterFactory
         var valueType = typeToConvert.GetGenericArguments()[1];
         var converterType = typeof(DateOnlyDictionaryConverter<>).MakeGenericType(valueType);
 
-        return Activator.CreateInstance(converterType, options) is not JsonConverter converter
-            ? throw new InvalidOperationException($"The converter for type {converterType} could not be created.")
-            : converter;
+        return Activator.CreateInstance(converterType, options) as JsonConverter ?? throw new InvalidOperationException($"The converter for type {converterType} could not be created.");
     }
 
     /// <summary>
