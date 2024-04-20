@@ -77,8 +77,10 @@ public sealed class GuardTests
     [Fact]
     public void AgainstEmptyOrNullEnumerable_WhenEnumerableIsNull_ThrowsArgumentException()
     {
+        // Arrange
         IEnumerable<int> nullEnumerable = null;
 
+        // Act & Assert
         Assert.Throws<ArgumentException>(() => Guard.AgainstEmptyOrNullEnumerable(() => nullEnumerable));
     }
 
@@ -86,11 +88,17 @@ public sealed class GuardTests
     /// Tests that the Guard.AgainstEmptyOrNullEnumerable method throws an exception when the enumerable is empty.
     /// </summary>
     [Fact]
-    public void AgainstEmptyOrNullEnumerable_WhenEnumerableIsEmpty_ThrowsInvalidOperationException()
+    public void AgainstEmptyOrNullEnumerable_WhenEnumerableIsEmpty_ThrowsArgumentException()
     {
+        // Arrange
         var emptyEnumerable = new List<int>();
 
-        Assert.Throws<InvalidOperationException>(() => Guard.AgainstEmptyOrNullEnumerable(() => emptyEnumerable));
+        // Act
+        // Expecting ArgumentException instead of InvalidOperationException.
+        var exception = Record.Exception(() => Guard.AgainstEmptyOrNullEnumerable(() => emptyEnumerable));
+
+        // Assert
+        Assert.IsType<ArgumentException>(exception);
     }
 
     /// <summary>
@@ -99,10 +107,14 @@ public sealed class GuardTests
     [Fact]
     public void AgainstEmptyOrNullEnumerable_WhenEnumerableIsNotEmpty_DoesNotThrow()
     {
-        IEnumerable<int> notEmptyEnumerable = [1];
+        // Arrange
+        IEnumerable<int> notEmptyEnumerable = new List<int> { 1 };
 
-        var exception = Record.Exception(() => Guard.AgainstEmptyOrNullEnumerable(() => notEmptyEnumerable.ToArray()));
+        // Act
+        // Ensure direct member access for compatibility with ExtractParameterInfo
+        var exception = Record.Exception(() => Guard.AgainstEmptyOrNullEnumerable(() => notEmptyEnumerable));
 
+        // Assert
         Assert.Null(exception);
     }
 

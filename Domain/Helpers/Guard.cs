@@ -89,7 +89,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNull<T>(Func<T> valueExpression) where T : class
+    public static void AgainstNull<T>(Expression<Func<T>> valueExpression) where T : class
     {
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
@@ -116,7 +116,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstEmptyOrNullEnumerable<T>(Func<IEnumerable<T>>enumerableExpression)
+    public static void AgainstEmptyOrNullEnumerable<T>(Expression<Func<IEnumerable<T>>>enumerableExpression)
     {
         // Get the array value and extract the parameter name from the expression
         var (enumerable, paramName) = ExtractParameterInfo(enumerableExpression);
@@ -145,7 +145,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNullOrEmptyArray<T>(Func<T[]> valueExpression)
+    public static void AgainstNullOrEmptyArray<T>(Expression<Func<T[]>> valueExpression)
     {
         // Get the array value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
@@ -266,7 +266,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNullOrEmpty(Func<string> valueExpression)
+    public static void AgainstNullOrEmpty(Expression<Func<string>> valueExpression)
     {
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
@@ -297,7 +297,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNullOrWhiteSpace(Func<string> valueExpression)
+    public static void AgainstNullOrWhiteSpace(Expression<Func<string>> valueExpression)
     {
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
@@ -335,7 +335,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstOverflow(Func<string> valueExpression, int maxLength)
+    public static void AgainstOverflow(Expression<Func<string>> valueExpression, int maxLength)
     {
         // Ensure maxLength is greater than zero
         AgainstNegativeOrZero(() => maxLength);
@@ -371,7 +371,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNullOrEmptyAndOverflow(Func<string> valueExpression, int maxLength)
+    public static void AgainstNullOrEmptyAndOverflow(Expression<Func<string>> valueExpression, int maxLength)
     {
         // Ensure maxLength is greater than zero
         AgainstNegativeOrZero(() => maxLength);
@@ -421,7 +421,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNullOrWhiteSpaceAndOverflow(Func<string> valueExpression, int maxLength)
+    public static void AgainstNullOrWhiteSpaceAndOverflow(Expression<Func<string>> valueExpression, int maxLength)
     {
         // Ensure maxLength is greater than zero
         AgainstNegativeOrZero(() => maxLength);
@@ -464,7 +464,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNegative<T>(Func<T> valueExpression) where T : IComparable<T>
+    public static void AgainstNegative<T>(Expression<Func<T>> valueExpression) where T : IComparable<T>
     {
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
@@ -501,7 +501,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNegativeOrZero<T>(Func<T> valueExpression) where T : IComparable<T>
+    public static void AgainstNegativeOrZero<T>(Expression<Func<T>> valueExpression) where T : IComparable<T>
     {
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
@@ -558,7 +558,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstUndefinedEnumValue<T>(Func<T> valueExpression) where T : Enum
+    public static void AgainstUndefinedEnumValue<T>(Expression<Func<T>> valueExpression) where T : Enum
     {
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
@@ -607,7 +607,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstOutOfRange<T>(Func<T> valueExpression, T min, T max) where T : IComparable<T>
+    public static void AgainstOutOfRange<T>(Expression<Func<T>> valueExpression, T min, T max) where T : IComparable<T>
     {
         // Validate parameters
         Against(min.CompareTo(max) >= 0)
@@ -949,33 +949,41 @@ public static class Guard
     }
 
     /// <summary>
-    /// Extracts the parameter value and parameter name from the given <see cref="Func{T}"/> expression.
+    /// Extracts the parameter value and name from a given expression.
+    /// This method uses expression trees to parse and evaluate the provided lambda,
+    /// enabling extraction of both the value and the name of the member (field or property) being accessed.
     /// </summary>
-    /// <typeparam name="T">The type of the value. Must be a reference type.</typeparam>
-    /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value whose name and value to retrieve.</param>
-    /// <returns>A tuple containing the extracted parameter value and parameter name.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression"/>.
-    /// </exception>
-    private static (T value, string paramName) ExtractParameterInfo<T>(Func<T> valueExpression)
+    /// <typeparam name="T">The type of the value expected from the expression.</typeparam>
+    /// <param name="valueExpression">The expression from which to extract value and parameter name.</param>
+    /// <returns>A tuple containing the value and the name of the parameter accessed in the expression.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the expression does not represent a direct access to a member or the expression is null.</exception>
+    private static (T value, string paramName) ExtractParameterInfo<T>(Expression<Func<T>> valueExpression)
     {
-        // Check if the expression's target is null
-        if (valueExpression.Target == null)
+        // Check if the provided expression is null, which is not allowed
+        if (valueExpression == null)
         {
-            throw new InvalidOperationException("Could not extract the parameter information from the expression.");
+            throw new InvalidOperationException("Expression cannot be null.");
         }
 
-        // Get the value from the expression
-        var value = valueExpression();
+        // Attempt to find a MemberExpression within the expression tree.
+        // A MemberExpression represents accessing a field or property.
+        var memberExpr = valueExpression.Body as MemberExpression;
 
-        // Try to find the field with the same type as the value
-        var fieldInfo = valueExpression.Target.GetType().GetFields().FirstOrDefault(field => field.FieldType == typeof(T))
-            ?? throw new InvalidOperationException("Could not extract the parameter information from the expression.");
+        // If the body of the expression is not a MemberExpression, it means the expression does not directly access a member.
+        // We throw an exception because the method is designed to work only with direct member access expressions.
+        if (memberExpr == null)
+            throw new InvalidOperationException("Could not extract the parameter information from the expression. The expression must directly access a member (property or field).");
 
-        // Return the name of the field and the value as a tuple
-        return (value, fieldInfo.Name);
+        // Compile the expression to a delegate and invoke it to evaluate and retrieve the actual value.
+        // Compiling the expression allows us to execute it and obtain the runtime value of the member it accesses.
+        var compiledExpression = valueExpression.Compile();
+        var value = compiledExpression();
+
+        // Return the evaluated value along with the name of the member being accessed.
+        // This name is used to identify the parameter in error messages or other logging.
+        return (value, memberExpr.Member.Name);
     }
-
+        
     /// <summary>
     /// Checks if the given string is null or empty and throws an <see cref="ArgumentException"/> if it is.
     /// </summary>
