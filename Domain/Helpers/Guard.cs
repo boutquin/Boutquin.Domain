@@ -135,6 +135,45 @@ public static class Guard
     }
 
     /// <summary>
+    /// Checks if the given value is either null (for reference types) or default (for value types) and throws an appropriate exception if it is.
+    /// </summary>
+    /// <typeparam name="T">The type of the value being checked.</typeparam>
+    /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value to check.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when the given value is null for reference types.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the given value is the default value for value types.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression"/>.
+    /// </exception>
+    /// <example>
+    /// <code>
+    /// public void ProcessData(int data)
+    /// {
+    ///     Guard.AgainstNullOrDefault(() => data);
+    ///     // ... rest of the method
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstNullOrDefault<T>(Expression<Func<T>> valueExpression)
+    {
+        // Get the value and extract the parameter name from the expression
+        var (value, paramName) = ExtractParameterInfo(valueExpression);
+
+        if (value is null)
+        {
+            throw new ArgumentNullException(paramName, $"Parameter '{paramName}' cannot be null.");
+        }
+
+        if (EqualityComparer<T>.Default.Equals(value, default))
+        {
+            throw new ArgumentException($"Parameter '{paramName}' cannot be the default value.", paramName);
+        }
+    }
+
+    /// <summary>
     /// Throws an <see cref="ArgumentException"/> if the specified enumerable is null or empty.
     /// </summary>
     /// <typeparam name="T">The type of elements in the enumerable.</typeparam>
