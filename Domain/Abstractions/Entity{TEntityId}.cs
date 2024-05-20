@@ -31,7 +31,7 @@ namespace Boutquin.Domain.Abstractions;
 /// <example>
 /// Example of an entity inheriting from Entity:
 /// <code>
-/// public class Order : Entity&lt;int&gt;
+/// public sealed class Order : Entity&lt;int&gt;
 /// {
 ///     public Order(int id) : base(id) { }
 ///

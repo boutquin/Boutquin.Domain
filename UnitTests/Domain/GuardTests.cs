@@ -14,10 +14,6 @@
 //
 namespace Boutquin.UnitTests.Domain;
 
-using System.Diagnostics.CodeAnalysis;
-using Boutquin.Domain.Exceptions;
-using Boutquin.Domain.Helpers;
-
 /// <summary>
 /// Contains unit tests for the Guard class.
 /// </summary>
@@ -315,7 +311,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNegative_WhenNumberIsNegative_ThrowsException()
     {
-        int negativeNumber = -1;
+        var negativeNumber = -1;
 
         Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNegative(() => negativeNumber));
     }
@@ -326,7 +322,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNegative_WhenNumberIsNotNegative_DoesNotThrow()
     {
-        int notNegativeNumber = 1;
+        var notNegativeNumber = 1;
 
         var exception = Record.Exception(() => Guard.AgainstNegative(() =>notNegativeNumber));
 
@@ -339,7 +335,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstOutOfRange_WhenNumberIsOutOfRange_ThrowsException()
     {
-        int outOfRangeNumber = 11;
+        var outOfRangeNumber = 11;
 
         Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstOutOfRange(() => outOfRangeNumber, 1, 10));
     }
@@ -350,7 +346,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstOutOfRange_WhenNumberIsWithinRange_DoesNotThrow()
     {
-        int withinRangeNumber = 5;
+        var withinRangeNumber = 5;
 
         var exception = Record.Exception(() => Guard.AgainstOutOfRange(() => withinRangeNumber, 1, 10));
 
@@ -363,8 +359,8 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNegativeOrZero_WhenNumberIsNegativeOrZero_ThrowsException()
     {
-        int negativeNumber = -1;
-        int zeroNumber = 0;
+        var negativeNumber = -1;
+        var zeroNumber = 0;
 
         Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNegativeOrZero(() => negativeNumber));
         Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNegativeOrZero(() => zeroNumber));
@@ -376,7 +372,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNegativeOrZero_WhenNumberIsPositive_DoesNotThrow()
     {
-        int positiveNumber = 1;
+        var positiveNumber = 1;
 
         var exception = Record.Exception(() => Guard.AgainstNegativeOrZero(() => positiveNumber));
 
@@ -455,7 +451,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNullOrWhiteSpace_WhenStringIsNotNullOrWhiteSpace_DoesNotThrow()
     {
-        string value = "test";
+        var value = "test";
 
         var exception = Record.Exception(() => Guard.AgainstNullOrWhiteSpace(() => value));
 
@@ -468,7 +464,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstOverflow_WhenStringLengthIsGreaterThanMaxLength_ThrowsException()
     {
-        string value = "this is a very long string";
+        var value = "this is a very long string";
 
         Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstOverflow(() => value, 10));
     }
@@ -479,7 +475,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstOverflow_WhenStringLengthIsLessThanOrEqualToMaxLength_DoesNotThrow()
     {
-        string value = "short";
+        var value = "short";
 
         var exception = Record.Exception(() => Guard.AgainstOverflow(() => value, 10));
 
@@ -503,7 +499,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNullOrEmptyAndOverflow_WhenOverflow_ThrowsException()
     {
-        string value = "this is a very long string";
+        var value = "this is a very long string";
 
         Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNullOrEmptyAndOverflow(() => value, 10));
     }
@@ -514,7 +510,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNullOrEmptyAndOverflow_WhenStringIsValid_DoesNotThrow()
     {
-        string value = "test";
+        var value = "test";
 
         var exception = Record.Exception(() => Guard.AgainstNullOrEmptyAndOverflow(() => value, 10));
 
@@ -539,7 +535,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNullOrWhiteSpaceAndOverflow_WhenOverflow_ThrowsException()
     {
-        string value = "this is a very long string";
+        var value = "this is a very long string";
 
         Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstNullOrWhiteSpaceAndOverflow(() => value, 10));
     }
@@ -550,7 +546,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNullOrWhiteSpaceAndOverflow_WhenStringIsValid_DoesNotThrow()
     {
-        string value = "test";
+        var value = "test";
 
         var exception = Record.Exception(() => Guard.AgainstNullOrWhiteSpaceAndOverflow(() => value, 10));
 
@@ -617,7 +613,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstUndefinedEnumValue_WhenEnumValueIsUndefined_ThrowsException()
     {
-        DayOfWeek undefinedEnumValue = (DayOfWeek)8;
+        var undefinedEnumValue = (DayOfWeek)8;
 
         Assert.Throws<ArgumentOutOfRangeException>(() => Guard.AgainstUndefinedEnumValue(() => undefinedEnumValue));
     }
@@ -628,7 +624,7 @@ public sealed class GuardTests
     [Fact]
     public void AgainstUndefinedEnumValue_WhenEnumValueIsDefined_DoesNotThrow()
     {
-        DayOfWeek definedEnumValue = DayOfWeek.Monday;
+        var definedEnumValue = DayOfWeek.Monday;
 
         var exception = Record.Exception(() => Guard.AgainstUndefinedEnumValue(() => definedEnumValue));
 

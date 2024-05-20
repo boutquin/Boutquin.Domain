@@ -14,8 +14,6 @@
 //
 namespace Boutquin.UnitTests.Domain;
 
-using Boutquin.Domain.Extensions;
-
 /// <summary>
 /// Contains unit tests for the DateTimeConverterExtensions class.
 /// </summary>

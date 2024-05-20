@@ -34,7 +34,7 @@ namespace Boutquin.Domain.Abstractions;
 /// <example>
 /// Example of using the IUnitOfWork interface in a service class:
 /// <code>
-/// public class MyService
+/// public sealed class MyService
 /// {
 ///     private readonly IRepository&lt;MyEntity&gt; _repository;
 ///     private readonly IUnitOfWork _unitOfWork;

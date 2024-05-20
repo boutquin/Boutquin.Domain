@@ -25,7 +25,7 @@ using Abstractions;
 /// <example>
 /// This sample shows how to use these methods in an application's startup code.
 /// <code>
-/// public class Startup
+/// public sealed class Startup
 /// {
 ///     public void ConfigureServices(IServiceCollection services)
 ///     {

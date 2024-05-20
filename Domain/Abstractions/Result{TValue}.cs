@@ -62,7 +62,7 @@ using System.Diagnostics.CodeAnalysis;
 /// }
 /// </code>
 /// </example>
-public class Result<TValue> : Result
+public sealed class Result<TValue> : Result
 {
     private readonly TValue? _value;
 

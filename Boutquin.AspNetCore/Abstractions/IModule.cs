@@ -23,7 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 /// <example>
 /// This sample shows how to implement this interface and use its methods.
 /// <code>
-/// public class MyModule : IModule
+/// public sealed class MyModule : IModule
 /// {
 ///     public IServiceCollection RegisterModule(IServiceCollection builder)
 ///     {

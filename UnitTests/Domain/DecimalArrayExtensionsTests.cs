@@ -12,12 +12,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-
-using Boutquin.Domain.Exceptions;
-using Boutquin.Domain.Extensions;
-
-using static Boutquin.Domain.Extensions.DecimalArrayExtensions;
-
 namespace Boutquin.UnitTests.Domain;
 
 /// <summary>

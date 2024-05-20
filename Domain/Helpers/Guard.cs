@@ -102,6 +102,39 @@ public static class Guard
     }
 
     /// <summary>
+    /// Checks if the given value type is its default value and throws an <see cref="ArgumentException"/> if it is.
+    /// This overload accepts a <see cref="Func{T}"/> that returns the value and extracts its name using nameof.
+    /// </summary>
+    /// <typeparam name="T">The type of the value being checked. Must be a value type.</typeparam>
+    /// <param name="valueExpression">A <see cref="Func{T}"/> that returns the value to check for default.</param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the given value is its default value (violation of Guard logic).
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the parameter name cannot be extracted from the <param name="valueExpression"/>.
+    /// </exception>
+    /// <example>
+    /// <code>
+    /// public void ProcessData(int data)
+    /// {
+    ///     Guard.AgainstDefault(() => data);
+    ///     // ... rest of the method
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstDefault<T>(Expression<Func<T>> valueExpression) where T : struct
+    {
+        // Get the value and extract the parameter name from the expression
+        var (value, paramName) = ExtractParameterInfo(valueExpression);
+
+        // Check if the given value is the default value for its type
+        if (EqualityComparer<T>.Default.Equals(value, default(T)))
+        {
+            throw new ArgumentException($"Parameter '{paramName}' cannot be the default value.", paramName);
+        }
+    }
+
+    /// <summary>
     /// Throws an <see cref="ArgumentException"/> if the specified enumerable is null or empty.
     /// </summary>
     /// <typeparam name="T">The type of elements in the enumerable.</typeparam>

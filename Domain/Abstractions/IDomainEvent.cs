@@ -46,7 +46,7 @@ using MediatR;
 /// <example>
 /// Example of a domain event implementation:
 /// <code>
-/// public class OrderPlacedEvent : IDomainEvent
+/// public sealed class OrderPlacedEvent : IDomainEvent
 /// {
 ///     public Guid OrderId { get; }
 ///     public DateTime OrderDate { get; }
