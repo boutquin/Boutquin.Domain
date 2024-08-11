@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public static class Guard
     /// </example>
     /// <param name="condition">The condition to check.</param>
     /// <returns>An instance of GuardCondition to chain with With&lt;TException&gt; method.</returns>
-    public static GuardCondition Against(bool condition) 
+    public static GuardCondition Against(bool condition)
         => new(condition);
 
     /// <summary>
@@ -93,7 +93,7 @@ public static class Guard
     {
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
-        
+
         // Check if the given value is null
         if (value == null)
         {
@@ -188,7 +188,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstEmptyOrNullEnumerable<T>(Expression<Func<IEnumerable<T>>>enumerableExpression)
+    public static void AgainstEmptyOrNullEnumerable<T>(Expression<Func<IEnumerable<T>>> enumerableExpression)
     {
         // Get the array value and extract the parameter name from the expression
         var (enumerable, paramName) = ExtractParameterInfo(enumerableExpression);
@@ -709,7 +709,7 @@ public static class Guard
         /// The constructor is marked as internal to prevent direct instantiation and is only used by the Guard class.
         /// </remarks>
         /// <param name="condition">The condition to check.</param>
-        internal GuardCondition(bool condition) 
+        internal GuardCondition(bool condition)
             => _condition = condition;
 
         /// <summary>
@@ -815,13 +815,13 @@ public static class Guard
                 throw new InvalidOperationException(
                     $"The exception type '{typeof(TException).FullName}' must have a constructor that accepts a single string parameter.");
             }
-            catch (TargetInvocationException tie) 
-            { 
-                if (tie.InnerException != null) 
-                { 
-                    throw tie.InnerException; 
-                } 
-                throw; 
+            catch (TargetInvocationException tie)
+            {
+                if (tie.InnerException != null)
+                {
+                    throw tie.InnerException;
+                }
+                throw;
             }
 
             // Check if the created exception instance is null
@@ -922,7 +922,6 @@ public static class Guard
                 }
                 throw;
             }
-
 
             // Check if the created exception instance is null
             if (exception == null)
@@ -1044,7 +1043,9 @@ public static class Guard
         // If the body of the expression is not a MemberExpression, it means the expression does not directly access a member.
         // We throw an exception because the method is designed to work only with direct member access expressions.
         if (memberExpr == null)
+        {
             throw new InvalidOperationException("Could not extract the parameter information from the expression. The expression must directly access a member (property or field).");
+        }
 
         // Compile the expression to a delegate and invoke it to evaluate and retrieve the actual value.
         // Compiling the expression allows us to execute it and obtain the runtime value of the member it accesses.
@@ -1055,7 +1056,7 @@ public static class Guard
         // This name is used to identify the parameter in error messages or other logging.
         return (value, memberExpr.Member.Name);
     }
-        
+
     /// <summary>
     /// Checks if the given string is null or empty and throws an <see cref="ArgumentException"/> if it is.
     /// </summary>

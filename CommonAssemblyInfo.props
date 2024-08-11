@@ -11,7 +11,7 @@
     <PackageProjectUrl>file://C:/Users/pierre/source/repos/packages</PackageProjectUrl>
     <RepositoryUrl>file://C:/Users/pierre/source/repos/packages</RepositoryUrl>
     <RepositoryType>file</RepositoryType>
-    <Version>0.5.0.3-beta01</Version>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
     <Copyright>Copyright © 2019-2024, Boutquin Computer Consulting. All rights reserved.</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageIconUrl>folder</PackageIconUrl>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -260,7 +260,7 @@ public class GuardAgainstNullOrDefaultTests
     /// <summary>
     /// Record type for testing purposes.
     /// </summary>
-    private record MyRecord(int Value);
+    private sealed record MyRecord(int Value);
 
     /// <summary>
     /// Tests that AgainstNullOrDefault throws an ArgumentException for default record struct value.

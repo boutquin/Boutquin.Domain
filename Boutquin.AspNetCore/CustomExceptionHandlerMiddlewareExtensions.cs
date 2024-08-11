@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 //
 namespace Boutquin.AspNetCore;
 
-using Microsoft.AspNetCore.Builder;
 using Domain.Helpers;
+using Microsoft.AspNetCore.Builder;
 
 /// <summary>
 /// Extension methods for <see cref="IApplicationBuilder"/> to add the <see cref="CustomExceptionHandlerMiddleware"/> to the application pipeline.

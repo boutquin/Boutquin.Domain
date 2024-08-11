@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -41,6 +41,6 @@ public abstract record StronglyTypedId<TValue>(TValue Value)
     /// debugging, or displaying the identifier in a user interface.
     /// </summary>
     /// <returns>A string that represents the value of the strongly typed ID.</returns>
-    public sealed override string ToString() 
+    public sealed override string ToString()
         => $"{Value}";
 }

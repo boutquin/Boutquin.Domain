@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public static class StringExtensions
     /// result = testString.IsNullOrEmpty(); // result will be false
     /// </code>
     /// </example>
-    public static bool IsNullOrEmpty(this string value) 
+    public static bool IsNullOrEmpty(this string value)
         => string.IsNullOrEmpty(value);
 
     /// <summary>
@@ -58,7 +58,7 @@ public static class StringExtensions
     /// <returns>
     ///   <c>true</c> if the specified string is null, empty, or consists only of white-space characters; otherwise, <c>false</c>.
     /// </returns>
-    public static bool IsNullOrWhiteSpace(this string value) 
+    public static bool IsNullOrWhiteSpace(this string value)
         => string.IsNullOrWhiteSpace(value);
 
     /// <summary>
@@ -110,7 +110,7 @@ public static class StringExtensions
     /// <param name="strB">The second string to compare.</param>
     /// <param name="comparisonType">One of the enumeration values that specifies the rules for the comparison.</param>
     /// <returns>A signed integer that indicates the relative values of value and strB.</returns>
-    public static int Compare(this string value, string strB, StringComparison comparisonType) 
+    public static int Compare(this string value, string strB, StringComparison comparisonType)
         => string.Compare(value, strB, comparisonType);
 
     /// <summary>
@@ -119,7 +119,7 @@ public static class StringExtensions
     /// <param name="value">The first string to compare.</param>
     /// <param name="strB">The second string to compare.</param>
     /// <returns>A signed integer that indicates the lexical relationship between the two comparands.</returns>
-    public static int CompareOrdinal(this string value, string strB) 
+    public static int CompareOrdinal(this string value, string strB)
         => string.CompareOrdinal(value, strB);
 
     /// <summary>
@@ -128,6 +128,6 @@ public static class StringExtensions
     /// <param name="format">A composite format string.</param>
     /// <param name="args">An object array that contains zero or more objects to format.</param>
     /// <returns>A copy of format in which the format items have been replaced by the string representation of the corresponding objects in args.</returns>
-    public static string Format(this string format, params object[] args) 
-        => string.Format(format, args);
+    public static string Format(this string format, params object[] args)
+        => string.Format(CultureInfo.CurrentCulture, format, args);
 }

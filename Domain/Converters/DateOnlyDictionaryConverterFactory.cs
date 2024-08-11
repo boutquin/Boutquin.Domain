@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 //
 namespace Boutquin.Domain.Converters;
 
-using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 /// <summary>
 /// A custom JsonConverterFactory to handle SortedDictionaries with DateOnly keys.
@@ -59,7 +59,7 @@ public sealed class DateOnlyDictionaryConverterFactory : JsonConverterFactory
     /// TValue is the type of the values stored in the dictionary.
     /// </summary>
     /// <typeparam name="TValue">The type of the values stored in the dictionary.</typeparam>
-    private class DateOnlyDictionaryConverter<TValue> : JsonConverter<SortedDictionary<DateOnly, TValue>>
+    private sealed class DateOnlyDictionaryConverter<TValue> : JsonConverter<SortedDictionary<DateOnly, TValue>>
     {
         private readonly JsonConverter<DateOnly> _dateOnlyConverter;
         private readonly JsonConverter<TValue> _valueConverter;

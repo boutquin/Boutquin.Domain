@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 namespace Boutquin.Domain.Converters;
 
 using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -35,11 +36,8 @@ public sealed class DateOnlyConverter : JsonConverter<DateOnly>
     /// <exception cref="JsonException">Thrown when the date string is null or cannot be parsed to a DateOnly object.</exception>
     public override DateOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var dateString = reader.GetString();
-        if (dateString == null)
-        {
+        var dateString = reader.GetString() ??
             throw new JsonException("Date string is null.");
-        }
 
         if (!DateOnly.TryParse(dateString, out var date))
         {
@@ -55,6 +53,6 @@ public sealed class DateOnlyConverter : JsonConverter<DateOnly>
     /// <param name="writer">The JSON writer.</param>
     /// <param name="value">The DateOnly object to serialize.</param>
     /// <param name="options">The JSON serializer options.</param>
-    public override void Write(Utf8JsonWriter writer, DateOnly value, JsonSerializerOptions options) 
-        => writer.WriteStringValue(value.ToString(DateFormat));
+    public override void Write(Utf8JsonWriter writer, DateOnly value, JsonSerializerOptions options)
+        => writer.WriteStringValue(value.ToString(DateFormat, CultureInfo.InvariantCulture));
 }

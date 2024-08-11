@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ public sealed class Result<TValue> : Result
     /// Thrown if attempting to access the value of a failed result.
     /// </exception>
     [NotNull]
-    public TValue Value 
+    public TValue Value
         => IsSuccess
             ? _value!
             : throw new InvalidOperationException("The value of a failure result cannot be accessed.");
