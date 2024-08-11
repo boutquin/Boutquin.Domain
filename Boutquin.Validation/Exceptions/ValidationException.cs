@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 //
 namespace Boutquin.Validation.Exceptions;
 
-using FluentValidation.Results;
 using Domain.Helpers;
+using FluentValidation.Results;
 
 /// <summary>
 /// The exception that is thrown when validation fails in the FluentValidation library.
@@ -53,6 +53,6 @@ public sealed class ValidationException : Exception
     /// </summary>
     /// <param name="failures">The collection of validation failures.</param>
     /// <returns>A string containing the concatenated error messages.</returns>
-    private static string BuildErrorMessage(IEnumerable<ValidationFailure> failures) 
+    private static string BuildErrorMessage(IEnumerable<ValidationFailure> failures)
         => string.Join(Environment.NewLine, failures.Select(f => f.ErrorMessage));
 }

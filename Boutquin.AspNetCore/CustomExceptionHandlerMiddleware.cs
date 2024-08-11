@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -15,11 +15,9 @@
 namespace Boutquin.AspNetCore;
 
 using System.Net;
-
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-using Domain.Exceptions;
 using Validation.Exceptions;
 
 /// <summary>
@@ -47,11 +45,11 @@ public sealed class CustomExceptionHandlerMiddleware
     {
         try
         {
-            await _next(context);
+            await _next(context).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            await HandleExceptionAsync(context, ex);
+            await HandleExceptionAsync(context, ex).ConfigureAwait(false);
         }
     }
 
@@ -145,6 +143,6 @@ public sealed class CustomExceptionHandlerMiddleware
         context.Response.ContentType = "application/problem+json";
 
         // Serialize the problemDetails object and write it to the response
-        await context.Response.WriteAsJsonAsync(problemDetails);
+        await context.Response.WriteAsJsonAsync(problemDetails).ConfigureAwait(false);
     }
 }

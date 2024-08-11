@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ public class Result
     /// Creates a success result.
     /// </summary>
     /// <returns>A successful result.</returns>
-    public static Result Success() 
+    public static Result Success()
         => new(true, Error.None);
 
     /// <summary>
@@ -113,7 +113,7 @@ public class Result
     /// </summary>
     /// <param name="error">The error associated with the failure.</param>
     /// <returns>A failed result with the given error.</returns>
-    public static Result Failure(Error error) 
+    public static Result Failure(Error error)
         => new(false, error);
 
     /// <summary>
@@ -135,7 +135,7 @@ public class Result
     /// }
     /// </code>
     /// </example>
-    public static Result<TValue> Success<TValue>(TValue value) 
+    public static Result<TValue> Success<TValue>(TValue value)
         => new(value, true, Error.None);
 
     /// <summary>
@@ -161,7 +161,7 @@ public class Result
     /// }
     /// </code>
     /// </example>
-    public static Result<TValue> Failure<TValue>(Error error) 
+    public static Result<TValue> Failure<TValue>(Error error)
         => new(default, false, error);
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -324,7 +324,7 @@ public sealed class GuardTests
     {
         var notNegativeNumber = 1;
 
-        var exception = Record.Exception(() => Guard.AgainstNegative(() =>notNegativeNumber));
+        var exception = Record.Exception(() => Guard.AgainstNegative(() => notNegativeNumber));
 
         Assert.Null(exception);
     }
@@ -440,7 +440,7 @@ public sealed class GuardTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void AgainstNullOrWhiteSpace_WhenStringIsNullOrWhiteSpace_ThrowsException(string value)
+    public void AgainstNullOrWhiteSpace_WhenStringIsNullOrWhiteSpace_ThrowsException(string? value)
     {
         Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpace(() => value));
     }
@@ -488,7 +488,7 @@ public sealed class GuardTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void AgainstNullOrEmptyAndOverflow_WhenStringIsNullOrEmpty_ThrowsException(string value)
+    public void AgainstNullOrEmptyAndOverflow_WhenStringIsNullOrEmpty_ThrowsException(string? value)
     {
         Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrEmptyAndOverflow(() => value, 10));
     }
@@ -524,7 +524,7 @@ public sealed class GuardTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void AgainstNullOrWhiteSpaceAndOverflow_WhenStringIsNullOrWhiteSpaceOrOverflow_ThrowsException(string value)
+    public void AgainstNullOrWhiteSpaceAndOverflow_WhenStringIsNullOrWhiteSpaceOrOverflow_ThrowsException(string? value)
     {
         Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpaceAndOverflow(() => value, 10));
     }
@@ -574,7 +574,7 @@ public sealed class GuardTests
     /// This class is used in the GuardTests to test the AgainstNonEnumType method.
     /// </remarks>
     // ReSharper disable once ClassNeverInstantiated.Local
-    private class SampleClass
+    private sealed class SampleClass
     // ReSharper disable once RedundantTypeDeclarationBody
     {
     }
@@ -752,7 +752,7 @@ public sealed class GuardTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void WithMessage_WhenExceptionMessageIsNullOrWhiteSpace_ThrowsArgumentException(string invalidMessage)
+    public void WithMessage_WhenExceptionMessageIsNullOrWhiteSpace_ThrowsArgumentException(string? invalidMessage)
     {
         // Arrange
         const bool Condition = true;
@@ -792,7 +792,7 @@ public sealed class GuardTests
     {
         var guardCondition = Guard.Against(true);
 
-        Assert.Throws<InvalidOperationException>(() => guardCondition.With<InvalidOperationException>());
+        Assert.Throws<InvalidOperationException>(guardCondition.With<InvalidOperationException>);
     }
 
     /// <summary>
@@ -803,7 +803,7 @@ public sealed class GuardTests
     {
         var guardCondition = Guard.Against(false);
 
-        var exception = Record.Exception(() => guardCondition.With<InvalidOperationException>());
+        var exception = Record.Exception(guardCondition.With<InvalidOperationException>);
 
         Assert.Null(exception);
     }

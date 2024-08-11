@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2023-2024 Pierre G. Boutquin. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License").
 //  You may not use this file except in compliance with the License.
@@ -72,6 +72,6 @@ public static class DecimalArrayExtensions
     /// <exception cref="EmptyOrNullArrayException">Thrown when the input array is empty.</exception>
     /// <exception cref="InsufficientDataException">Thrown when the input array contains less than two elements for sample calculation.</exception>
 
-    public static decimal StandardDeviation(this decimal[] values, CalculationType calculationType = CalculationType.Sample) 
+    public static decimal StandardDeviation(this decimal[] values, CalculationType calculationType = CalculationType.Sample)
         => (decimal)Math.Sqrt((double)values.Variance(calculationType));
 }
