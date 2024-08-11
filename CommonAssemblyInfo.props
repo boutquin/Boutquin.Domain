@@ -16,8 +16,8 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageIconUrl>folder</PackageIconUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageVersion>$(PackageVersion)-$(MinVerBuildMetadata)</PackageVersion>
+    <PackageVersion>$(PackageVersion)$(MinVerBuildMetadata)</PackageVersion>
     <Version>$(PackageVersion)</Version>
-    <MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerDefaultPreReleaseIdentifiers>beta</MinVerDefaultPreReleaseIdentifiers>
   </PropertyGroup>
 </Project>
