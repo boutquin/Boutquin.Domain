@@ -2,17 +2,12 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Common abstractions (entities, enums, exceptions, interfaces, types and logic) specific to a Domain layer.</Description>
-    <PackageTags>CleanArchitecture,Domain,Entities,GuardClauses,ContractDrivenDevelopment,ExtensionMethods,CustomExceptions,Serialization,Shared</PackageTags>
+    <Title>Boutquin.Domain</Title>
+    <Description>Domain-Driven Design building blocks for .NET — Entity base class, Result pattern, Guard clauses, strongly typed IDs, domain exceptions, and JSON converters.</Description>
+    <PackageTags>ddd;domain-driven-design;dotnet;csharp;entity;result-pattern;guard-clauses;strongly-typed-id;clean-architecture;domain-exceptions</PackageTags>
     <PackageReleaseNotes>See CHANGELOG.md for release notes.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/boutquin/Boutquin.Domain</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/users/boutquin/projects/1/</PackageProjectUrl>
-    <Title>Common abstractions specific to a Domain layer.</Title>
   </PropertyGroup>
 
   <ItemGroup>

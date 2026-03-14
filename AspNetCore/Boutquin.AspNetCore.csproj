@@ -2,7 +2,23 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>Boutquin.AspNetCore</Title>
+    <Description>ASP.NET Core middleware and module registration — RFC 7807 exception handler, modular app startup with testable assembly discovery.</Description>
+    <PackageTags>aspnetcore;middleware;exception-handler;rfc7807;problem-details;modular-monolith;dotnet;csharp;clean-architecture</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\Resources\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <!--
     InternalsVisibleTo grants the test project access to internal members.
