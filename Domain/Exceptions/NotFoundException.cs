@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -19,13 +19,16 @@ namespace Boutquin.Domain.Exceptions;
 /// <summary>
 /// The exception that is thrown when the requested resource is not found.
 /// </summary>
-[Serializable]
-public sealed class NotFoundException : Exception
+public sealed class NotFoundException : DomainException
 {
+    private const int DefaultStatusCode = 404;
+    private const string DefaultTitle = "Not Found";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="NotFoundException"/> class.
     /// </summary>
     public NotFoundException()
+        : base(DefaultStatusCode, DefaultTitle)
     {
     }
 
@@ -34,7 +37,7 @@ public sealed class NotFoundException : Exception
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     public NotFoundException(string message)
-        : base(message)
+        : base(DefaultStatusCode, DefaultTitle, message)
     {
     }
 
@@ -44,7 +47,7 @@ public sealed class NotFoundException : Exception
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="inner">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
     public NotFoundException(string message, Exception inner)
-        : base(message, inner)
+        : base(DefaultStatusCode, DefaultTitle, message, inner)
     {
     }
 }

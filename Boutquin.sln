@@ -10,15 +10,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66DCA184-6AA9-430B-949F-E93F90DB156E}"
 	ProjectSection(SolutionItems) = preProject
 		.editorConfig = .editorConfig
-		CommonAssemblyInfo.props = CommonAssemblyInfo.props
+		Directory.Build.props = Directory.Build.props
 		global.json = global.json
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boutquin.Validation", "Boutquin.Validation\Boutquin.Validation.csproj", "{1A9B956F-D3C7-4E30-9AB9-DB312874A828}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boutquin.Validation", "Validation\Boutquin.Validation.csproj", "{1A9B956F-D3C7-4E30-9AB9-DB312874A828}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boutquin.AspNetCore", "Boutquin.AspNetCore\Boutquin.AspNetCore.csproj", "{86A0FCAB-3015-4E06-90EF-6AB4D03C56F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boutquin.AspNetCore", "AspNetCore\Boutquin.AspNetCore.csproj", "{86A0FCAB-3015-4E06-90EF-6AB4D03C56F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

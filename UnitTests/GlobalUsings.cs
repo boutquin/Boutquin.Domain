@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -18,4 +18,6 @@ global using System.Diagnostics.CodeAnalysis;
 global using Boutquin.Domain.Exceptions;
 global using Boutquin.Domain.Extensions;
 global using Boutquin.Domain.Helpers;
+global using FluentAssertions;
+global using Xunit;
 global using static Boutquin.Domain.Extensions.DecimalArrayExtensions;

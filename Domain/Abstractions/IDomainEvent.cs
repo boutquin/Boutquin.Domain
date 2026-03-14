@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -43,6 +43,11 @@ using MediatR;
 /// a class is a domain event. Implementors of this interface should contain properties that provide
 /// details about the event itself.
 /// </para>
+/// <para>
+/// <strong>Note:</strong> This interface extends MediatR's <see cref="INotification"/> to enable
+/// dispatching via MediatR. If you prefer to avoid the MediatR dependency in your domain layer,
+/// consider defining your own marker interface and adapting at the infrastructure level.
+/// </para>
 /// </remarks>
 /// <example>
 /// Example of a domain event implementation:
@@ -51,7 +56,7 @@ using MediatR;
 /// {
 ///     public Guid OrderId { get; }
 ///     public DateTime OrderDate { get; }
-/// 
+///
 ///     public OrderPlacedEvent(Guid orderId, DateTime orderDate)
 ///     {
 ///         OrderId = orderId;

@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ namespace Boutquin.Domain.Helpers;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Exceptions;
 
 /// <summary>
@@ -36,6 +37,13 @@ using Exceptions;
 ///
 /// The Guard class supports a wide range of validation scenarios, including null or empty strings,
 /// out-of-range values, invalid enum values, and more.
+///
+/// <para>
+/// <strong>Performance note:</strong> The expression-based overloads (e.g., <c>Guard.AgainstNull(() =&gt; value)</c>)
+/// compile the expression tree on every invocation to extract both the value and parameter name. This provides
+/// excellent developer ergonomics but has measurable overhead. For performance-sensitive hot paths, prefer the
+/// overloads that accept the value and parameter name directly (e.g., <c>Guard.AgainstNullOrWhiteSpace(value, nameof(value))</c>).
+/// </para>
 /// </remarks>
 /// <example>
 /// This sample shows how to use the Guard class to validate method arguments:
@@ -248,7 +256,7 @@ public static class Guard
     /// </example>
     public static void AgainstEmptyOrNullCollection<T>(Expression<Func<ICollection<T>>> collectionExpression)
     {
-        var collection = collectionExpression.Compile().Invoke();
+        var (collection, paramName) = ExtractParameterInfo(collectionExpression);
 
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (collection != null && collection.Count != 0)
@@ -256,7 +264,6 @@ public static class Guard
             return;
         }
 
-        var paramName = ((MemberExpression)collectionExpression.Body).Member.Name;
         throw new EmptyOrNullCollectionException($"Parameter '{paramName}' cannot be null or an empty collection.");
     }
 
@@ -278,7 +285,7 @@ public static class Guard
     /// </example>
     public static void AgainstEmptyOrNullDictionary<TKey, TValue>(Expression<Func<IDictionary<TKey, TValue>>> dictionaryExpression) where TKey : notnull
     {
-        var dictionary = dictionaryExpression.Compile().Invoke();
+        var (dictionary, paramName) = ExtractParameterInfo(dictionaryExpression);
 
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (dictionary != null && dictionary.Count != 0)
@@ -286,7 +293,6 @@ public static class Guard
             return;
         }
 
-        var paramName = ((MemberExpression)dictionaryExpression.Body).Member.Name;
         throw new EmptyOrNullDictionaryException($"Parameter '{paramName}' cannot be null or an empty dictionary.");
     }
 
@@ -308,7 +314,7 @@ public static class Guard
     /// </example>
     public static void AgainstEmptyOrNullReadOnlyDictionary<TKey, TValue>(Expression<Func<IReadOnlyDictionary<TKey, TValue>>> dictionaryExpression) where TKey : notnull
     {
-        var dictionary = dictionaryExpression.Compile().Invoke();
+        var (dictionary, paramName) = ExtractParameterInfo(dictionaryExpression);
 
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (dictionary != null && dictionary.Count != 0)
@@ -316,7 +322,6 @@ public static class Guard
             return;
         }
 
-        var paramName = ((MemberExpression)dictionaryExpression.Body).Member.Name;
         throw new EmptyOrNullDictionaryException($"Parameter '{paramName}' cannot be null or an empty dictionary.");
     }
 
@@ -377,7 +382,7 @@ public static class Guard
         var (value, paramName) = ExtractParameterInfo(valueExpression);
 
         // Check if the given string value is null, empty, or contains only whitespace characters
-        AgainstNullOrWhiteSpace(value, paramName);
+        ThrowIfNullOrWhiteSpace(value, paramName);
     }
 
     /// <summary>
@@ -418,7 +423,7 @@ public static class Guard
         var (value, paramName) = ExtractParameterInfo(valueExpression);
 
         // Check if the length of the string value exceeds the maxLength
-        AgainstOverflow(value, paramName, maxLength);
+        ThrowIfOverflow(value, paramName, maxLength);
     }
 
     /// <summary>
@@ -454,9 +459,9 @@ public static class Guard
         var (value, paramName) = ExtractParameterInfo(valueExpression);
 
         // Check if the given string value is null or empty
-        AgainstNullOrEmpty(value, paramName);
+        ThrowIfNullOrEmpty(value, paramName);
         // Check if the length of the string value exceeds the maxLength
-        AgainstOverflow(value, paramName, maxLength);
+        ThrowIfOverflow(value, paramName, maxLength);
     }
 
     /// <summary>
@@ -504,9 +509,9 @@ public static class Guard
         var (value, paramName) = ExtractParameterInfo(valueExpression);
 
         // Check if the given string value is null, empty, or contains only whitespace characters
-        AgainstNullOrWhiteSpace(value, paramName);
+        ThrowIfNullOrWhiteSpace(value, paramName);
         // Check if the length of the string value exceeds the maxLength
-        AgainstOverflow(value, paramName, maxLength);
+        ThrowIfOverflow(value, paramName, maxLength);
     }
 
     /// <summary>
@@ -538,7 +543,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNegative<T>(Expression<Func<T>> valueExpression) where T : IComparable<T>
+    public static void AgainstNegative<T>(Expression<Func<T>> valueExpression) where T : struct, IComparable<T>
     {
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
@@ -575,7 +580,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstNegativeOrZero<T>(Expression<Func<T>> valueExpression) where T : IComparable<T>
+    public static void AgainstNegativeOrZero<T>(Expression<Func<T>> valueExpression) where T : struct, IComparable<T>
     {
         // Get the value and extract the parameter name from the expression
         var (value, paramName) = ExtractParameterInfo(valueExpression);
@@ -681,7 +686,7 @@ public static class Guard
     /// }
     /// </code>
     /// </example>
-    public static void AgainstOutOfRange<T>(Expression<Func<T>> valueExpression, T min, T max) where T : IComparable<T>
+    public static void AgainstOutOfRange<T>(Expression<Func<T>> valueExpression, T min, T max) where T : struct, IComparable<T>
     {
         // Validate parameters
         Against(min.CompareTo(max) >= 0)
@@ -1059,17 +1064,146 @@ public static class Guard
         return (value, memberExpr.Member.Name);
     }
 
+    // ─── Zero-overhead overloads using CallerArgumentExpression ───────────────
+    // These overloads extract the parameter name at compile-time, avoiding the
+    // expression tree compilation overhead of the Expression<Func<T>> overloads.
+    // Prefer these in performance-sensitive hot paths.
+
+    /// <summary>
+    /// Checks if the given reference type value is null and throws an <see cref="ArgumentNullException"/> if it is.
+    /// This zero-overhead overload extracts the parameter name at compile time.
+    /// </summary>
+    /// <typeparam name="T">The type of the value being checked. Must be a reference type.</typeparam>
+    /// <param name="value">The value to check for null.</param>
+    /// <param name="paramName">The name of the parameter (automatically captured).</param>
+    /// <exception cref="ArgumentNullException">Thrown when the value is null.</exception>
+    /// <example>
+    /// <code>
+    /// public void PrintList(List&lt;string&gt; items)
+    /// {
+    ///     Guard.AgainstNull(items);
+    ///     foreach (var item in items) { Console.WriteLine(item); }
+    /// }
+    /// </code>
+    /// </example>
+    public static void AgainstNull<T>(T? value, [CallerArgumentExpression(nameof(value))] string paramName = "") where T : class
+    {
+        if (value is null)
+        {
+            throw new ArgumentNullException(paramName, $"Parameter '{paramName}' cannot be null.");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given value type is its default value and throws an <see cref="ArgumentException"/> if it is.
+    /// This zero-overhead overload extracts the parameter name at compile time.
+    /// </summary>
+    /// <typeparam name="T">The type of the value being checked. Must be a value type.</typeparam>
+    /// <param name="value">The value to check for default.</param>
+    /// <param name="paramName">The name of the parameter (automatically captured).</param>
+    /// <exception cref="ArgumentException">Thrown when the value is its default value.</exception>
+    public static void AgainstDefault<T>(T value, [CallerArgumentExpression(nameof(value))] string paramName = "") where T : struct
+    {
+        if (EqualityComparer<T>.Default.Equals(value, default))
+        {
+            throw new ArgumentException($"Parameter '{paramName}' cannot be the default value.", paramName);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given string is null or empty and throws an <see cref="ArgumentException"/> if it is.
+    /// This zero-overhead overload extracts the parameter name at compile time.
+    /// </summary>
+    /// <param name="value">The string to check for null or empty.</param>
+    /// <param name="paramName">The name of the parameter (automatically captured).</param>
+    /// <exception cref="ArgumentException">Thrown when the string is null or empty.</exception>
+    public static void AgainstNullOrEmpty(string? value, [CallerArgumentExpression(nameof(value))] string paramName = "")
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            throw new ArgumentException($"Parameter '{paramName}' cannot be null or empty.", paramName);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given string is null, empty, or consists only of white-space characters
+    /// and throws an <see cref="ArgumentException"/> if it is.
+    /// This zero-overhead overload extracts the parameter name at compile time.
+    /// </summary>
+    /// <param name="value">The string to check.</param>
+    /// <param name="paramName">The name of the parameter (automatically captured).</param>
+    /// <exception cref="ArgumentException">Thrown when the string is null, empty, or whitespace.</exception>
+    public static void AgainstNullOrWhiteSpace(string? value, [CallerArgumentExpression(nameof(value))] string paramName = "")
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException($"Parameter '{paramName}' cannot be null, empty or contain only white-space characters.", paramName);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given value is negative and throws an <see cref="ArgumentOutOfRangeException"/> if it is.
+    /// This zero-overhead overload extracts the parameter name at compile time.
+    /// </summary>
+    /// <typeparam name="T">The type of the value. Must be a comparable value type.</typeparam>
+    /// <param name="value">The value to check.</param>
+    /// <param name="paramName">The name of the parameter (automatically captured).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is negative.</exception>
+    public static void AgainstNegative<T>(T value, [CallerArgumentExpression(nameof(value))] string paramName = "") where T : struct, IComparable<T>
+    {
+        if (value.CompareTo(default) < 0)
+        {
+            throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' cannot be negative.");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given value is negative or zero and throws an <see cref="ArgumentOutOfRangeException"/> if it is.
+    /// This zero-overhead overload extracts the parameter name at compile time.
+    /// </summary>
+    /// <typeparam name="T">The type of the value. Must be a comparable value type.</typeparam>
+    /// <param name="value">The value to check.</param>
+    /// <param name="paramName">The name of the parameter (automatically captured).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is negative or zero.</exception>
+    public static void AgainstNegativeOrZero<T>(T value, [CallerArgumentExpression(nameof(value))] string paramName = "") where T : struct, IComparable<T>
+    {
+        if (value.CompareTo(default) <= 0)
+        {
+            throw new ArgumentOutOfRangeException(paramName, $"Parameter '{paramName}' cannot be negative or zero.");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the given value is within the specified range and throws an <see cref="ArgumentOutOfRangeException"/> if it is not.
+    /// This zero-overhead overload extracts the parameter name at compile time.
+    /// </summary>
+    /// <typeparam name="T">The type of the value. Must be a comparable value type.</typeparam>
+    /// <param name="value">The value to check.</param>
+    /// <param name="min">The minimum valid value, inclusive.</param>
+    /// <param name="max">The maximum valid value, inclusive.</param>
+    /// <param name="paramName">The name of the parameter (automatically captured).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is out of range.</exception>
+    /// <exception cref="ArgumentException">Thrown when min is not less than max.</exception>
+    public static void AgainstOutOfRange<T>(T value, T min, T max, [CallerArgumentExpression(nameof(value))] string paramName = "") where T : struct, IComparable<T>
+    {
+        if (min.CompareTo(max) >= 0)
+        {
+            throw new ArgumentException($"The value of parameter 'max' {max} must be greater than the value of parameter 'min' {min}");
+        }
+
+        if (value.CompareTo(min) < 0 || value.CompareTo(max) > 0)
+        {
+            throw new ArgumentOutOfRangeException(paramName, $"The value of {paramName} must be between {min} and {max}.");
+        }
+    }
+
+    // ─── Private helpers (used by Expression-based overloads) ──────────────────
+
     /// <summary>
     /// Checks if the given string is null or empty and throws an <see cref="ArgumentException"/> if it is.
     /// </summary>
-    /// <param name="value">The string to check for null or empty.</param>
-    /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
-    /// <exception cref="ArgumentException">
-    /// Thrown when the given string is null or empty (private violation of Guard logic).
-    /// </exception>
-    private static void AgainstNullOrEmpty(string value, string paramName)
+    private static void ThrowIfNullOrEmpty(string value, string paramName)
     {
-        // Check if the given string is null or empty 
         if (string.IsNullOrEmpty(value))
         {
             throw new ArgumentException($"Parameter '{paramName}' cannot be null or empty.", paramName);
@@ -1080,14 +1214,8 @@ public static class Guard
     /// Checks if the given string is null, empty, or consists only of white-space characters
     /// and throws an <see cref="ArgumentException"/> if it is.
     /// </summary>
-    /// <param name="value">The string to check for null, empty or white-space characters.</param>
-    /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
-    /// <exception cref="ArgumentException">
-    /// Thrown when the given string is null, empty or consists only of white-space characters (private violation of Guard logic).
-    /// </exception>
-    private static void AgainstNullOrWhiteSpace(string value, string paramName)
+    private static void ThrowIfNullOrWhiteSpace(string value, string paramName)
     {
-        // Check if the given string is null, empty, or consists only of white-space characters
         if (string.IsNullOrWhiteSpace(value))
         {
             throw new ArgumentException($"Parameter '{paramName}' cannot be null, empty or contain only white-space characters.", paramName);
@@ -1096,20 +1224,12 @@ public static class Guard
 
     /// <summary>
     /// Checks if the given string exceeds the specified maximum length
-    /// and throws an <see cref="ArgumentException"/> if it does.
+    /// and throws an <see cref="ArgumentOutOfRangeException"/> if it does.
     /// </summary>
-    /// <param name="value">The string to check for exceeding the maximum length.</param>
-    /// <param name="paramName">The name of the parameter that will be used in the exception message.</param>
-    /// <param name="maxLength">The maximum length allowed for the string.</param>
-    /// <exception cref="ArgumentException">
-    /// Thrown when the given string exceeds the maximum length (private violation of Guard logic).
-    /// </exception>
-    private static void AgainstOverflow(string value, string paramName, int maxLength)
+    private static void ThrowIfOverflow(string value, string paramName, int maxLength)
     {
-        // Check if the length of the string value exceeds the maxLength
         if (value.Length > maxLength)
         {
-            // Throw an <see cref="ArgumentOutOfRangeException"/> if the length of the string value exceeds the maxLength
             throw new ArgumentOutOfRangeException(paramName, $"The length of the parameter '{paramName}' cannot exceed {maxLength} characters.");
         }
     }

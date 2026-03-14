@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -304,5 +304,101 @@ public sealed class StringExtensionsTests
 
         // Assert
         result.Should().Be(expected);
+    }
+
+    // ── Compare ────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Compare_OrdinalIgnoreCase_EqualStrings_ReturnsZero()
+    {
+        // Act
+        var result = "hello".Compare("HELLO", StringComparison.OrdinalIgnoreCase);
+
+        // Assert
+        result.Should().Be(0);
+    }
+
+    [Fact]
+    public void Compare_Ordinal_DifferentStrings_ReturnsNonZero()
+    {
+        // Act
+        var result = "abc".Compare("def", StringComparison.Ordinal);
+
+        // Assert
+        result.Should().BeNegative();
+    }
+
+    [Fact]
+    public void Compare_Ordinal_SameStrings_ReturnsZero()
+    {
+        // Act
+        var result = "test".Compare("test", StringComparison.Ordinal);
+
+        // Assert
+        result.Should().Be(0);
+    }
+
+    // ── CompareOrdinal ─────────────────────────────────────────────────
+
+    [Fact]
+    public void CompareOrdinal_EqualStrings_ReturnsZero()
+    {
+        // Act
+        var result = "hello".CompareOrdinal("hello");
+
+        // Assert
+        result.Should().Be(0);
+    }
+
+    [Fact]
+    public void CompareOrdinal_FirstLessThanSecond_ReturnsNegative()
+    {
+        // Act
+        var result = "abc".CompareOrdinal("xyz");
+
+        // Assert
+        result.Should().BeNegative();
+    }
+
+    [Fact]
+    public void CompareOrdinal_FirstGreaterThanSecond_ReturnsPositive()
+    {
+        // Act
+        var result = "xyz".CompareOrdinal("abc");
+
+        // Assert
+        result.Should().BePositive();
+    }
+
+    // ── Format ─────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Format_WithArgs_ReturnsFormattedString()
+    {
+        // Act
+        var result = "Hello, {0}! You are {1} years old.".Format("World", 42);
+
+        // Assert
+        result.Should().Be("Hello, World! You are 42 years old.");
+    }
+
+    [Fact]
+    public void Format_WithNoArgs_ReturnsOriginalString()
+    {
+        // Act
+        var result = "No placeholders here.".Format();
+
+        // Assert
+        result.Should().Be("No placeholders here.");
+    }
+
+    [Fact]
+    public void Format_WithSingleArg_ReturnsFormattedString()
+    {
+        // Act
+        var result = "Value: {0}".Format(42);
+
+        // Assert
+        result.Should().Be("Value: 42");
     }
 }

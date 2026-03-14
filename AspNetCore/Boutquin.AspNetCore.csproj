@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <!--
+    InternalsVisibleTo grants the test project access to internal members.
+
+    Why this is needed:
+    ModuleExtensions has an internal overload of RegisterModules that accepts a
+    Func<Assembly> assembly resolver parameter. This overload exists solely for
+    testability — it allows unit tests to inject a known assembly instead of relying
+    on Assembly.GetEntryAssembly() (which returns null under xUnit) or
+    Assembly.GetCallingAssembly() (which returns the wrong assembly due to the
+    intermediate call chain through the public overload).
+
+    The overload is internal rather than public because it is an implementation detail
+    that production callers should never need. InternalsVisibleTo is the standard .NET
+    mechanism for exposing internal members to a specific friend assembly (the test
+    project) without widening the public API surface.
+  -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Boutquin.UnitTests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="7.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Validation\Boutquin.Validation.csproj" />
+    <ProjectReference Include="..\Domain\Boutquin.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

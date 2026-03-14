@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../CommonAssemblyInfo.props" />
-
   <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Common abstractions (entities, enums, exceptions, interfaces, types and logic) specific to a Domain layer.</Description>
     <PackageTags>CleanArchitecture,Domain,Entities,GuardClauses,ContractDrivenDevelopment,ExtensionMethods,CustomExceptions,Serialization,Shared</PackageTags>
-    <PackageReleaseNotes>Initial version.</PackageReleaseNotes>
+    <PackageReleaseNotes>See CHANGELOG.md for release notes.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -29,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
-    <PackageReference Include="MinVer" Version="5.0.0">
+    <PackageReference Include="MinVer" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

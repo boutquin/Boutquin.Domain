@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public static class ResultExtensions
     /// var myResult = PerformOperation();
     /// var message = myResult.Match(
     ///     onSuccess: () => "Operation succeeded.",
-    ///     onFailure: error => $"Operation failed: {error.Message}");
+    ///     onFailure: error => $"Operation failed: {error.Name}");
     /// // The variable 'message' will contain a success or failure message based on the operation result.
     /// </example>
     public static T Match<T>(
@@ -47,4 +47,27 @@ public static class ResultExtensions
         Func<T> onSuccess,
         Func<Error, T> onFailure) =>
         result.IsSuccess ? onSuccess() : onFailure(result.Error);
+
+    /// <summary>
+    /// Executes one of two provided functions based on the success or failure of a Result that carries a value.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the return value of the functions.</typeparam>
+    /// <typeparam name="TValue">The type of the value contained in the Result.</typeparam>
+    /// <param name="result">The Result&lt;TValue&gt; instance on which the extension method is called.</param>
+    /// <param name="onSuccess">The function to execute if the Result indicates success, receiving the value as a parameter.</param>
+    /// <param name="onFailure">The function to execute if the Result indicates failure, taking an Error as a parameter.</param>
+    /// <returns>The return value of either the onSuccess or onFailure function.</returns>
+    /// <example>
+    /// <code>
+    /// var result = Divide(10, 2);
+    /// var message = result.Match(
+    ///     onSuccess: value => $"Result: {value}",
+    ///     onFailure: error => $"Error: {error.Name}");
+    /// </code>
+    /// </example>
+    public static TResult Match<TResult, TValue>(
+        this Result<TValue> result,
+        Func<TValue, TResult> onSuccess,
+        Func<Error, TResult> onFailure) =>
+        result.IsSuccess ? onSuccess(result.Value) : onFailure(result.Error);
 }

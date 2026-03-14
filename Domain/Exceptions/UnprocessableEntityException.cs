@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -19,13 +19,16 @@ namespace Boutquin.Domain.Exceptions;
 /// <summary>
 /// The exception that is thrown when the server understands the request but is unable to process the request due to semantic errors.
 /// </summary>
-[Serializable]
-public sealed class UnprocessableEntityException : Exception
+public sealed class UnprocessableEntityException : DomainException
 {
+    private const int DefaultStatusCode = 422;
+    private const string DefaultTitle = "Unprocessable Entity";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="UnprocessableEntityException"/> class.
     /// </summary>
     public UnprocessableEntityException()
+        : base(DefaultStatusCode, DefaultTitle)
     {
     }
 
@@ -34,7 +37,7 @@ public sealed class UnprocessableEntityException : Exception
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     public UnprocessableEntityException(string message)
-        : base(message)
+        : base(DefaultStatusCode, DefaultTitle, message)
     {
     }
 
@@ -44,8 +47,7 @@ public sealed class UnprocessableEntityException : Exception
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="inner">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
     public UnprocessableEntityException(string message, Exception inner)
-        : base(message, inner)
+        : base(DefaultStatusCode, DefaultTitle, message, inner)
     {
     }
 }
-

@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public sealed class Result<TValue> : Result
     /// <param name="value">The value associated with a successful operation.</param>
     /// <param name="isSuccess">Indicates whether the operation was successful.</param>
     /// <param name="error">The error associated with a failed operation.</param>
-    protected internal Result(TValue? value, bool isSuccess, Error error)
+    internal Result(TValue? value, bool isSuccess, Error error)
         : base(isSuccess, error) =>
         _value = value;
 

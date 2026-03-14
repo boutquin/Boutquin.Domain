@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -19,13 +19,16 @@ namespace Boutquin.Domain.Exceptions;
 /// <summary>
 /// The exception that is thrown when the client does not have permission to access a resource.
 /// </summary>
-[Serializable]
-public sealed class ForbiddenException : Exception
+public sealed class ForbiddenException : DomainException
 {
+    private const int DefaultStatusCode = 403;
+    private const string DefaultTitle = "Forbidden";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ForbiddenException"/> class.
     /// </summary>
     public ForbiddenException()
+        : base(DefaultStatusCode, DefaultTitle)
     {
     }
 
@@ -34,7 +37,7 @@ public sealed class ForbiddenException : Exception
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     public ForbiddenException(string message)
-        : base(message)
+        : base(DefaultStatusCode, DefaultTitle, message)
     {
     }
 
@@ -44,7 +47,7 @@ public sealed class ForbiddenException : Exception
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="inner">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
     public ForbiddenException(string message, Exception inner)
-        : base(message, inner)
+        : base(DefaultStatusCode, DefaultTitle, message, inner)
     {
     }
 }

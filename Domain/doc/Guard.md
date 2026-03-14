@@ -1,169 +1,202 @@
-﻿# Class Name: Guard
+# Class Name: Guard
 
-The Guard class is a utility class that provides static methods to validate the preconditions for parameters in a method. It helps to ensure that input values are valid and appropriate for the given context.
+**Namespace:** `Boutquin.Domain.Helpers`
+
+The Guard class is a static utility class that provides methods to validate preconditions for method parameters. It helps ensure that input values are valid and appropriate for the given context, following the [Guard Clause](https://refactoring.com/catalog/replaceNestedConditionalWithGuardClauses.html) pattern.
+
+## Design
+
+The Guard class provides two families of overloads for most validation methods:
+
+1. **Expression-based overloads** — Accept a `Expression<Func<T>>` lambda (e.g., `Guard.AgainstNull(() => value)`). These compile the expression tree at runtime to extract both the value and the parameter name automatically. They offer the best developer ergonomics but have measurable overhead from expression compilation on every call.
+
+2. **CallerArgumentExpression overloads** — Accept the value directly with `[CallerArgumentExpression]` (e.g., `Guard.AgainstNull(value)`). These use a C# 10 compiler feature to capture the parameter name at compile time with zero runtime overhead. Prefer these for performance-sensitive hot paths.
 
 ## Methods
 
-### `Against(bool condition)`
+### Fluent Condition API
 
-Checks if the given condition is true and throws the specified exception if it is.
+#### `Against(bool condition)`
 
-#### Parameters
+Checks if the given condition is true and returns a [GuardCondition](GuardCondition.md) to chain with `With<TException>()`.
 
+**Parameters:**
 - `condition` (bool): The condition to check.
 
-#### Returns
+**Returns:** An instance of the [GuardCondition class](GuardCondition.md) to chain with `With<TException>()`.
 
-- An instance of the [GuardCondition class](https://github.com/boutquin/Boutquin.Domain/blob/master/Domain/doc/GuardCondition.md) to chain with With&lt;TException&gt; method.
+### Null / Default Checks
 
-### `AgainstNull<T>(Func<T> valueExpression) where T : class`
+#### `AgainstNull<T>(Expression<Func<T>> valueExpression) where T : class`
 
-Checks if the given reference type value is null and throws an ArgumentNullException if it is. This overload accepts a Func&lt;T&gt; that returns the value and extracts its name using nameof.
+Checks if the given reference type value is null and throws `ArgumentNullException` if it is. Extracts the parameter name from the expression tree.
 
-#### Type Parameters
+**Parameters:**
+- `valueExpression` (Expression&lt;Func&lt;T&gt;&gt;): An expression that returns the value to check for null.
 
-- `T` (class): The type of the value being checked. Must be a reference type.
+**Exceptions:** `ArgumentNullException` when the value is null.
 
-#### Parameters
+#### `AgainstNull<T>(T? value, [CallerArgumentExpression] string paramName = "") where T : class`
 
-- `valueExpression` (Func&lt;T&gt;): A Func&lt;T&gt; that returns the value to check for null.
+CallerArgumentExpression overload — checks if the reference type value is null. The parameter name is captured at compile time.
 
-#### Exceptions
+**Parameters:**
+- `value` (T?): The value to check for null.
+- `paramName` (string): Auto-captured by the compiler.
 
-- `ArgumentNullException`: Thrown when the given value is null.
+**Exceptions:** `ArgumentNullException` when the value is null.
 
-### `AgainstNullOrEmpty(Func<string> valueExpression)`
+#### `AgainstDefault<T>(Expression<Func<T>> valueExpression) where T : struct`
 
-Checks if the given string value is null or empty and throws an ArgumentNullException if it is. This overload accepts a Func&lt;string&gt; that returns the value and extracts its name using nameof.
+Checks if the given value type equals its default value (e.g., `0` for `int`, `Guid.Empty` for `Guid`).
 
-#### Parameters
+**Parameters:**
+- `valueExpression` (Expression&lt;Func&lt;T&gt;&gt;): An expression that returns the value to check.
 
-- `valueExpression` (Func&lt;string&gt;): A Func&lt;string&gt; that returns the value to check for null or empty.
+**Exceptions:** `ArgumentException` when the value equals `default(T)`.
 
-#### Exceptions
+#### `AgainstDefault<T>(T value, [CallerArgumentExpression] string paramName = "") where T : struct`
 
-- `ArgumentNullException`: Thrown when the given string value is null or empty.
+CallerArgumentExpression overload for default value checks.
 
-### `AgainstNullOrWhiteSpace(Func<string> valueExpression)`
+#### `AgainstNullOrDefault<T>(Expression<Func<T>> valueExpression)`
 
-Checks if the given string value is null, empty, or contains only whitespace characters and throws an ArgumentNullException if it is. This overload accepts a Func&lt;string&gt; that returns the value and extracts its name using nameof.
+Checks if the given value is null (for reference types) or default (for value types).
 
-#### Parameters
+### Collection Checks
 
-- `valueExpression` (Func&lt;string&gt;): A Func&lt;string&gt; that returns the value to check for null, empty, or whitespace.
+#### `AgainstEmptyOrNullEnumerable<T>(Expression<Func<IEnumerable<T>>> enumerableExpression)`
 
-#### Exceptions
+Checks if the given enumerable is null or empty.
 
-- `ArgumentNullException`: Thrown when the given string value is null, empty, or contains only whitespace characters.
+**Exceptions:** `ArgumentNullException` when null; `EmptyOrNullCollectionException` when empty.
 
-### `AgainstOverflow(Func<string> valueExpression, int maxLength)`
+#### `AgainstNullOrEmptyArray<T>(Expression<Func<T[]>> valueExpression)`
 
-Ensures that the length of the string returned by the given Func&lt;T&gt; expression is less than or equal to the specified maxLength.
+Checks if the given array is null or has zero elements.
 
-#### Parameters
+**Exceptions:** `ArgumentNullException` when null; `EmptyOrNullArrayException` when empty.
 
-- `valueExpression` (Func&lt;string&gt;): A Func&lt;string&gt; that returns the string value to be checked.
-- `maxLength` (int): The maximum length allowed for the string value. Must be greater than zero.
+#### `AgainstEmptyOrNullCollection<T>(Expression<Func<ICollection<T>>> collectionExpression)`
 
-#### Exceptions
+Checks if the given collection is null or has zero elements.
 
-- `ArgumentOutOfRangeException`: Thrown when the length of the string value exceeds the specified maxLength or when maxLength is less than or equal to zero.
-- `InvalidOperationException`: Thrown when the parameter name cannot be extracted from the expression.
+**Exceptions:** `ArgumentNullException` when null; `EmptyOrNullCollectionException` when empty.
 
-### `AgainstNullOrEmptyAndOverflow(Func<string> valueExpression, int maxLength)`
+#### `AgainstEmptyOrNullDictionary<TKey, TValue>(Expression<Func<IDictionary<TKey, TValue>>> dictionaryExpression)`
 
-Checks if the string returned by the given Func&lt;T&gt; expression is null, empty or exceeds the specified maximum length and throws an ArgumentException if it does.
+Checks if the given dictionary is null or has zero entries.
 
-#### Parameters
+**Exceptions:** `ArgumentNullException` when null; `EmptyOrNullDictionaryException` when empty.
 
-- `valueExpression` (Func&lt;string&gt;): A Func&lt;string&gt; that returns the string to check for null, empty, or exceeding the maximum length.
-- `maxLength` (int): The maximum length allowed for the string.
+#### `AgainstEmptyOrNullReadOnlyDictionary<TKey, TValue>(Expression<Func<IReadOnlyDictionary<TKey, TValue>>> dictionaryExpression)`
 
-#### Exceptions
+Same as above but for `IReadOnlyDictionary<TKey, TValue>`.
 
-- `ArgumentException`: Thrown when the given string is null, empty, or exceeds the maximum length.
+### String Checks
 
-### `AgainstNullOrWhiteSpaceAndOverflow(Func<string> valueExpression, int maxLength)`
+#### `AgainstNullOrEmpty(Expression<Func<string>> valueExpression)`
 
-Checks if the string returned by the given Func&lt;T&gt; expression is null, empty, consists only of white-space characters, or exceeds the specified maximum length and throws an ArgumentException if it does.
+Checks if the given string is null or empty.
 
-#### Parameters
+**Exceptions:** `ArgumentNullException` when null or empty.
 
-- `valueExpression` (Func&lt;string&gt;): A Func&lt;string&gt; that returns the string to check for null, empty, white-space characters, or exceeding the maximum length.
-- `maxLength` (int): The maximum length allowed for the string.
+#### `AgainstNullOrEmpty(string? value, [CallerArgumentExpression] string paramName = "")`
 
-#### Exceptions
+CallerArgumentExpression overload for null/empty string checks.
 
-- `ArgumentException`: Thrown when the given string is null, empty, consists only of white-space characters, or exceeds the maximum length.
-- `InvalidOperationException`: Thrown when the parameter name cannot be extracted from the expression.
+#### `AgainstNullOrWhiteSpace(Expression<Func<string>> valueExpression)`
 
-### `AgainstNegative<T>(Func<T> valueExpression) where T : IComparable<T>`
+Checks if the given string is null, empty, or consists only of whitespace.
 
-Checks if the value returned by the given Func&lt;T&gt; expression is negative and throws an ArgumentOutOfRangeException if it is.
+**Exceptions:** `ArgumentNullException` when null, empty, or whitespace.
 
-#### Type Parameters
+#### `AgainstNullOrWhiteSpace(string? value, [CallerArgumentExpression] string paramName = "")`
 
-- `T` (IComparable&lt;T&gt;): The type of the value. Must be a comparable value type.
+CallerArgumentExpression overload for null/whitespace string checks.
 
-#### Parameters
+#### `AgainstOverflow(Expression<Func<string>> valueExpression, int maxLength)`
 
-- `valueExpression` (Func&lt;T&gt;): A Func&lt;T&gt; that returns the value to check for negativity.
+Ensures the string length does not exceed the specified maximum.
 
-#### Exceptions
+**Parameters:**
+- `valueExpression` (Expression&lt;Func&lt;string&gt;&gt;): An expression returning the string to check.
+- `maxLength` (int): The maximum allowed length (must be > 0).
 
-- `ArgumentOutOfRangeException`: Thrown when the given value is negative.
-- `InvalidOperationException`: Thrown when the parameter name cannot be extracted from the expression.
+**Exceptions:** `ArgumentOutOfRangeException` when the string exceeds maxLength.
 
-### `AgainstNegativeOrZero<T>(Func<T> valueExpression) where T : IComparable<T>`
+#### `AgainstNullOrEmptyAndOverflow(Expression<Func<string>> valueExpression, int maxLength)`
 
-Ensures that the value returned by the given Func&lt;T&gt; expression is greater than zero.
+Combined check: null/empty + overflow.
 
-#### Type Parameters
+#### `AgainstNullOrWhiteSpaceAndOverflow(Expression<Func<string>> valueExpression, int maxLength)`
 
-- `T` (IComparable&lt;T&gt;): The type of the value. Must be a comparable type.
+Combined check: null/whitespace + overflow.
 
-#### Parameters
+### Numeric Checks
 
-- `valueExpression` (Func&lt;T&gt;): A Func&lt;T&gt; that returns the value to be checked.
+#### `AgainstNegative<T>(Expression<Func<T>> valueExpression) where T : struct, IComparable<T>`
 
-#### Exceptions
+Checks if the value is negative (less than zero).
 
-- `ArgumentOutOfRangeException`: Thrown when the value is negative or zero.
-- `InvalidOperationException`: Thrown when the parameter name cannot be extracted from the expression.
+**Exceptions:** `ArgumentOutOfRangeException` when negative.
 
-### `AgainstUndefinedEnumValue<T>(Func<T> valueExpression) where T : Enum`
+#### `AgainstNegative<T>(T value, [CallerArgumentExpression] string paramName = "") where T : struct, IComparable<T>`
 
-Checks if the enum value returned by the given Func&lt;T&gt; expression is defined and throws an ArgumentOutOfRangeException if it is not.
+CallerArgumentExpression overload for negativity checks.
 
-#### Type Parameters
+#### `AgainstNegativeOrZero<T>(Expression<Func<T>> valueExpression) where T : struct, IComparable<T>`
 
-- `T` (Enum): The type of the enum value.
+Checks if the value is zero or negative.
 
-#### Parameters
+**Exceptions:** `ArgumentOutOfRangeException` when negative or zero.
 
-- `valueExpression` (Func&lt;T&gt;): A Func&lt;T&gt; that returns the enum value to check if it is defined.
+#### `AgainstNegativeOrZero<T>(T value, [CallerArgumentExpression] string paramName = "") where T : struct, IComparable<T>`
 
-#### Exceptions
+CallerArgumentExpression overload.
 
-- `ArgumentOutOfRangeException`: Thrown when the given enum value is not defined.
-- `InvalidOperationException`: Thrown when the parameter name cannot be extracted from the expression.
+#### `AgainstOutOfRange<T>(Expression<Func<T>> valueExpression, T min, T max) where T : struct, IComparable<T>`
 
-### `AgainstOutOfRange<T>(Func<T> valueExpression, T min, T max) where T : IComparable<T>`
+Checks if the value is within the specified range [min, max], inclusive.
 
-Checks if the value returned by the given Func&lt;T&gt; expression is within the specified range, inclusive.
+**Parameters:**
+- `valueExpression`: Expression returning the value.
+- `min` (T): Minimum valid value (inclusive).
+- `max` (T): Maximum valid value (inclusive).
 
-#### Type Parameters
+**Exceptions:** `ArgumentOutOfRangeException` when outside range.
 
-- `T` (IComparable&lt;T&gt;): The type of the value. Must be a comparable value type.
+#### `AgainstOutOfRange<T>(T value, T min, T max, [CallerArgumentExpression] string paramName = "") where T : struct, IComparable<T>`
 
-#### Parameters
+CallerArgumentExpression overload for range checks.
 
-- `valueExpression` (Func&lt;T&gt;): A Func&lt;T&gt; that returns the value to check for range.
-- `min` (T): The minimum valid value, inclusive.
-- `max` (T): The maximum valid value, inclusive.
+### Enum Checks
 
-#### Exceptions
+#### `AgainstNonEnumType<T>()`
 
-- `ArgumentOutOfRangeException`: Thrown when the given value is not within the specified range.
-- `InvalidOperationException`: Thrown when the parameter name cannot be extracted from the expression.
+Checks that the type parameter `T` is an enum type.
 
+**Exceptions:** `ArgumentException` when `T` is not an enum.
+
+#### `AgainstUndefinedEnumValue<T>(Expression<Func<T>> valueExpression) where T : Enum`
+
+Checks if the enum value is defined in the enum type.
+
+**Exceptions:** `ArgumentOutOfRangeException` when the value is not a defined member.
+
+## Example Usage
+
+```csharp
+// Expression-based (automatic parameter name extraction):
+Guard.AgainstNull(() => customer);
+Guard.AgainstNullOrWhiteSpace(() => name);
+Guard.AgainstOutOfRange(() => age, 0, 150);
+
+// CallerArgumentExpression-based (zero overhead, C# 10+):
+Guard.AgainstNull(customer);
+Guard.AgainstNullOrWhiteSpace(name);
+Guard.AgainstOutOfRange(age, 0, 150);
+
+// Fluent condition API:
+Guard.Against(quantity <= 0).With<ArgumentException>("Quantity must be positive.");
+```

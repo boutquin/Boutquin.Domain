@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -19,13 +19,16 @@ namespace Boutquin.Domain.Exceptions;
 /// <summary>
 /// The exception that is thrown when a request conflicts with the current state of the server.
 /// </summary>
-[Serializable]
-public sealed class ConflictException : Exception
+public sealed class ConflictException : DomainException
 {
+    private const int DefaultStatusCode = 409;
+    private const string DefaultTitle = "Conflict";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ConflictException"/> class.
     /// </summary>
     public ConflictException()
+        : base(DefaultStatusCode, DefaultTitle)
     {
     }
 
@@ -34,7 +37,7 @@ public sealed class ConflictException : Exception
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     public ConflictException(string message)
-        : base(message)
+        : base(DefaultStatusCode, DefaultTitle, message)
     {
     }
 
@@ -44,7 +47,7 @@ public sealed class ConflictException : Exception
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="inner">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
     public ConflictException(string message, Exception inner)
-        : base(message, inner)
+        : base(DefaultStatusCode, DefaultTitle, message, inner)
     {
     }
 }

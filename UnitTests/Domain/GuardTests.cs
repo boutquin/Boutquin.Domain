@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -41,11 +41,7 @@ public sealed class GuardTests
         string? nullValue = null;
 
         // Act
-#pragma warning disable CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
-#pragma warning disable CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
-        var act = () => Guard.AgainstNull(() => nullValue);
-#pragma warning restore CS8621 // Nullability of reference types in return type doesn't match the target delegate (possibly because of nullability attributes).
-#pragma warning restore CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
+        var act = () => Guard.AgainstNull(() => nullValue!);
 
         // Assert
         act.Should().Throw<ArgumentNullException>()
@@ -76,10 +72,10 @@ public sealed class GuardTests
     public void AgainstEmptyOrNullEnumerable_WhenEnumerableIsNull_ThrowsArgumentException()
     {
         // Arrange
-        IEnumerable<int> nullEnumerable = null;
+        IEnumerable<int>? nullEnumerable = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => Guard.AgainstEmptyOrNullEnumerable(() => nullEnumerable));
+        Assert.Throws<ArgumentException>(() => Guard.AgainstEmptyOrNullEnumerable(() => nullEnumerable!));
     }
 
     /// <summary>
@@ -139,14 +135,10 @@ public sealed class GuardTests
     public void AgainstNullOrEmptyArray_WhenArrayIsNull_ThrowsArgumentException()
     {
         // Arrange
-#pragma warning disable CS8600
-        int[] nullArray = null;
-#pragma warning restore CS8600
+        int[]? nullArray = null;
 
         // Act
-#pragma warning disable CS8603
-        var act = () => Guard.AgainstNullOrEmptyArray(() => nullArray);
-#pragma warning restore CS8603
+        var act = () => Guard.AgainstNullOrEmptyArray(() => nullArray!);
 
         // Assert
         act.Should().Throw<EmptyOrNullArrayException>().WithMessage($"Parameter '{nameof(nullArray)}' cannot be null or an empty array.");
@@ -191,14 +183,10 @@ public sealed class GuardTests
     public void AgainstEmptyOrNullCollection_WhenCollectionIsNull_ThrowsEmptyOrNullCollectionException()
     {
         // Arrange
-#pragma warning disable CS8600
-        List<int> nullList = null;
-#pragma warning restore CS8600
+        List<int>? nullList = null;
 
         // Act
-#pragma warning disable CS8603
-        var act = () => Guard.AgainstEmptyOrNullCollection(() => nullList);
-#pragma warning restore CS8603
+        var act = () => Guard.AgainstEmptyOrNullCollection(() => nullList!);
 
         // Assert
         act.Should().Throw<EmptyOrNullCollectionException>().WithMessage($"Parameter '{nameof(nullList)}' cannot be null or an empty collection.");
@@ -243,14 +231,10 @@ public sealed class GuardTests
     public void AgainstEmptyOrNullDictionary_WhenDictionaryIsNull_ThrowsEmptyOrNullDictionaryException()
     {
         // Arrange
-#pragma warning disable CS8600
-        IDictionary<int, string> nullDictionary = null;
-#pragma warning restore CS8600
+        IDictionary<int, string>? nullDictionary = null;
 
         // Act
-#pragma warning disable CS8603
-        var act = () => Guard.AgainstEmptyOrNullDictionary(() => nullDictionary);
-#pragma warning restore CS8603
+        var act = () => Guard.AgainstEmptyOrNullDictionary(() => nullDictionary!);
 
         // Assert
         act.Should().Throw<EmptyOrNullDictionaryException>().WithMessage($"Parameter '{nameof(nullDictionary)}' cannot be null or an empty dictionary.");
@@ -278,9 +262,9 @@ public sealed class GuardTests
     [Fact]
     public void AgainstEmptyOrNullReadOnlyDictionary_WhenDictionaryIsNull_ThrowsEmptyOrNullDictionaryException()
     {
-        IReadOnlyDictionary<int, string> nullDictionary = null;
+        IReadOnlyDictionary<int, string>? nullDictionary = null;
 
-        Assert.Throws<EmptyOrNullDictionaryException>(() => Guard.AgainstEmptyOrNullReadOnlyDictionary(() => nullDictionary));
+        Assert.Throws<EmptyOrNullDictionaryException>(() => Guard.AgainstEmptyOrNullReadOnlyDictionary(() => nullDictionary!));
     }
 
     /// <summary>
@@ -391,9 +375,7 @@ public sealed class GuardTests
         string? nullValue = null;
 
         // Act
-#pragma warning disable CS8603 // Possible null reference return.
-        var act = () => Guard.AgainstNullOrEmpty(() => nullValue);
-#pragma warning restore CS8603 // Possible null reference return.
+        var act = () => Guard.AgainstNullOrEmpty(() => nullValue!);
 
         // Assert
         act.Should().Throw<ArgumentException>()
@@ -444,7 +426,7 @@ public sealed class GuardTests
     [InlineData("   ")]
     public void AgainstNullOrWhiteSpace_WhenStringIsNullOrWhiteSpace_ThrowsException(string? value)
     {
-        Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpace(() => value));
+        Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpace(() => value!));
     }
 
     /// <summary>
@@ -492,7 +474,7 @@ public sealed class GuardTests
     [InlineData("")]
     public void AgainstNullOrEmptyAndOverflow_WhenStringIsNullOrEmpty_ThrowsException(string? value)
     {
-        Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrEmptyAndOverflow(() => value, 10));
+        Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrEmptyAndOverflow(() => value!, 10));
     }
 
     /// <summary>
@@ -528,7 +510,7 @@ public sealed class GuardTests
     [InlineData("   ")]
     public void AgainstNullOrWhiteSpaceAndOverflow_WhenStringIsNullOrWhiteSpaceOrOverflow_ThrowsException(string? value)
     {
-        Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpaceAndOverflow(() => value, 10));
+        Assert.Throws<ArgumentException>(() => Guard.AgainstNullOrWhiteSpaceAndOverflow(() => value!, 10));
     }
 
     /// <summary>
@@ -639,9 +621,9 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNull_WhenArgumentIsNull_ThrowsArgumentNullException()
     {
-        object nullObject = null;
+        object? nullObject = null;
 
-        Assert.Throws<ArgumentNullException>(() => Guard.AgainstNull(() => nullObject));
+        Assert.Throws<ArgumentNullException>(() => Guard.AgainstNull(() => nullObject!));
     }
 
     /// <summary>
@@ -663,9 +645,9 @@ public sealed class GuardTests
     [Fact]
     public void AgainstNullOrEmptyArray_WhenArrayIsNull_ThrowsEmptyOrNullArrayException()
     {
-        int[] nullArray = null;
+        int[]? nullArray = null;
 
-        Assert.Throws<EmptyOrNullArrayException>(() => Guard.AgainstNullOrEmptyArray(() => nullArray));
+        Assert.Throws<EmptyOrNullArrayException>(() => Guard.AgainstNullOrEmptyArray(() => nullArray!));
     }
 
     /// <summary>
@@ -760,7 +742,7 @@ public sealed class GuardTests
         const bool Condition = true;
 
         // Act
-        var act = () => Guard.Against(Condition).With<InvalidOperationException>(invalidMessage);
+        var act = () => Guard.Against(Condition).With<InvalidOperationException>(invalidMessage!);
 
         // Assert
         act.Should().Throw<ArgumentException>()

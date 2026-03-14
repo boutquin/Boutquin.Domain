@@ -1,10 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../CommonAssemblyInfo.props" />
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.9.2" />
-    <PackageReference Include="MinVer" Version="5.0.0">
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="MinVer" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

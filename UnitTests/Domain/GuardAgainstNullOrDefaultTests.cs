@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Pierre G. Boutquin. All rights reserved.
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License").
 //   You may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ public class GuardAgainstNullOrDefaultTests
     [Fact]
     public void AgainstNullOrDefault_NullReference_ThrowsArgumentNullException()
     {
-        string value = null;
-        Assert.Throws<ArgumentNullException>(() => Guard.AgainstNullOrDefault(() => value));
+        string? value = null;
+        Assert.Throws<ArgumentNullException>(() => Guard.AgainstNullOrDefault(() => value!));
     }
 
     /// <summary>
@@ -244,8 +244,8 @@ public class GuardAgainstNullOrDefaultTests
     [Fact]
     public void AgainstNullOrDefault_RecordDefault_ThrowsArgumentException()
     {
-        MyRecord value = default;
-        Assert.Throws<ArgumentNullException>(() => Guard.AgainstNullOrDefault(() => value));
+        MyRecord? value = default;
+        Assert.Throws<ArgumentNullException>(() => Guard.AgainstNullOrDefault(() => value!));
     }
 
     /// <summary>
