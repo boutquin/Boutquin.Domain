@@ -16,21 +16,19 @@
 
 namespace Boutquin.Domain.Abstractions;
 
-using MediatR;
-
 /// <summary>
 /// Represents a domain event within the system.
 /// </summary>
 /// <remarks>
 /// <para>
 /// A domain event is an event that is significant within the domain of the application.
-/// Implementing this interface allows an object to be dispatched by MediatR as a notification,
+/// Implementing this interface allows an object to be dispatched by a mediator as a notification,
 /// enabling a decoupled, event-driven architecture.
 /// </para>
 /// <para>
 /// In a domain-driven design context, domain events are used to model important occurrences within the domain.
 /// These events are typically things that have happened in the past (e.g., OrderPlaced, ItemShipped, etc.).
-/// By implementing the <see cref="INotification"/> interface from MediatR, domain events can be dispatched
+/// By implementing the <see cref="INotification"/> interface, domain events can be dispatched
 /// to relevant handlers which can then perform specific actions in response to the event.
 /// </para>
 /// <para>
@@ -42,11 +40,6 @@ using MediatR;
 /// The interface itself does not define any members; it serves as a marker interface to signify that
 /// a class is a domain event. Implementors of this interface should contain properties that provide
 /// details about the event itself.
-/// </para>
-/// <para>
-/// <strong>Note:</strong> This interface extends MediatR's <see cref="INotification"/> to enable
-/// dispatching via MediatR. If you prefer to avoid the MediatR dependency in your domain layer,
-/// consider defining your own marker interface and adapting at the infrastructure level.
 /// </para>
 /// </remarks>
 /// <example>

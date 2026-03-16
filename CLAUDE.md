@@ -1,5 +1,7 @@
 # Boutquin.Domain
 
+> **Language conventions:** `~/.claude/conventions/dotnet-conventions.md`
+
 .NET 10 / C# 14 domain-driven design library. Three NuGet packages published from one solution.
 
 ## Solution Structure

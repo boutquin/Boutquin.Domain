@@ -193,4 +193,19 @@ public class Result
     /// </example>
     public static Result<TValue> Create<TValue>(TValue? value) =>
         value is not null ? Success(value) : Failure<TValue>(Error.NullValue);
+
+    /// <summary>
+    /// Creates a failure result representing a cancelled operation.
+    /// </summary>
+    /// <param name="code">The error code for the cancellation. Defaults to "Error.Cancellation".</param>
+    /// <param name="name">The error description. Defaults to "The request was cancelled.".</param>
+    /// <returns>A failed result with a <see cref="ErrorType.RequestTimeout"/> error.</returns>
+    public static Result Cancelled(string code = "Error.Cancellation", string name = "The request was cancelled.") =>
+        Failure(Error.RequestTimeout(code, name));
+
+    /// <summary>
+    /// Implicitly converts an <see cref="Error"/> to a failed <see cref="Result"/>.
+    /// </summary>
+    /// <param name="error">The error to convert.</param>
+    public static implicit operator Result(Error error) => new(false, error);
 }
