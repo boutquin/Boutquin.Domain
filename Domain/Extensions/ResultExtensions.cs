@@ -17,6 +17,7 @@
 namespace Boutquin.Domain.Extensions;
 
 using System;
+using System.Threading.Tasks;
 using Abstractions;
 
 /// <summary>
@@ -70,4 +71,168 @@ public static class ResultExtensions
         Func<TValue, TResult> onSuccess,
         Func<Error, TResult> onFailure) =>
         result.IsSuccess ? onSuccess(result.Value) : onFailure(result.Error);
+
+    /// <summary>
+    /// Asynchronously evaluates a Result and returns a value based on success or failure.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value.</typeparam>
+    /// <param name="resultTask">The asynchronous Result to evaluate.</param>
+    /// <param name="onSuccess">The function to execute if the Result indicates success.</param>
+    /// <param name="onFailure">The function to execute if the Result indicates failure.</param>
+    /// <returns>The return value of either the onSuccess or onFailure function.</returns>
+    public static async ValueTask<T> MatchAsync<T>(
+        this ValueTask<Result> resultTask,
+        Func<Task<T>> onSuccess,
+        Func<Error, Task<T>> onFailure)
+    {
+        ArgumentNullException.ThrowIfNull(onSuccess);
+        ArgumentNullException.ThrowIfNull(onFailure);
+
+        var result = await resultTask.ConfigureAwait(false);
+        return result.IsSuccess
+            ? await onSuccess().ConfigureAwait(false)
+            : await onFailure(result.Error).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Asynchronously evaluates a Result{TValue} and returns a value based on success or failure.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value.</typeparam>
+    /// <typeparam name="TValue">The type of the value contained in the Result.</typeparam>
+    /// <param name="resultTask">The asynchronous Result to evaluate.</param>
+    /// <param name="onSuccess">The function to execute if the Result indicates success, receiving the value.</param>
+    /// <param name="onFailure">The function to execute if the Result indicates failure.</param>
+    /// <returns>The return value of either the onSuccess or onFailure function.</returns>
+    public static async ValueTask<T> MatchAsync<T, TValue>(
+        this ValueTask<Result<TValue>> resultTask,
+        Func<TValue, Task<T>> onSuccess,
+        Func<Error, Task<T>> onFailure)
+    {
+        ArgumentNullException.ThrowIfNull(onSuccess);
+        ArgumentNullException.ThrowIfNull(onFailure);
+
+        var result = await resultTask.ConfigureAwait(false);
+        return result.IsSuccess
+            ? await onSuccess(result.Value).ConfigureAwait(false)
+            : await onFailure(result.Error).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Transforms the value of a successful Result into a new Result with a different value type.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the input value.</typeparam>
+    /// <typeparam name="TOut">The type of the output value.</typeparam>
+    /// <param name="result">The Result to transform.</param>
+    /// <param name="func">The transformation function to apply to the value.</param>
+    /// <returns>A new Result containing the transformed value, or the original error on failure.</returns>
+    public static Result<TOut> Map<TIn, TOut>(this Result<TIn> result, Func<TIn, TOut> func)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        ArgumentNullException.ThrowIfNull(func);
+
+        return result.IsSuccess
+            ? Result.Success(func(result.Value))
+            : Result.Failure<TOut>(result.Error);
+    }
+
+    /// <summary>
+    /// Chains a Result-returning operation onto a successful Result.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the input value.</typeparam>
+    /// <typeparam name="TOut">The type of the output value.</typeparam>
+    /// <param name="result">The Result to bind.</param>
+    /// <param name="func">The function that returns a new Result.</param>
+    /// <returns>The Result of the chained operation, or the original error on failure.</returns>
+    public static Result<TOut> Bind<TIn, TOut>(this Result<TIn> result, Func<TIn, Result<TOut>> func)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        ArgumentNullException.ThrowIfNull(func);
+
+        return result.IsSuccess
+            ? func(result.Value)
+            : Result.Failure<TOut>(result.Error);
+    }
+
+    /// <summary>
+    /// Asynchronously chains a Result-returning operation onto a successful Result.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the input value.</typeparam>
+    /// <typeparam name="TOut">The type of the output value.</typeparam>
+    /// <param name="resultTask">The asynchronous Result to bind.</param>
+    /// <param name="func">The async function that returns a new Result.</param>
+    /// <returns>The Result of the chained operation, or the original error on failure.</returns>
+    public static async ValueTask<Result<TOut>> BindAsync<TIn, TOut>(
+        this Task<Result<TIn>> resultTask,
+        Func<TIn, Task<Result<TOut>>> func)
+    {
+        ArgumentNullException.ThrowIfNull(resultTask);
+        ArgumentNullException.ThrowIfNull(func);
+
+        var result = await resultTask.ConfigureAwait(false);
+        return result.IsSuccess
+            ? await func(result.Value).ConfigureAwait(false)
+            : Result.Failure<TOut>(result.Error);
+    }
+
+    /// <summary>
+    /// Executes a side-effect action on a successful Result without altering the result.
+    /// </summary>
+    /// <typeparam name="T">The type of the value contained in the Result.</typeparam>
+    /// <param name="result">The Result to tap.</param>
+    /// <param name="action">The action to execute on the value if the Result is successful.</param>
+    /// <returns>The original Result, unchanged.</returns>
+    public static Result<T> Tap<T>(this Result<T> result, Action<T> action)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        ArgumentNullException.ThrowIfNull(action);
+
+        if (result.IsSuccess)
+        {
+            action(result.Value);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Asynchronously executes a side-effect action on a successful Result.
+    /// </summary>
+    /// <typeparam name="T">The type of the value contained in the Result.</typeparam>
+    /// <param name="resultTask">The asynchronous Result to tap.</param>
+    /// <param name="action">The async action to execute on the value if the Result is successful.</param>
+    /// <returns>The original Result, unchanged.</returns>
+    public static async ValueTask<Result<T>> TapAsync<T>(
+        this ValueTask<Result<T>> resultTask,
+        Func<T, Task> action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        var result = await resultTask.ConfigureAwait(false);
+        if (result.IsSuccess)
+        {
+            await action(result.Value).ConfigureAwait(false);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Executes a side-effect action on a failed Result without altering the result.
+    /// </summary>
+    /// <typeparam name="T">The type of the value contained in the Result.</typeparam>
+    /// <param name="result">The Result to inspect.</param>
+    /// <param name="action">The action to execute on the error if the Result is a failure.</param>
+    /// <returns>The original Result, unchanged.</returns>
+    public static Result<T> OnFailure<T>(this Result<T> result, Action<Error> action)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        ArgumentNullException.ThrowIfNull(action);
+
+        if (!result.IsSuccess)
+        {
+            action(result.Error);
+        }
+
+        return result;
+    }
 }

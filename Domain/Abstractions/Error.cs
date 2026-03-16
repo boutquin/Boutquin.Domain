@@ -21,6 +21,7 @@ namespace Boutquin.Domain.Abstractions;
 /// </summary>
 /// <param name="Code">A unique error code identifying the type of error.</param>
 /// <param name="Name">A descriptive name for the error.</param>
+/// <param name="ErrorType">The category of the error, mapped to an HTTP status code. Defaults to <see cref="ErrorType.None"/>.</param>
 /// <remarks>
 /// <para>
 /// The Error record is used to encapsulate information about errors that occur within the domain.
@@ -47,7 +48,7 @@ namespace Boutquin.Domain.Abstractions;
 /// }
 /// </code>
 /// </example>
-public record Error(string Code, string Name)
+public record Error(string Code, string Name, ErrorType ErrorType = default)
 {
     /// <summary>
     /// Represents no error.
@@ -64,4 +65,25 @@ public record Error(string Code, string Name)
     /// This static member can be used when a null value is provided where it is not allowed.
     /// </remarks>
     public static readonly Error NullValue = new("Error.NullValue", "Null value was provided");
+
+    /// <summary>Creates a <see cref="ErrorType.BadRequest"/> (400) error.</summary>
+    public static Error BadRequest(string code, string name) => new(code, name, ErrorType.BadRequest);
+
+    /// <summary>Creates a <see cref="ErrorType.NotFound"/> (404) error.</summary>
+    public static Error NotFound(string code, string name) => new(code, name, ErrorType.NotFound);
+
+    /// <summary>Creates a <see cref="ErrorType.Conflict"/> (409) error.</summary>
+    public static Error Conflict(string code, string name) => new(code, name, ErrorType.Conflict);
+
+    /// <summary>Creates a <see cref="ErrorType.Unauthorized"/> (401) error.</summary>
+    public static Error Unauthorized(string code, string name) => new(code, name, ErrorType.Unauthorized);
+
+    /// <summary>Creates a <see cref="ErrorType.Forbidden"/> (403) error.</summary>
+    public static Error Forbidden(string code, string name) => new(code, name, ErrorType.Forbidden);
+
+    /// <summary>Creates a <see cref="ErrorType.RequestTimeout"/> (408) error.</summary>
+    public static Error RequestTimeout(string code, string name) => new(code, name, ErrorType.RequestTimeout);
+
+    /// <summary>Creates a <see cref="ErrorType.InternalServerError"/> (500) error.</summary>
+    public static Error InternalServerError(string code, string name) => new(code, name, ErrorType.InternalServerError);
 }

@@ -25,7 +25,7 @@ The building blocks for Domain-Driven Design:
 - **[Result / Result&lt;TValue&gt;](Domain/doc/Result.md)** — Functional error handling — return success/failure instead of throwing exceptions.
 - **[Error](Domain/doc/Result.md)** — Immutable record representing a domain error with code and name.
 - **IEntity** — Interface for entities that generate domain events.
-- **IDomainEvent** — Marker interface extending MediatR's `INotification` for domain events.
+- **IDomainEvent** — Marker interface for domain events (implements `INotification`).
 - **IUnitOfWork** — Defines the persistence boundary (`SaveChangesAsync`).
 
 ### Helpers
@@ -98,9 +98,13 @@ throw new NotFoundException("Order 42 was not found.");
 // -> 404 ProblemDetails JSON response
 ```
 
+## Architecture
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for how the components fit together — layers, interface hierarchy, data flow, and component navigation.
+
 ## Contributing
 
-If you'd like to contribute, please feel free to submit a pull request or open an issue with your suggestions or improvements.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on reporting bugs, suggesting enhancements, and submitting pull requests. This project adheres to the Contributor Covenant [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 

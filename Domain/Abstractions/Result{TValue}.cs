@@ -101,4 +101,10 @@ public sealed class Result<TValue> : Result
     /// This conversion simplifies returning a successful result from methods.
     /// </remarks>
     public static implicit operator Result<TValue>(TValue? value) => Create(value);
+
+    /// <summary>
+    /// Implicitly converts an <see cref="Error"/> to a failed <see cref="Result{TValue}"/>.
+    /// </summary>
+    /// <param name="error">The error to convert.</param>
+    public static implicit operator Result<TValue>(Error error) => new(default, false, error);
 }
