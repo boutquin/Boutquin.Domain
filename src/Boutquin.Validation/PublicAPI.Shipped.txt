@@ -1,0 +1,4 @@
+#nullable enable
+Boutquin.Validation.Exceptions.ValidationException
+Boutquin.Validation.Exceptions.ValidationException.Errors.get -> System.Collections.Generic.IReadOnlyList<FluentValidation.Results.ValidationFailure!>!
+Boutquin.Validation.Exceptions.ValidationException.ValidationException(System.Collections.Generic.IEnumerable<FluentValidation.Results.ValidationFailure!>! failures) -> void

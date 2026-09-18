@@ -7,10 +7,10 @@ This document explains how the components in Boutquin.Domain fit together. For a
 The solution contains three independently-packaged libraries plus a test project:
 
 ```
-Domain/        Core DDD building blocks (zero external dependencies)
-Validation/    FluentValidation integration (depends on Domain)
-AspNetCore/    Middleware and module system (depends on Domain + Validation)
-UnitTests/     xUnit tests (depends on all three)
+src/Boutquin.Domain/        Core DDD building blocks (zero external dependencies)
+src/Boutquin.Validation/    FluentValidation integration (depends on Domain)
+src/Boutquin.AspNetCore/    Middleware and module system (depends on Domain + Validation)
+tests/Boutquin.UnitTests/   xUnit tests (depends on all three)
 ```
 
 Domain has zero external dependencies. Validation depends only on Domain and FluentValidation. AspNetCore depends on Domain, Validation, and `Microsoft.AspNetCore.App`. Tests depend on all three.
@@ -22,11 +22,11 @@ Domain has zero external dependencies. Validation depends only on Domain and Flu
 ```
 IEntity
   └─ Entity<TEntityId>          Identity-based equality, domain event buffering
-       │
-       └─ StronglyTypedId<T>    Wraps primitives as domain-specific IDs
+
+StronglyTypedId<T>              Wraps primitives as domain-specific IDs
 ```
 
-**Why identity-based equality?** Domain entities are identified by their ID, not their properties. Two `Order` objects with the same `OrderId` are the same order, regardless of other field values. `Entity<TEntityId>` enforces this by using only `Id` in `Equals`/`GetHashCode`. Transient entities (default ID) throw on comparison to prevent accidental identity collisions.
+**Why identity-based equality?** Domain entities are identified by their ID, not their properties. Two `Order` objects with the same `OrderId` are the same order, regardless of other field values. `Entity<TEntityId>` enforces this by using only `Id` in `Equals`/`GetHashCode`; it also requires the same concrete runtime type. Distinct transient entities (default ID) compare unequal, while an entity still equals itself by reference.
 
 ### Result Pattern
 
@@ -37,7 +37,7 @@ Result                          Success/failure without exceptions
        ├─ implicit TValue       Auto-wrap success values
        └─ implicit Error        Auto-wrap errors
 
-Error(Code, Name, ErrorType)    Value object with HTTP status mapping
+Error(Code, Description, ErrorType)    Value object with HTTP status mapping
   │
   ├─ Error.None                 Sentinel for "no error"
   ├─ Error.NullValue            Sentinel for null arguments
@@ -68,7 +68,7 @@ await GetOrder(id)
     .OnFailure(error => logger.LogWarning("Order lookup failed: {Code}", error.Code))
     .MatchAsync(
         dto => Results.Ok(dto),
-        error => Results.Problem(error));
+        error => Results.Problem(detail: error.Description));
 ```
 
 ### Domain Events
@@ -98,7 +98,7 @@ Guard
 
 Both APIs throw `ArgumentException` subtypes. The `CallerArgumentExpression` API is preferred for new code (zero runtime overhead). The expression-based API exists for backward compatibility.
 
-Guard methods are `internal` with `InternalsVisibleTo` for the test project. This keeps the public API surface clean while allowing thorough testing.
+`Guard` is a public API. Both the expression-based and `CallerArgumentExpression` families are available to consumers; the latter is normally the better default for new code.
 
 ## ASP.NET Core Integration
 
@@ -138,12 +138,12 @@ The `RegisterModules` overload accepts `Func<Assembly>` for testability — `Ass
 ```
 FluentValidation.AbstractValidator<T>
   │
-  └─ ValidationBehavior<TRequest, TResponse>    Pipeline behavior (mediator integration)
+ValidationException             Wraps FluentValidation failures
+  │
+  └─ Errors: IReadOnlyList<ValidationFailure>
        │
-       └─ throws ValidationException            Caught by middleware → 400
-            │
-            └─ Errors: IReadOnlyDictionary<string, string[]>
-                 (property name → error messages, grouped)
+       └─ CustomExceptionHandlerMiddleware → 400 ProblemDetails
+            extensions["errors"] groups messages by property name
 ```
 
 ## Component Navigation
@@ -152,35 +152,37 @@ FluentValidation.AbstractValidator<T>
 
 | Goal | Start at | Key files |
 |------|----------|-----------|
-| Define a domain entity | `Entity<TEntityId>` | `Domain/Abstractions/Entity.cs` |
-| Create a strongly typed ID | `StronglyTypedId<T>` | `Domain/Abstractions/StronglyTypedId.cs` |
-| Return success/failure | `Result<T>` | `Domain/Abstractions/Result.cs`, `Result{TValue}.cs` |
-| Chain Result operations | `ResultExtensions` | `Domain/Extensions/ResultExtensions.cs` |
-| Define error types | `Error` + `ErrorType` | `Domain/Abstractions/Error.cs`, `ErrorType.cs` |
-| Validate parameters | `Guard` | `Domain/Helpers/Guard.cs` |
-| Handle exceptions as HTTP | `CustomExceptionHandlerMiddleware` | `AspNetCore/Middleware/` |
-| Register modules | `ModuleExtensions` | `AspNetCore/Extensions/ModuleExtensions.cs` |
-| Validate with FluentValidation | `ValidationException` | `Validation/ValidationException.cs` |
-| Raise domain events | `Entity.RaiseDomainEvent()` | `Domain/Abstractions/Entity.cs` |
+| Define a domain entity | `Entity<TEntityId>` | `src/Boutquin.Domain/Abstractions/Entity{TEntityId}.cs` |
+| Create a strongly typed ID | `StronglyTypedId<T>` | `src/Boutquin.Domain/Helpers/StronglyTypedId.cs` |
+| Return success/failure | `Result<T>` | `src/Boutquin.Domain/Abstractions/Result.cs`, `Result{TValue}.cs` |
+| Chain Result operations | `ResultExtensions` | `src/Boutquin.Domain/Extensions/ResultExtensions.cs` |
+| Define error types | `Error` + `ErrorType` | `src/Boutquin.Domain/Abstractions/Error.cs`, `ErrorType.cs` |
+| Validate parameters | `Guard` | `src/Boutquin.Domain/Helpers/Guard.cs` |
+| Handle exceptions as HTTP | `CustomExceptionHandlerMiddleware` | `src/Boutquin.AspNetCore/CustomExceptionHandlerMiddleware.cs` |
+| Register modules | `ModuleExtensions` | `src/Boutquin.AspNetCore/Extensions/ModuleExtensions.cs` |
+| Validate with FluentValidation | `ValidationException` | `src/Boutquin.Validation/Exceptions/ValidationException.cs` |
+| Raise domain events | `Entity.RaiseDomainEvent()` | `src/Boutquin.Domain/Abstractions/Entity{TEntityId}.cs` |
 
 ## Directory Structure
 
 ```
-Domain/
+src/Boutquin.Domain/
   Abstractions/        Entity, Result, Error, ErrorType, INotification, IDomainEvent,
-                       IEntity, IUnitOfWork, StronglyTypedId
-  Helpers/             Guard, GuardCondition
+                       IEntity, IUnitOfWork
+  Helpers/             Guard, GuardCondition, StronglyTypedId
+  ValueObjects/        DateRange, Money
+  Enumerations/        Currency (ISO 4217 numeric codes)
   Extensions/          StringExtensions, DateTimeExtensions, EnumExtensions,
                        ResultExtensions, JsonElementExtensions, DecimalArrayExtensions
   Converters/          DateOnlyConverter, DateOnlyDictionaryConverterFactory
   Exceptions/          DomainException hierarchy (maps to HTTP status codes)
   doc/                 Per-component API documentation
-AspNetCore/
-  Middleware/          CustomExceptionHandlerMiddleware
+src/Boutquin.AspNetCore/
+  CustomExceptionHandlerMiddleware.cs
   Extensions/          ModuleExtensions
   doc/                 Middleware and module documentation
-Validation/
-  ValidationException  FluentValidation error wrapper
+src/Boutquin.Validation/
+  Exceptions/          FluentValidation error wrapper
   doc/                 Validation documentation
-UnitTests/             308 xUnit tests with FluentAssertions
+tests/Boutquin.UnitTests/  xUnit tests with FluentAssertions
 ```

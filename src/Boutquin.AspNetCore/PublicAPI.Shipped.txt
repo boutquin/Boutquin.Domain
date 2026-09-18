@@ -1,0 +1,12 @@
+#nullable enable
+Boutquin.AspNetCore.Abstractions.IModule
+Boutquin.AspNetCore.Abstractions.IModule.MapEndpoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder! endpoints) -> Microsoft.AspNetCore.Routing.IEndpointRouteBuilder!
+Boutquin.AspNetCore.Abstractions.IModule.RegisterModule(Microsoft.Extensions.DependencyInjection.IServiceCollection! services) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+Boutquin.AspNetCore.CustomExceptionHandlerMiddleware
+Boutquin.AspNetCore.CustomExceptionHandlerMiddleware.CustomExceptionHandlerMiddleware(Microsoft.AspNetCore.Http.RequestDelegate! next, Microsoft.Extensions.Logging.ILogger<Boutquin.AspNetCore.CustomExceptionHandlerMiddleware!>? logger = null) -> void
+Boutquin.AspNetCore.CustomExceptionHandlerMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext! context) -> System.Threading.Tasks.Task!
+Boutquin.AspNetCore.CustomExceptionHandlerMiddlewareExtensions
+Boutquin.AspNetCore.Extensions.ModuleExtensions
+static Boutquin.AspNetCore.CustomExceptionHandlerMiddlewareExtensions.UseCustomExceptionHandler(this Microsoft.AspNetCore.Builder.IApplicationBuilder! app) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
+static Boutquin.AspNetCore.Extensions.ModuleExtensions.MapEndpoints(this Microsoft.AspNetCore.Builder.WebApplication! app) -> Microsoft.AspNetCore.Builder.WebApplication!
+static Boutquin.AspNetCore.Extensions.ModuleExtensions.RegisterModules(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, params System.Reflection.Assembly![]! assemblies) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!

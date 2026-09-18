@@ -3,45 +3,72 @@ name: PR Verify
 on:
   pull_request:
     branches: ["main"]
+  push:
+    branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build:
     name: PR Verify
     runs-on: ubuntu-latest
+    env:
+      PACKAGE_OUTPUT: ${{ github.workspace }}/artifacts/packages
+      PACKAGE_VERSION: 1.0.0-ci.${{ github.run_id }}.${{ github.run_attempt }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Full history needed for MinVer
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
 
       - name: Cache NuGet packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Build.props') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Build.props', '**/Directory.Packages.props') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
 
       - name: dotnet restore
         run: dotnet restore
 
+      - name: Verify assembly-version policy boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(dotnet msbuild src/Boutquin.Domain/Boutquin.Domain.csproj -target:GetAssemblyVersion -property:MinVerVersionOverride=0.10.7-policyprobe.1 -getProperty:AssemblyVersion)" = "0.10.0.0"
+          test "$(dotnet msbuild src/Boutquin.Domain/Boutquin.Domain.csproj -target:GetAssemblyVersion -property:MinVerVersionOverride=1.2.3-policyprobe.1 -getProperty:AssemblyVersion)" = "1.0.0.0"
+
       - name: Build with dotnet
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore --no-incremental -p:GeneratePackageOnBuild=false -p:MinVerVersionOverride="$PACKAGE_VERSION"
 
       - name: dotnet test with coverage
-        run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage
+        run: dotnet test --configuration Release --no-build --no-restore --collect:"XPlat Code Coverage" --results-directory ./coverage
 
       - name: Upload coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: coverage/
         if: always()
 
       - name: dotnet format
-        run: dotnet format -v detailed --verify-no-changes
+        run: dotnet format -v detailed --verify-no-changes --no-restore
+
+      - name: Pack and verify packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$PACKAGE_OUTPUT"
+          test -z "$(find "$PACKAGE_OUTPUT" -mindepth 1 -print -quit)"
+          dotnet pack src/Boutquin.Domain/Boutquin.Domain.csproj --configuration Release --no-build --no-restore -p:MinVerVersionOverride="$PACKAGE_VERSION" --output "$PACKAGE_OUTPUT"
+          dotnet pack src/Boutquin.Validation/Boutquin.Validation.csproj --configuration Release --no-build --no-restore -p:MinVerVersionOverride="$PACKAGE_VERSION" --output "$PACKAGE_OUTPUT"
+          dotnet pack src/Boutquin.AspNetCore/Boutquin.AspNetCore.csproj --configuration Release --no-build --no-restore -p:MinVerVersionOverride="$PACKAGE_VERSION" --output "$PACKAGE_OUTPUT"
+          commit="$(git rev-parse HEAD)"
+          dotnet run --project tools/Boutquin.PackageVerification --configuration Release --no-build -- verify --spec eng/package-verification.json --artifacts "$PACKAGE_OUTPUT" --version "$PACKAGE_VERSION" --commit "$commit"
+          dotnet run --project tools/Boutquin.PackageVerification --configuration Release --no-build -- record-hashes --spec eng/package-verification.json --artifacts "$PACKAGE_OUTPUT" --version "$PACKAGE_VERSION" --commit "$commit" --output "$PACKAGE_OUTPUT/package-hashes.json"
+          dotnet run --project tools/Boutquin.PackageVerification --configuration Release --no-build -- verify --spec eng/package-verification.json --artifacts "$PACKAGE_OUTPUT" --version "$PACKAGE_VERSION" --commit "$commit" --hashes "$PACKAGE_OUTPUT/package-hashes.json"
