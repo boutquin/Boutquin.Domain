@@ -1,0 +1,31 @@
+{
+  "repositoryRoot": "..",
+  "repositoryUrl": "https://github.com/boutquin/Boutquin.Domain",
+  "repositoryType": "git",
+  "targetFramework": "net10.0",
+  "packages": [
+    {
+      "id": "Boutquin.Domain",
+      "assembly": "Boutquin.Domain.dll",
+      "readmeSource": "src/Boutquin.Domain/README.md",
+      "internalDependencies": []
+    },
+    {
+      "id": "Boutquin.Validation",
+      "assembly": "Boutquin.Validation.dll",
+      "readmeSource": "src/Boutquin.Validation/README.md",
+      "internalDependencies": [
+        "Boutquin.Domain"
+      ]
+    },
+    {
+      "id": "Boutquin.AspNetCore",
+      "assembly": "Boutquin.AspNetCore.dll",
+      "readmeSource": "src/Boutquin.AspNetCore/README.md",
+      "internalDependencies": [
+        "Boutquin.Domain",
+        "Boutquin.Validation"
+      ]
+    }
+  ]
+}

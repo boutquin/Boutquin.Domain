@@ -8,22 +8,24 @@ jobs:
   publish:
     name: Publish NuGet packages
     runs-on: ubuntu-latest
+    env:
+      PACKAGE_OUTPUT: ${{ github.workspace }}/artifacts/packages
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Full history needed for MinVer
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.401
 
       - name: Cache NuGet packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Build.props') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Build.props', '**/Directory.Packages.props') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
 
@@ -31,10 +33,39 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore -p:GeneratePackageOnBuild=false
 
       - name: Test
-        run: dotnet test --configuration Release --no-build
+        run: dotnet test --configuration Release --no-build --no-restore
 
-      - name: Push to NuGet
-        run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: Format
+        run: dotnet format -v detailed --verify-no-changes --no-restore
+
+      - name: Pack, hash, and verify release artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_version="${GITHUB_REF_NAME#v}"
+          commit="$(git rev-parse HEAD)"
+          mkdir -p "$PACKAGE_OUTPUT"
+          test -z "$(find "$PACKAGE_OUTPUT" -mindepth 1 -print -quit)"
+          dotnet pack src/Boutquin.Domain/Boutquin.Domain.csproj --configuration Release --no-build --no-restore --output "$PACKAGE_OUTPUT"
+          dotnet pack src/Boutquin.Validation/Boutquin.Validation.csproj --configuration Release --no-build --no-restore --output "$PACKAGE_OUTPUT"
+          dotnet pack src/Boutquin.AspNetCore/Boutquin.AspNetCore.csproj --configuration Release --no-build --no-restore --output "$PACKAGE_OUTPUT"
+          dotnet run --project tools/Boutquin.PackageVerification --configuration Release --no-build -- verify --spec eng/package-verification.json --artifacts "$PACKAGE_OUTPUT" --version "$package_version" --commit "$commit"
+          dotnet run --project tools/Boutquin.PackageVerification --configuration Release --no-build -- record-hashes --spec eng/package-verification.json --artifacts "$PACKAGE_OUTPUT" --version "$package_version" --commit "$commit" --output "$PACKAGE_OUTPUT/package-hashes.json"
+          dotnet run --project tools/Boutquin.PackageVerification --configuration Release --no-build -- verify --spec eng/package-verification.json --artifacts "$PACKAGE_OUTPUT" --version "$package_version" --commit "$commit" --hashes "$PACKAGE_OUTPUT/package-hashes.json"
+
+      - name: Preserve verified release artifacts and hashes
+        uses: actions/upload-artifact@v7
+        with:
+          name: nuget-release-${{ github.ref_name }}
+          path: artifacts/packages/
+          if-no-files-found: error
+
+      - name: Push packages to NuGet
+        run: dotnet nuget push "$PACKAGE_OUTPUT/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Push symbols to NuGet
+        continue-on-error: true
+        run: dotnet nuget push "$PACKAGE_OUTPUT/*.snupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

@@ -10,6 +10,9 @@
 *.userosscache
 *.sln.docstates
 
+# Legacy solution format — repo is .slnx-only (do NOT ignore *.slnx)
+*.sln
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -371,3 +374,19 @@ CLAUDE.local.md
 
 # macOS
 .DS_Store
+
+# build-arena run artifacts
+.build-arena/
+
+# Arena run EVIDENCE is git-tracked (findings, verdicts, fixes, audits, ledger).
+# Ignore ONLY machine state. Never add a bare `.code-arena/` line.
+.code-arena/locks/
+.code-arena/**/reduced-supervisor-state.json
+.code-arena/**/preflight-ok.txt
+.code-arena/**/.preflight
+.code-arena/**/PENDING-SPAWNS.md
+.code-arena/**/__pycache__/
+.code-arena/**/*.pyc
+!.code-arena/**/*.log
+.code-arena/**/reference.txt
+.code-arena/reference/

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>Boutquin.Validation</Title>
+    <Description>FluentValidation integration for Boutquin.Domain — ValidationException with structured error details for RFC 7807 ProblemDetails responses.</Description>
+    <PackageTags>fluentvalidation;validation;dotnet;csharp;clean-architecture;domain-driven-design;problem-details</PackageTags>
+    <PackageReleaseNotes>Release notes: https://github.com/boutquin/Boutquin.Domain/blob/main/CHANGELOG.md</PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Resources\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="MinVer">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Boutquin.Domain\Boutquin.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

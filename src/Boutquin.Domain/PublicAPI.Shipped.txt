@@ -1,0 +1,511 @@
+#nullable enable
+Boutquin.Domain.Abstractions.Entity<TEntityId>
+Boutquin.Domain.Abstractions.Entity<TEntityId>.ClearDomainEvents() -> void
+Boutquin.Domain.Abstractions.Entity<TEntityId>.Entity() -> void
+Boutquin.Domain.Abstractions.Entity<TEntityId>.Entity(TEntityId id) -> void
+Boutquin.Domain.Abstractions.Entity<TEntityId>.Equals(Boutquin.Domain.Abstractions.Entity<TEntityId>? other) -> bool
+Boutquin.Domain.Abstractions.Entity<TEntityId>.GetDomainEvents() -> System.Collections.Generic.IReadOnlyList<Boutquin.Domain.Abstractions.IDomainEvent!>!
+Boutquin.Domain.Abstractions.Entity<TEntityId>.Id.get -> TEntityId
+Boutquin.Domain.Abstractions.Entity<TEntityId>.Id.init -> void
+Boutquin.Domain.Abstractions.Entity<TEntityId>.RaiseDomainEvent(Boutquin.Domain.Abstractions.IDomainEvent! domainEvent) -> void
+Boutquin.Domain.Abstractions.Error
+Boutquin.Domain.Abstractions.Error.Code.get -> string!
+Boutquin.Domain.Abstractions.Error.Code.init -> void
+Boutquin.Domain.Abstractions.Error.Deconstruct(out string! Code, out string! Description, out Boutquin.Domain.Abstractions.ErrorType ErrorType) -> void
+Boutquin.Domain.Abstractions.Error.Description.get -> string!
+Boutquin.Domain.Abstractions.Error.Description.init -> void
+Boutquin.Domain.Abstractions.Error.Error(Boutquin.Domain.Abstractions.Error! original) -> void
+Boutquin.Domain.Abstractions.Error.Error(string! Code, string! Description, Boutquin.Domain.Abstractions.ErrorType ErrorType = Boutquin.Domain.Abstractions.ErrorType.None) -> void
+Boutquin.Domain.Abstractions.Error.ErrorType.get -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.Error.ErrorType.init -> void
+Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.BadGateway = 502 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.BadRequest = 400 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.Cancelled = 499 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.Conflict = 409 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.ExpectationFailed = 417 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.Forbidden = 403 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.GatewayTimeout = 504 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.Gone = 410 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.HttpVersionNotSupported = 505 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.InsufficientStorage = 507 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.InternalServerError = 500 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.LengthRequired = 411 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.MethodNotAllowed = 405 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.None = 0 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.NotAcceptable = 406 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.NotFound = 404 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.NotImplemented = 501 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.PaymentRequired = 402 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.PreconditionFailed = 412 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.ProxyAuthenticationRequired = 407 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.RequestEntityTooLarge = 413 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.RequestHeaderFieldsTooLarge = 431 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.RequestTimeout = 408 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.RequestUriTooLong = 414 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.RequestedRangeNotSatisfiable = 416 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.ServiceUnavailable = 503 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.TooManyRequests = 429 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.Unauthorized = 401 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.ErrorType.UnsupportedMediaType = 415 -> Boutquin.Domain.Abstractions.ErrorType
+Boutquin.Domain.Abstractions.IDomainEvent
+Boutquin.Domain.Abstractions.IEntity
+Boutquin.Domain.Abstractions.IEntity.ClearDomainEvents() -> void
+Boutquin.Domain.Abstractions.IEntity.GetDomainEvents() -> System.Collections.Generic.IReadOnlyList<Boutquin.Domain.Abstractions.IDomainEvent!>!
+Boutquin.Domain.Abstractions.INotification
+Boutquin.Domain.Abstractions.IUnitOfWork
+Boutquin.Domain.Abstractions.IUnitOfWork.SaveChangesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<int>!
+Boutquin.Domain.Abstractions.Result
+Boutquin.Domain.Abstractions.Result.Error.get -> Boutquin.Domain.Abstractions.Error!
+Boutquin.Domain.Abstractions.Result.IsFailure.get -> bool
+Boutquin.Domain.Abstractions.Result.IsSuccess.get -> bool
+Boutquin.Domain.Abstractions.Result.Result(bool isSuccess, Boutquin.Domain.Abstractions.Error! error) -> void
+Boutquin.Domain.Abstractions.Result<TValue>
+Boutquin.Domain.Abstractions.Result<TValue>.Value.get -> TValue
+Boutquin.Domain.Converters.DateOnlyConverter
+Boutquin.Domain.Converters.DateOnlyConverter.DateOnlyConverter() -> void
+Boutquin.Domain.Converters.DateOnlyDictionaryConverterFactory
+Boutquin.Domain.Converters.DateOnlyDictionaryConverterFactory.DateOnlyDictionaryConverterFactory() -> void
+Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.AED = 784 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.AFN = 971 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ALL = 8 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.AMD = 51 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ANG = 532 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.AOA = 973 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ARS = 32 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.AUD = 36 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.AWG = 533 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.AZN = 944 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BAM = 977 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BBD = 52 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BDT = 50 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BGN = 975 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BHD = 48 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BIF = 108 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BMD = 60 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BND = 96 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BOB = 68 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BOV = 984 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BRL = 986 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BSD = 44 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BTN = 64 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BWP = 72 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BYN = 933 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.BZD = 84 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CAD = 124 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CDF = 976 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CHE = 947 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CHF = 756 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CHW = 948 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CLF = 990 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CLP = 152 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CNY = 156 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.COP = 170 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.COU = 970 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CRC = 188 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CUP = 192 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CVE = 132 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.CZK = 203 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.DJF = 262 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.DKK = 208 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.DOP = 214 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.DZD = 12 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.EGP = 818 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ERN = 232 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ETB = 230 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.EUR = 978 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.FJD = 242 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.FKP = 238 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.GBP = 826 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.GEL = 981 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.GHS = 936 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.GIP = 292 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.GMD = 270 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.GNF = 324 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.GTQ = 320 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.GYD = 328 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.HKD = 344 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.HNL = 340 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.HTG = 332 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.HUF = 348 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.IDR = 360 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ILS = 376 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.INR = 356 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.IQD = 368 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.IRR = 364 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ISK = 352 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.JMD = 388 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.JOD = 400 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.JPY = 392 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.KES = 404 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.KGS = 417 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.KHR = 116 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.KMF = 174 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.KPW = 408 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.KRW = 410 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.KWD = 414 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.KYD = 136 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.KZT = 398 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.LAK = 418 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.LBP = 422 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.LKR = 144 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.LRD = 430 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.LSL = 426 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.LYD = 434 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MAD = 504 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MDL = 498 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MGA = 969 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MKD = 807 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MMK = 104 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MNT = 496 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MOP = 446 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MRU = 929 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MUR = 480 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MVR = 462 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MWK = 454 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MXN = 484 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MXV = 979 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MYR = 458 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.MZN = 943 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.NAD = 516 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.NGN = 566 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.NIO = 558 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.NOK = 578 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.NPR = 524 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.NZD = 554 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.OMR = 512 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.PAB = 590 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.PEN = 604 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.PGK = 598 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.PHP = 608 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.PKR = 586 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.PLN = 985 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.PYG = 600 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.QAR = 634 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.RON = 946 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.RSD = 941 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.RUB = 643 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.RWF = 646 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SAR = 682 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SBD = 90 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SCR = 690 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SDG = 938 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SEK = 752 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SGD = 702 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SHP = 654 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SLE = 925 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SOS = 706 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SRD = 968 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SSP = 728 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.STN = 930 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SVC = 222 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SYP = 760 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.SZL = 748 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.THB = 764 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.TJS = 972 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.TMT = 934 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.TND = 788 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.TOP = 776 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.TRY = 949 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.TTD = 780 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.TWD = 901 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.TZS = 834 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.UAH = 980 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.UGX = 800 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.USD = 840 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.USN = 997 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.UYI = 940 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.UYU = 858 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.UYW = 927 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.UZS = 860 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.Unspecified = 0 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.VES = 928 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.VND = 704 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.VUV = 548 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.WST = 882 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XAF = 950 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XAG = 961 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XAU = 959 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XBA = 955 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XBB = 956 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XBC = 957 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XBD = 958 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XCD = 951 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XDR = 960 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XOF = 952 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XPD = 964 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XPF = 953 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XPT = 962 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XSU = 994 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XTS = 963 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XUA = 965 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.XXX = 999 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.YER = 886 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ZAR = 710 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ZMW = 967 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Enumerations.Currency.ZWG = 924 -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Exceptions.BadRequestException
+Boutquin.Domain.Exceptions.BadRequestException.BadRequestException() -> void
+Boutquin.Domain.Exceptions.BadRequestException.BadRequestException(string! message) -> void
+Boutquin.Domain.Exceptions.BadRequestException.BadRequestException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.ConflictException
+Boutquin.Domain.Exceptions.ConflictException.ConflictException() -> void
+Boutquin.Domain.Exceptions.ConflictException.ConflictException(string! message) -> void
+Boutquin.Domain.Exceptions.ConflictException.ConflictException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.CurrencyMismatchException
+Boutquin.Domain.Exceptions.CurrencyMismatchException.Actual.get -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Exceptions.CurrencyMismatchException.CurrencyMismatchException(Boutquin.Domain.Enumerations.Currency expected, Boutquin.Domain.Enumerations.Currency actual) -> void
+Boutquin.Domain.Exceptions.CurrencyMismatchException.CurrencyMismatchException(string! message) -> void
+Boutquin.Domain.Exceptions.CurrencyMismatchException.CurrencyMismatchException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.CurrencyMismatchException.Expected.get -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.Exceptions.DomainException
+Boutquin.Domain.Exceptions.DomainException.DomainException(int statusCode, string! title) -> void
+Boutquin.Domain.Exceptions.DomainException.DomainException(int statusCode, string! title, string! message) -> void
+Boutquin.Domain.Exceptions.DomainException.DomainException(int statusCode, string! title, string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.DomainException.StatusCode.get -> int
+Boutquin.Domain.Exceptions.DomainException.Title.get -> string!
+Boutquin.Domain.Exceptions.EmptyOrNullArrayException
+Boutquin.Domain.Exceptions.EmptyOrNullArrayException.EmptyOrNullArrayException() -> void
+Boutquin.Domain.Exceptions.EmptyOrNullArrayException.EmptyOrNullArrayException(string! message) -> void
+Boutquin.Domain.Exceptions.EmptyOrNullArrayException.EmptyOrNullArrayException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.EmptyOrNullCollectionException
+Boutquin.Domain.Exceptions.EmptyOrNullCollectionException.EmptyOrNullCollectionException() -> void
+Boutquin.Domain.Exceptions.EmptyOrNullCollectionException.EmptyOrNullCollectionException(string! message) -> void
+Boutquin.Domain.Exceptions.EmptyOrNullCollectionException.EmptyOrNullCollectionException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.EmptyOrNullDictionaryException
+Boutquin.Domain.Exceptions.EmptyOrNullDictionaryException.EmptyOrNullDictionaryException() -> void
+Boutquin.Domain.Exceptions.EmptyOrNullDictionaryException.EmptyOrNullDictionaryException(string! message) -> void
+Boutquin.Domain.Exceptions.EmptyOrNullDictionaryException.EmptyOrNullDictionaryException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.ExceptionMessages
+Boutquin.Domain.Exceptions.ForbiddenException
+Boutquin.Domain.Exceptions.ForbiddenException.ForbiddenException() -> void
+Boutquin.Domain.Exceptions.ForbiddenException.ForbiddenException(string! message) -> void
+Boutquin.Domain.Exceptions.ForbiddenException.ForbiddenException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.InsufficientDataException
+Boutquin.Domain.Exceptions.InsufficientDataException.InsufficientDataException(string! message) -> void
+Boutquin.Domain.Exceptions.InsufficientDataException.InsufficientDataException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.InternalServerErrorException
+Boutquin.Domain.Exceptions.InternalServerErrorException.InternalServerErrorException() -> void
+Boutquin.Domain.Exceptions.InternalServerErrorException.InternalServerErrorException(string! message) -> void
+Boutquin.Domain.Exceptions.InternalServerErrorException.InternalServerErrorException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.NotFoundException
+Boutquin.Domain.Exceptions.NotFoundException.NotFoundException() -> void
+Boutquin.Domain.Exceptions.NotFoundException.NotFoundException(string! message) -> void
+Boutquin.Domain.Exceptions.NotFoundException.NotFoundException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.ServiceUnavailableException
+Boutquin.Domain.Exceptions.ServiceUnavailableException.ServiceUnavailableException() -> void
+Boutquin.Domain.Exceptions.ServiceUnavailableException.ServiceUnavailableException(string! message) -> void
+Boutquin.Domain.Exceptions.ServiceUnavailableException.ServiceUnavailableException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.TooManyRequestsException
+Boutquin.Domain.Exceptions.TooManyRequestsException.TooManyRequestsException() -> void
+Boutquin.Domain.Exceptions.TooManyRequestsException.TooManyRequestsException(string! message) -> void
+Boutquin.Domain.Exceptions.TooManyRequestsException.TooManyRequestsException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.UnauthorizedException
+Boutquin.Domain.Exceptions.UnauthorizedException.UnauthorizedException() -> void
+Boutquin.Domain.Exceptions.UnauthorizedException.UnauthorizedException(string! message) -> void
+Boutquin.Domain.Exceptions.UnauthorizedException.UnauthorizedException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.UnprocessableEntityException
+Boutquin.Domain.Exceptions.UnprocessableEntityException.UnprocessableEntityException() -> void
+Boutquin.Domain.Exceptions.UnprocessableEntityException.UnprocessableEntityException(string! message) -> void
+Boutquin.Domain.Exceptions.UnprocessableEntityException.UnprocessableEntityException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Exceptions.UnsupportedMediaTypeException
+Boutquin.Domain.Exceptions.UnsupportedMediaTypeException.UnsupportedMediaTypeException() -> void
+Boutquin.Domain.Exceptions.UnsupportedMediaTypeException.UnsupportedMediaTypeException(string! message) -> void
+Boutquin.Domain.Exceptions.UnsupportedMediaTypeException.UnsupportedMediaTypeException(string! message, System.Exception! inner) -> void
+Boutquin.Domain.Extensions.CurrencyExtensions
+Boutquin.Domain.Extensions.DateTimeExtensions
+Boutquin.Domain.Extensions.DecimalArrayExtensions
+Boutquin.Domain.Extensions.DecimalArrayExtensions.CalculationType
+Boutquin.Domain.Extensions.DecimalArrayExtensions.CalculationType.Population = 1 -> Boutquin.Domain.Extensions.DecimalArrayExtensions.CalculationType
+Boutquin.Domain.Extensions.DecimalArrayExtensions.CalculationType.Sample = 0 -> Boutquin.Domain.Extensions.DecimalArrayExtensions.CalculationType
+Boutquin.Domain.Extensions.EnumExtensions
+Boutquin.Domain.Extensions.JsonElementExtensions
+Boutquin.Domain.Extensions.ResultExtensions
+Boutquin.Domain.Extensions.StringExtensions
+Boutquin.Domain.Helpers.Guard
+Boutquin.Domain.Helpers.Guard.GuardCondition
+Boutquin.Domain.Helpers.Guard.GuardCondition.With<TException>() -> void
+Boutquin.Domain.Helpers.Guard.GuardCondition.With<TException>(string! exceptionMessage) -> void
+Boutquin.Domain.Helpers.Guard.GuardCondition.With<TException>(string! exceptionMessage, params object![]! args) -> void
+Boutquin.Domain.Helpers.Guard.GuardCondition.WithArgs<TException>(params object![]! args) -> void
+Boutquin.Domain.Helpers.StronglyTypedId<TValue>
+Boutquin.Domain.Helpers.StronglyTypedId<TValue>.Deconstruct(out TValue Value) -> void
+Boutquin.Domain.Helpers.StronglyTypedId<TValue>.StronglyTypedId(Boutquin.Domain.Helpers.StronglyTypedId<TValue>! original) -> void
+Boutquin.Domain.Helpers.StronglyTypedId<TValue>.StronglyTypedId(TValue Value) -> void
+Boutquin.Domain.Helpers.StronglyTypedId<TValue>.Value.get -> TValue
+Boutquin.Domain.Helpers.StronglyTypedId<TValue>.Value.init -> void
+Boutquin.Domain.ValueObjects.DateRange
+Boutquin.Domain.ValueObjects.DateRange.Contains(Boutquin.Domain.ValueObjects.DateRange other) -> bool
+Boutquin.Domain.ValueObjects.DateRange.Contains(System.DateOnly date) -> bool
+Boutquin.Domain.ValueObjects.DateRange.DateRange() -> void
+Boutquin.Domain.ValueObjects.DateRange.DateRange(System.DateOnly From, System.DateOnly To) -> void
+Boutquin.Domain.ValueObjects.DateRange.Deconstruct(out System.DateOnly From, out System.DateOnly To) -> void
+Boutquin.Domain.ValueObjects.DateRange.Equals(Boutquin.Domain.ValueObjects.DateRange other) -> bool
+Boutquin.Domain.ValueObjects.DateRange.From.get -> System.DateOnly
+Boutquin.Domain.ValueObjects.DateRange.From.init -> void
+Boutquin.Domain.ValueObjects.DateRange.Intersect(Boutquin.Domain.ValueObjects.DateRange other) -> Boutquin.Domain.ValueObjects.DateRange?
+Boutquin.Domain.ValueObjects.DateRange.IsEmpty.get -> bool
+Boutquin.Domain.ValueObjects.DateRange.LengthInDays.get -> int
+Boutquin.Domain.ValueObjects.DateRange.Minus(Boutquin.Domain.ValueObjects.DateRange other) -> System.Collections.Generic.IReadOnlyList<Boutquin.Domain.ValueObjects.DateRange>!
+Boutquin.Domain.ValueObjects.DateRange.Overlaps(Boutquin.Domain.ValueObjects.DateRange other) -> bool
+Boutquin.Domain.ValueObjects.DateRange.To.get -> System.DateOnly
+Boutquin.Domain.ValueObjects.DateRange.To.init -> void
+Boutquin.Domain.ValueObjects.DateRange.Union(Boutquin.Domain.ValueObjects.DateRange other) -> Boutquin.Domain.ValueObjects.DateRange
+Boutquin.Domain.ValueObjects.Money
+Boutquin.Domain.ValueObjects.Money.Add(Boutquin.Domain.ValueObjects.Money m) -> Boutquin.Domain.ValueObjects.Money
+Boutquin.Domain.ValueObjects.Money.Add(decimal d) -> Boutquin.Domain.ValueObjects.Money
+Boutquin.Domain.ValueObjects.Money.Amount.get -> decimal
+Boutquin.Domain.ValueObjects.Money.CompareTo(Boutquin.Domain.ValueObjects.Money other) -> int
+Boutquin.Domain.ValueObjects.Money.CompareTo(object? obj) -> int
+Boutquin.Domain.ValueObjects.Money.Currency.get -> Boutquin.Domain.Enumerations.Currency
+Boutquin.Domain.ValueObjects.Money.Deconstruct(out decimal Amount, out Boutquin.Domain.Enumerations.Currency Currency) -> void
+Boutquin.Domain.ValueObjects.Money.Divide(decimal d) -> Boutquin.Domain.ValueObjects.Money
+Boutquin.Domain.ValueObjects.Money.Equals(Boutquin.Domain.ValueObjects.Money other) -> bool
+Boutquin.Domain.ValueObjects.Money.Money() -> void
+Boutquin.Domain.ValueObjects.Money.Money(decimal Amount, Boutquin.Domain.Enumerations.Currency Currency) -> void
+Boutquin.Domain.ValueObjects.Money.Multiply(decimal d) -> Boutquin.Domain.ValueObjects.Money
+Boutquin.Domain.ValueObjects.Money.Subtract(Boutquin.Domain.ValueObjects.Money m) -> Boutquin.Domain.ValueObjects.Money
+Boutquin.Domain.ValueObjects.Money.Subtract(decimal d) -> Boutquin.Domain.ValueObjects.Money
+Boutquin.Domain.ValueObjects.Money.ToAmount(decimal amount) -> Boutquin.Domain.ValueObjects.Money
+abstract Boutquin.Domain.Helpers.StronglyTypedId<TValue>.<Clone>$() -> Boutquin.Domain.Helpers.StronglyTypedId<TValue>!
+const Boutquin.Domain.Exceptions.ExceptionMessages.BadRequest = "The request was invalid." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.Conflict = "The request conflicts with the current state of the resource." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.EmptyOrNullArray = "Input array must not be empty or null." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.EmptyOrNullCollection = "Input collection must not be empty or null." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.EmptyOrNullDictionary = "Input dictionary must not be empty or null." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.Forbidden = "Access to this resource is forbidden." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.InsufficientDataForSampleCalculation = "Input array must have at least two elements for sample calculation." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.NotFound = "The requested resource was not found." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.TooManyRequests = "Too many requests have been sent in a given amount of time." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.Unauthorized = "Authentication is required to access this resource." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.UnprocessableEntity = "The request was well-formed but could not be processed." -> string!
+const Boutquin.Domain.Exceptions.ExceptionMessages.UnsupportedMediaType = "The request media type is not supported." -> string!
+override Boutquin.Domain.Abstractions.Entity<TEntityId>.Equals(object? obj) -> bool
+override Boutquin.Domain.Abstractions.Entity<TEntityId>.GetHashCode() -> int
+override Boutquin.Domain.Abstractions.Error.Equals(object? obj) -> bool
+override Boutquin.Domain.Abstractions.Error.GetHashCode() -> int
+override Boutquin.Domain.Abstractions.Error.ToString() -> string!
+override Boutquin.Domain.Converters.DateOnlyConverter.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> System.DateOnly
+override Boutquin.Domain.Converters.DateOnlyConverter.Write(System.Text.Json.Utf8JsonWriter! writer, System.DateOnly value, System.Text.Json.JsonSerializerOptions! options) -> void
+override Boutquin.Domain.Converters.DateOnlyDictionaryConverterFactory.CanConvert(System.Type! typeToConvert) -> bool
+override Boutquin.Domain.Converters.DateOnlyDictionaryConverterFactory.CreateConverter(System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> System.Text.Json.Serialization.JsonConverter!
+override Boutquin.Domain.Helpers.StronglyTypedId<TValue>.Equals(object? obj) -> bool
+override Boutquin.Domain.Helpers.StronglyTypedId<TValue>.GetHashCode() -> int
+override Boutquin.Domain.ValueObjects.DateRange.GetHashCode() -> int
+override Boutquin.Domain.ValueObjects.Money.GetHashCode() -> int
+override Boutquin.Domain.ValueObjects.Money.ToString() -> string!
+override sealed Boutquin.Domain.Helpers.StronglyTypedId<TValue>.ToString() -> string!
+static Boutquin.Domain.Abstractions.Entity<TEntityId>.operator !=(Boutquin.Domain.Abstractions.Entity<TEntityId>? left, Boutquin.Domain.Abstractions.Entity<TEntityId>? right) -> bool
+static Boutquin.Domain.Abstractions.Entity<TEntityId>.operator ==(Boutquin.Domain.Abstractions.Entity<TEntityId>? left, Boutquin.Domain.Abstractions.Entity<TEntityId>? right) -> bool
+static Boutquin.Domain.Abstractions.Error.BadRequest(string! code, string! description) -> Boutquin.Domain.Abstractions.Error!
+static Boutquin.Domain.Abstractions.Error.Cancelled(string! code, string! description) -> Boutquin.Domain.Abstractions.Error!
+static Boutquin.Domain.Abstractions.Error.Conflict(string! code, string! description) -> Boutquin.Domain.Abstractions.Error!
+static Boutquin.Domain.Abstractions.Error.Forbidden(string! code, string! description) -> Boutquin.Domain.Abstractions.Error!
+static Boutquin.Domain.Abstractions.Error.InternalServerError(string! code, string! description) -> Boutquin.Domain.Abstractions.Error!
+static Boutquin.Domain.Abstractions.Error.NotFound(string! code, string! description) -> Boutquin.Domain.Abstractions.Error!
+static Boutquin.Domain.Abstractions.Error.RequestTimeout(string! code, string! description) -> Boutquin.Domain.Abstractions.Error!
+static Boutquin.Domain.Abstractions.Error.Unauthorized(string! code, string! description) -> Boutquin.Domain.Abstractions.Error!
+static Boutquin.Domain.Abstractions.Error.operator !=(Boutquin.Domain.Abstractions.Error? left, Boutquin.Domain.Abstractions.Error? right) -> bool
+static Boutquin.Domain.Abstractions.Error.operator ==(Boutquin.Domain.Abstractions.Error? left, Boutquin.Domain.Abstractions.Error? right) -> bool
+static Boutquin.Domain.Abstractions.Result.Cancelled(string! code = "Error.Cancellation", string! description = "The request was cancelled.") -> Boutquin.Domain.Abstractions.Result!
+static Boutquin.Domain.Abstractions.Result.Create<TValue>(TValue? value) -> Boutquin.Domain.Abstractions.Result<TValue>!
+static Boutquin.Domain.Abstractions.Result.Failure(Boutquin.Domain.Abstractions.Error! error) -> Boutquin.Domain.Abstractions.Result!
+static Boutquin.Domain.Abstractions.Result.Failure<TValue>(Boutquin.Domain.Abstractions.Error! error) -> Boutquin.Domain.Abstractions.Result<TValue>!
+static Boutquin.Domain.Abstractions.Result.Success() -> Boutquin.Domain.Abstractions.Result!
+static Boutquin.Domain.Abstractions.Result.Success<TValue>(TValue value) -> Boutquin.Domain.Abstractions.Result<TValue>!
+static Boutquin.Domain.Abstractions.Result.implicit operator Boutquin.Domain.Abstractions.Result!(Boutquin.Domain.Abstractions.Error! error) -> Boutquin.Domain.Abstractions.Result!
+static Boutquin.Domain.Abstractions.Result<TValue>.implicit operator Boutquin.Domain.Abstractions.Result<TValue>!(Boutquin.Domain.Abstractions.Error! error) -> Boutquin.Domain.Abstractions.Result<TValue>!
+static Boutquin.Domain.Abstractions.Result<TValue>.implicit operator Boutquin.Domain.Abstractions.Result<TValue>!(TValue? value) -> Boutquin.Domain.Abstractions.Result<TValue>!
+static Boutquin.Domain.Extensions.CurrencyExtensions.Amount(this Boutquin.Domain.Enumerations.Currency currency, decimal amount) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.Extensions.DateTimeExtensions.ConvertTimeZone(this System.DateTime dateTime, string! sourceTimeZoneId, string! targetTimeZoneId) -> System.DateTime
+static Boutquin.Domain.Extensions.DecimalArrayExtensions.StandardDeviation(this decimal[]! values, Boutquin.Domain.Extensions.DecimalArrayExtensions.CalculationType calculationType = Boutquin.Domain.Extensions.DecimalArrayExtensions.CalculationType.Sample) -> decimal
+static Boutquin.Domain.Extensions.DecimalArrayExtensions.Variance(this decimal[]! values, Boutquin.Domain.Extensions.DecimalArrayExtensions.CalculationType calculationType = Boutquin.Domain.Extensions.DecimalArrayExtensions.CalculationType.Sample) -> decimal
+static Boutquin.Domain.Extensions.EnumExtensions.GetDescription<T>(this T enumValue) -> string!
+static Boutquin.Domain.Extensions.JsonElementExtensions.ToObject<T>(this System.Text.Json.JsonElement element, System.Text.Json.JsonSerializerOptions? options = null) -> T?
+static Boutquin.Domain.Extensions.ResultExtensions.Bind<TIn, TOut>(this Boutquin.Domain.Abstractions.Result<TIn>! result, System.Func<TIn, Boutquin.Domain.Abstractions.Result<TOut>!>! func) -> Boutquin.Domain.Abstractions.Result<TOut>!
+static Boutquin.Domain.Extensions.ResultExtensions.BindAsync<TIn, TOut>(this System.Threading.Tasks.Task<Boutquin.Domain.Abstractions.Result<TIn>!>! resultTask, System.Func<TIn, System.Threading.Tasks.Task<Boutquin.Domain.Abstractions.Result<TOut>!>!>! func) -> System.Threading.Tasks.ValueTask<Boutquin.Domain.Abstractions.Result<TOut>!>
+static Boutquin.Domain.Extensions.ResultExtensions.BindAsync<TIn, TOut>(this System.Threading.Tasks.ValueTask<Boutquin.Domain.Abstractions.Result<TIn>!> resultTask, System.Func<TIn, System.Threading.Tasks.Task<Boutquin.Domain.Abstractions.Result<TOut>!>!>! func) -> System.Threading.Tasks.ValueTask<Boutquin.Domain.Abstractions.Result<TOut>!>
+static Boutquin.Domain.Extensions.ResultExtensions.Map<TIn, TOut>(this Boutquin.Domain.Abstractions.Result<TIn>! result, System.Func<TIn, TOut>! func) -> Boutquin.Domain.Abstractions.Result<TOut>!
+static Boutquin.Domain.Extensions.ResultExtensions.Match<T>(this Boutquin.Domain.Abstractions.Result! result, System.Func<T>! onSuccess, System.Func<Boutquin.Domain.Abstractions.Error!, T>! onFailure) -> T
+static Boutquin.Domain.Extensions.ResultExtensions.Match<TResult, TValue>(this Boutquin.Domain.Abstractions.Result<TValue>! result, System.Func<TValue, TResult>! onSuccess, System.Func<Boutquin.Domain.Abstractions.Error!, TResult>! onFailure) -> TResult
+static Boutquin.Domain.Extensions.ResultExtensions.MatchAsync<T, TValue>(this System.Threading.Tasks.Task<Boutquin.Domain.Abstractions.Result<TValue>!>! resultTask, System.Func<TValue, System.Threading.Tasks.Task<T>!>! onSuccess, System.Func<Boutquin.Domain.Abstractions.Error!, System.Threading.Tasks.Task<T>!>! onFailure) -> System.Threading.Tasks.ValueTask<T>
+static Boutquin.Domain.Extensions.ResultExtensions.MatchAsync<T, TValue>(this System.Threading.Tasks.ValueTask<Boutquin.Domain.Abstractions.Result<TValue>!> resultTask, System.Func<TValue, System.Threading.Tasks.Task<T>!>! onSuccess, System.Func<Boutquin.Domain.Abstractions.Error!, System.Threading.Tasks.Task<T>!>! onFailure) -> System.Threading.Tasks.ValueTask<T>
+static Boutquin.Domain.Extensions.ResultExtensions.MatchAsync<T>(this System.Threading.Tasks.Task<Boutquin.Domain.Abstractions.Result!>! resultTask, System.Func<System.Threading.Tasks.Task<T>!>! onSuccess, System.Func<Boutquin.Domain.Abstractions.Error!, System.Threading.Tasks.Task<T>!>! onFailure) -> System.Threading.Tasks.ValueTask<T>
+static Boutquin.Domain.Extensions.ResultExtensions.MatchAsync<T>(this System.Threading.Tasks.ValueTask<Boutquin.Domain.Abstractions.Result!> resultTask, System.Func<System.Threading.Tasks.Task<T>!>! onSuccess, System.Func<Boutquin.Domain.Abstractions.Error!, System.Threading.Tasks.Task<T>!>! onFailure) -> System.Threading.Tasks.ValueTask<T>
+static Boutquin.Domain.Extensions.ResultExtensions.OnFailure<T>(this Boutquin.Domain.Abstractions.Result<T>! result, System.Action<Boutquin.Domain.Abstractions.Error!>! action) -> Boutquin.Domain.Abstractions.Result<T>!
+static Boutquin.Domain.Extensions.ResultExtensions.Tap<T>(this Boutquin.Domain.Abstractions.Result<T>! result, System.Action<T>! action) -> Boutquin.Domain.Abstractions.Result<T>!
+static Boutquin.Domain.Extensions.ResultExtensions.TapAsync<T>(this System.Threading.Tasks.Task<Boutquin.Domain.Abstractions.Result<T>!>! resultTask, System.Func<T, System.Threading.Tasks.Task!>! action) -> System.Threading.Tasks.ValueTask<Boutquin.Domain.Abstractions.Result<T>!>
+static Boutquin.Domain.Extensions.ResultExtensions.TapAsync<T>(this System.Threading.Tasks.ValueTask<Boutquin.Domain.Abstractions.Result<T>!> resultTask, System.Func<T, System.Threading.Tasks.Task!>! action) -> System.Threading.Tasks.ValueTask<Boutquin.Domain.Abstractions.Result<T>!>
+static Boutquin.Domain.Extensions.StringExtensions.Compare(this string? value, string? strB, System.StringComparison comparisonType) -> int
+static Boutquin.Domain.Extensions.StringExtensions.CompareOrdinal(this string? value, string? strB) -> int
+static Boutquin.Domain.Extensions.StringExtensions.Format(this string! format, System.IFormatProvider! provider, params object![]! args) -> string!
+static Boutquin.Domain.Extensions.StringExtensions.Format(this string! format, params object![]! args) -> string!
+static Boutquin.Domain.Extensions.StringExtensions.IsNullOrEmpty(this string? value) -> bool
+static Boutquin.Domain.Extensions.StringExtensions.IsNullOrWhiteSpace(this string? value) -> bool
+static Boutquin.Domain.Extensions.StringExtensions.ToLowerCaseFirst(this string! value) -> string!
+static Boutquin.Domain.Extensions.StringExtensions.ToLowerCaseFirst(this string! value, System.Globalization.CultureInfo! culture) -> string!
+static Boutquin.Domain.Extensions.StringExtensions.ToUpperCaseFirst(this string! value) -> string!
+static Boutquin.Domain.Extensions.StringExtensions.ToUpperCaseFirst(this string! value, System.Globalization.CultureInfo! culture) -> string!
+static Boutquin.Domain.Helpers.Guard.Against(bool condition) -> Boutquin.Domain.Helpers.Guard.GuardCondition!
+static Boutquin.Domain.Helpers.Guard.AgainstDefault<T>(System.Linq.Expressions.Expression<System.Func<T>!>! valueExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstDefault<T>(T value, string! paramName = "") -> void
+static Boutquin.Domain.Helpers.Guard.AgainstEmptyOrNullArray<T>(System.Linq.Expressions.Expression<System.Func<T[]!>!>! valueExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstEmptyOrNullCollection<T>(System.Linq.Expressions.Expression<System.Func<System.Collections.Generic.ICollection<T>!>!>! collectionExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstEmptyOrNullDictionary<TKey, TValue>(System.Linq.Expressions.Expression<System.Func<System.Collections.Generic.IDictionary<TKey, TValue>!>!>! dictionaryExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstEmptyOrNullEnumerable<T>(System.Linq.Expressions.Expression<System.Func<System.Collections.Generic.IEnumerable<T>!>!>! enumerableExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstEmptyOrNullReadOnlyDictionary<TKey, TValue>(System.Linq.Expressions.Expression<System.Func<System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>!>!>! dictionaryExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNegative<T>(System.Linq.Expressions.Expression<System.Func<T>!>! valueExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNegative<T>(T value, string! paramName = "") -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNegativeOrZero<T>(System.Linq.Expressions.Expression<System.Func<T>!>! valueExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNegativeOrZero<T>(T value, string! paramName = "") -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNonEnumType<T>() -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNull<T>(System.Linq.Expressions.Expression<System.Func<T!>!>! valueExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNull<T>(T? value, string! paramName = "") -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNullOrDefault<T>(System.Linq.Expressions.Expression<System.Func<T>!>! valueExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNullOrEmpty(System.Linq.Expressions.Expression<System.Func<string!>!>! valueExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNullOrEmpty(string? value, string! paramName = "") -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNullOrEmptyAndOverflow(System.Linq.Expressions.Expression<System.Func<string!>!>! valueExpression, int maxLength) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNullOrWhiteSpace(System.Linq.Expressions.Expression<System.Func<string!>!>! valueExpression) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNullOrWhiteSpace(string? value, string! paramName = "") -> void
+static Boutquin.Domain.Helpers.Guard.AgainstNullOrWhiteSpaceAndOverflow(System.Linq.Expressions.Expression<System.Func<string!>!>! valueExpression, int maxLength) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstOutOfRange<T>(System.Linq.Expressions.Expression<System.Func<T>!>! valueExpression, T min, T max) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstOutOfRange<T>(T value, T min, T max, string! paramName = "") -> void
+static Boutquin.Domain.Helpers.Guard.AgainstOverflow(System.Linq.Expressions.Expression<System.Func<string!>!>! valueExpression, int maxLength) -> void
+static Boutquin.Domain.Helpers.Guard.AgainstUndefinedEnumValue<T>(System.Linq.Expressions.Expression<System.Func<T>!>! valueExpression) -> void
+static Boutquin.Domain.Helpers.StronglyTypedId<TValue>.operator !=(Boutquin.Domain.Helpers.StronglyTypedId<TValue>? left, Boutquin.Domain.Helpers.StronglyTypedId<TValue>? right) -> bool
+static Boutquin.Domain.Helpers.StronglyTypedId<TValue>.operator ==(Boutquin.Domain.Helpers.StronglyTypedId<TValue>? left, Boutquin.Domain.Helpers.StronglyTypedId<TValue>? right) -> bool
+static Boutquin.Domain.ValueObjects.DateRange.operator !=(Boutquin.Domain.ValueObjects.DateRange left, Boutquin.Domain.ValueObjects.DateRange right) -> bool
+static Boutquin.Domain.ValueObjects.DateRange.operator ==(Boutquin.Domain.ValueObjects.DateRange left, Boutquin.Domain.ValueObjects.DateRange right) -> bool
+static Boutquin.Domain.ValueObjects.Money.Round(Boutquin.Domain.ValueObjects.Money m) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.Round(Boutquin.Domain.ValueObjects.Money m, System.MidpointRounding mode) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.Round(Boutquin.Domain.ValueObjects.Money m, int decimals) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.Round(Boutquin.Domain.ValueObjects.Money m, int decimals, System.MidpointRounding mode) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator !=(Boutquin.Domain.ValueObjects.Money left, Boutquin.Domain.ValueObjects.Money right) -> bool
+static Boutquin.Domain.ValueObjects.Money.operator *(Boutquin.Domain.ValueObjects.Money m, decimal d) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator *(decimal d, Boutquin.Domain.ValueObjects.Money m) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator +(Boutquin.Domain.ValueObjects.Money m, decimal d) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator +(Boutquin.Domain.ValueObjects.Money m1, Boutquin.Domain.ValueObjects.Money m2) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator +(decimal d, Boutquin.Domain.ValueObjects.Money m) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator -(Boutquin.Domain.ValueObjects.Money m) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator -(Boutquin.Domain.ValueObjects.Money m, decimal d) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator -(Boutquin.Domain.ValueObjects.Money m1, Boutquin.Domain.ValueObjects.Money m2) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator -(decimal d, Boutquin.Domain.ValueObjects.Money m) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator /(Boutquin.Domain.ValueObjects.Money m, decimal d) -> Boutquin.Domain.ValueObjects.Money
+static Boutquin.Domain.ValueObjects.Money.operator <(Boutquin.Domain.ValueObjects.Money m1, Boutquin.Domain.ValueObjects.Money m2) -> bool
+static Boutquin.Domain.ValueObjects.Money.operator <=(Boutquin.Domain.ValueObjects.Money m1, Boutquin.Domain.ValueObjects.Money m2) -> bool
+static Boutquin.Domain.ValueObjects.Money.operator ==(Boutquin.Domain.ValueObjects.Money left, Boutquin.Domain.ValueObjects.Money right) -> bool
+static Boutquin.Domain.ValueObjects.Money.operator >(Boutquin.Domain.ValueObjects.Money m1, Boutquin.Domain.ValueObjects.Money m2) -> bool
+static Boutquin.Domain.ValueObjects.Money.operator >=(Boutquin.Domain.ValueObjects.Money m1, Boutquin.Domain.ValueObjects.Money m2) -> bool
+static readonly Boutquin.Domain.Abstractions.Error.None -> Boutquin.Domain.Abstractions.Error!
+static readonly Boutquin.Domain.Abstractions.Error.NullValue -> Boutquin.Domain.Abstractions.Error!
+virtual Boutquin.Domain.Abstractions.Error.<Clone>$() -> Boutquin.Domain.Abstractions.Error!
+virtual Boutquin.Domain.Abstractions.Error.EqualityContract.get -> System.Type!
+virtual Boutquin.Domain.Abstractions.Error.Equals(Boutquin.Domain.Abstractions.Error? other) -> bool
+virtual Boutquin.Domain.Abstractions.Error.PrintMembers(System.Text.StringBuilder! builder) -> bool
+virtual Boutquin.Domain.Helpers.StronglyTypedId<TValue>.EqualityContract.get -> System.Type!
+virtual Boutquin.Domain.Helpers.StronglyTypedId<TValue>.Equals(Boutquin.Domain.Helpers.StronglyTypedId<TValue>? other) -> bool
+virtual Boutquin.Domain.Helpers.StronglyTypedId<TValue>.PrintMembers(System.Text.StringBuilder! builder) -> bool
+~override Boutquin.Domain.ValueObjects.DateRange.Equals(object obj) -> bool
+~override Boutquin.Domain.ValueObjects.DateRange.ToString() -> string
+~override Boutquin.Domain.ValueObjects.Money.Equals(object obj) -> bool

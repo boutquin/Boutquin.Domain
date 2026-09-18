@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Boutquin.Domain/Boutquin.Domain.csproj" />
+    <Project Path="src/Boutquin.AspNetCore/Boutquin.AspNetCore.csproj" />
+    <Project Path="src/Boutquin.Validation/Boutquin.Validation.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Boutquin.UnitTests/Boutquin.UnitTests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Boutquin.PackageVerification/Boutquin.PackageVerification.csproj" />
+  </Folder>
+</Solution>

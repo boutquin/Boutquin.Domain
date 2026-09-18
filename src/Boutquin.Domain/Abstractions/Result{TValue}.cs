@@ -1,0 +1,125 @@
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
+//
+//   Licensed under the Apache License, Version 2.0 (the "License").
+//   You may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+//
+
+namespace Boutquin.Domain.Abstractions;
+
+using System.Diagnostics.CodeAnalysis;
+
+/// <summary>
+/// Represents the outcome of an operation that returns a value, which can be either success or failure.
+/// </summary>
+/// <typeparam name="TValue">The type of value returned in the case of a successful operation.</typeparam>
+/// <remarks>
+/// <para>
+/// The Result&lt;TValue&gt; class is an extension of the <see cref="Result"/> class for operations that return a value. 
+/// In addition to indicating success or failure, this class encapsulates a value that is returned when the operation is successful.
+/// </para>
+/// <para>
+/// This class should be used as a return type in methods where you need to return a value and also indicate the success or failure status of the operation.
+/// </para>
+/// <para>
+/// The class provides a property <c>Value</c> to access the returned value. It ensures that the value can only be accessed if the operation was successful,
+/// otherwise, an <see cref="InvalidOperationException"/> is thrown. This behavior enforces the check of the operation status before attempting to access the result.
+/// </para>
+/// <para>
+/// The class also includes an implicit conversion operator from <c>TValue?</c> to
+/// <c>Result&lt;TValue&gt;</c> for convenience. It routes through <see cref="Result.Create{TValue}"/>,
+/// so a non-null value becomes a success but a <see langword="null"/> value becomes a <em>failure</em>
+/// carrying <see cref="Error.NullValue"/> — not a successful result with a null value.
+/// </para>
+/// </remarks>
+/// <example>
+/// This example demonstrates how to use the Result&lt;TValue&gt; class to attempt parsing a string into an integer:
+/// <code>
+/// public static Result&lt;int&gt; TryParseInt(string input)
+/// {
+///     if (int.TryParse(input, out int result))
+///     {
+///         return Result&lt;int&gt;.Success(result);
+///     }
+/// 
+///     return Result&lt;int&gt;.Failure(new Error("ParseError", "Failed to parse input as integer."));
+/// }
+/// 
+/// // Usage
+/// var result = TryParseInt("123");
+/// if (result.IsSuccess)
+/// {
+///     Console.WriteLine($"Parsed value: {result.Value}");
+/// }
+/// else
+/// {
+///     Console.WriteLine($"Error: {result.Error.Description}");
+/// }
+/// </code>
+/// </example>
+public sealed class Result<TValue> : Result
+{
+    private readonly TValue? _value;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Result{TValue}"/> class.
+    /// </summary>
+    /// <param name="value">The value associated with a successful operation.</param>
+    /// <param name="isSuccess">Indicates whether the operation was successful.</param>
+    /// <param name="error">The error associated with a failed operation.</param>
+    internal Result(TValue? value, bool isSuccess, Error error)
+        : base(isSuccess, error) =>
+        _value = value;
+
+    /// <summary>
+    /// Gets the value of the operation if it was successful.
+    /// </summary>
+    /// <value>
+    /// The value of the operation.
+    /// </value>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if attempting to access the value of a failed result.
+    /// </exception>
+    [NotNull]
+    public TValue Value
+        => IsSuccess
+            ? _value!
+            : throw new InvalidOperationException("The value of a failure result cannot be accessed.");
+
+    /// <summary>
+    /// Implicitly converts a value to a <see cref="Result{TValue}"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <remarks>
+    /// <para>
+    /// This conversion simplifies returning a result from methods. It routes through
+    /// <see cref="Result.Create{TValue}"/>, so a <see langword="null"/> <paramref name="value"/>
+    /// produces a <em>failure</em> carrying <see cref="Error.NullValue"/> — not a successful result
+    /// with a null value. A returned <c>null</c> therefore becomes a failed result, which can surprise
+    /// callers expecting a null-valued success; use <see cref="Result.Success{TValue}"/> explicitly when
+    /// the value is known non-null.
+    /// </para>
+    /// <para>
+    /// When <typeparamref name="TValue"/> is <see cref="Error"/> (or <see cref="object"/>), the sibling
+    /// <c>Error</c>-to-<c>Result&lt;TValue&gt;</c> conversion is more specific and wins, so a successful
+    /// <c>Result&lt;Error&gt;</c> cannot be produced by implicit conversion — construct it via
+    /// <see cref="Result.Success{TValue}"/> instead.
+    /// </para>
+    /// </remarks>
+    public static implicit operator Result<TValue>(TValue? value) => Create(value);
+
+    /// <summary>
+    /// Implicitly converts an <see cref="Error"/> to a failed <see cref="Result{TValue}"/>.
+    /// </summary>
+    /// <param name="error">The error to convert.</param>
+    public static implicit operator Result<TValue>(Error error) => new(default, false, error);
+}

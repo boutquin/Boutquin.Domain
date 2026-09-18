@@ -1,0 +1,456 @@
+// Copyright (c) 2024-2026 Pierre G. Boutquin. All rights reserved.
+//
+//   Licensed under the Apache License, Version 2.0 (the "License").
+//   You may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//       http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+//
+
+namespace Boutquin.UnitTests.Domain;
+
+/// <summary>
+/// Contains unit tests for the <see cref="StringExtensions"/> class.
+/// </summary>
+/// <remarks>
+/// This test class provides test cases for various string extension methods such as:
+/// - IsNullOrEmpty: Tests for null or empty strings.
+/// - IsNullOrWhiteSpace: Tests for null, empty, or whitespace strings.
+/// - ToUpperCaseFirst: Tests for converting the first character of a string to uppercase.
+/// - ToLowerCaseFirst: Tests for converting the first character of a string to lowercase.
+/// </remarks>
+public sealed class StringExtensionsTests
+{
+    /// <summary>
+    /// Tests that the IsNullOrEmpty extension method returns true when the string is null.
+    /// </summary>
+    [Fact]
+    public void IsNullOrEmpty_WhenStringIsNull_ReturnsTrue()
+    {
+        // Arrange
+        string? nullString = null;
+
+        // Act (G-06: IsNullOrEmpty accepts string? — no CS8604 suppression needed)
+        var result = nullString.IsNullOrEmpty();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    /// <summary>
+    /// G-06 / AC-2.6: <c>[NotNullWhen(false)]</c> lets the compiler treat the receiver as non-null on
+    /// the false branch, so dereferencing it there compiles without a null-forgiving operator or a
+    /// CS8602 suppression. Without the annotation this would fail the build (TreatWarningsAsErrors).
+    /// </summary>
+    [Fact]
+    public void IsNullOrEmpty_NotNullWhenFalse_FlowNarrowsReceiver()
+    {
+        string? value = "abc";
+
+        if (!value.IsNullOrEmpty())
+        {
+            value.Length.Should().Be(3);
+        }
+    }
+
+    /// <summary>
+    /// The <c>[NotNullWhen(false)]</c> annotation on IsNullOrWhiteSpace flow-narrows the receiver too.
+    /// </summary>
+    [Fact]
+    public void IsNullOrWhiteSpace_NotNullWhenFalse_FlowNarrowsReceiver()
+    {
+        string? value = "abc";
+
+        if (!value.IsNullOrWhiteSpace())
+        {
+            value.Length.Should().Be(3);
+        }
+    }
+
+    /// <summary>
+    /// Tests that the IsNullOrEmpty extension method returns true when the string is empty.
+    /// </summary>
+    [Fact]
+    public void IsNullOrEmpty_WhenStringIsEmpty_ReturnsTrue()
+    {
+        // Arrange
+        var emptyString = string.Empty;
+
+        // Act
+        var result = emptyString.IsNullOrEmpty();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Tests that the IsNullOrEmpty extension method returns false when the string is not empty.
+    /// </summary>
+    [Fact]
+    public void IsNullOrEmpty_WhenStringIsNotEmpty_ReturnsFalse()
+    {
+        // Arrange
+        var nonEmptyString = "Hello, World!";
+
+        // Act
+        var result = nonEmptyString.IsNullOrEmpty();
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    /// <summary>
+    /// Tests that the IsNullOrWhiteSpace extension method returns true when the string is null.
+    /// </summary>
+    [Fact]
+    public void IsNullOrWhiteSpace_WhenStringIsNull_ReturnsTrue()
+    {
+        // Arrange
+        string? nullString = null;
+
+        // Act (G-06: IsNullOrWhiteSpace accepts string? — no CS8604 suppression needed)
+        var result = nullString.IsNullOrWhiteSpace();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Tests that the IsNullOrWhiteSpace extension method returns true when the string is empty.
+    /// </summary>
+    [Fact]
+    public void IsNullOrWhiteSpace_WhenStringIsEmpty_ReturnsTrue()
+    {
+        // Arrange
+        var emptyString = string.Empty;
+
+        // Act
+        var result = emptyString.IsNullOrWhiteSpace();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Tests that the IsNullOrWhiteSpace extension method returns true when the string contains only whitespace characters.
+    /// </summary>
+    [Fact]
+    public void IsNullOrWhiteSpace_WhenStringIsWhiteSpace_ReturnsTrue()
+    {
+        // Arrange
+        var whiteSpaceString = " \t\n\r";
+
+        // Act
+        var result = whiteSpaceString.IsNullOrWhiteSpace();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    /// <summary>
+    /// Tests that the IsNullOrWhiteSpace extension method returns false when the string contains non-whitespace characters.
+    /// </summary>
+    [Fact]
+    public void IsNullOrWhiteSpace_WhenStringContainsNonWhiteSpaceCharacters_ReturnsFalse()
+    {
+        // Arrange
+        var stringWithNonWhiteSpaceCharacters = "Hello, World!";
+
+        // Act
+        var result = stringWithNonWhiteSpaceCharacters.IsNullOrWhiteSpace();
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    /// <summary>
+    /// Tests that the ToUpperCaseFirst extension method throws an ArgumentNullException when the string is null.
+    /// </summary>
+    [Fact]
+    public void ToUpperCaseFirst_WhenStringIsNull_ThrowsArgumentNullException()
+    {
+        // Arrange
+#pragma warning disable CS8600
+        string nullString = null;
+#pragma warning restore CS8600
+
+        // Act
+#pragma warning disable CS8604
+        Action act = () => nullString.ToUpperCaseFirst();
+#pragma warning restore CS8604
+
+        // Assert
+        act.Should().Throw<ArgumentNullException>().WithMessage("*value*");
+    }
+
+    /// <summary>
+    /// Tests that the ToUpperCaseFirst extension method returns an empty string when the string is empty.
+    /// </summary>
+    [Fact]
+    public void ToUpperCaseFirst_WhenStringIsEmpty_ReturnsEmptyString()
+    {
+        // Arrange
+        var emptyString = string.Empty;
+
+        // Act
+        var result = emptyString.ToUpperCaseFirst();
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    /// <summary>
+    /// Tests that the ToUpperCaseFirst extension method returns a string with the first character in uppercase when the string has only one character.
+    /// </summary>
+    [Fact]
+    public void ToUpperCaseFirst_WhenStringHasOneCharacter_ReturnsUppercaseCharacter()
+    {
+        // Arrange
+        var singleCharString = "a";
+
+        // Act
+        var result = singleCharString.ToUpperCaseFirst();
+
+        // Assert
+        result.Should().Be("A");
+    }
+
+    /// <summary>
+    /// Tests that the ToUpperCaseFirst extension method returns a string with the first character in uppercase when the string has multiple characters.
+    /// </summary>
+    [Fact]
+    public void ToUpperCaseFirst_WhenStringHasMultipleCharacters_ReturnsUppercaseFirstCharacter()
+    {
+        // Arrange
+        var multiCharString = "hello, world!";
+
+        // Act
+        var result = multiCharString.ToUpperCaseFirst();
+
+        // Assert
+        result.Should().Be("Hello, world!");
+    }
+
+    /// <summary>
+    /// Tests that the ToUpperCaseFirst extension method does not change the string when the first character is already in uppercase.
+    /// </summary>
+    [Fact]
+    public void ToUpperCaseFirst_WhenFirstCharacterIsAlreadyUppercase_ReturnsSameString()
+    {
+        // Arrange
+        var stringWithUppercaseFirst = "Hello, world!";
+
+        // Act
+        var result = stringWithUppercaseFirst.ToUpperCaseFirst();
+
+        // Assert
+        result.Should().Be(stringWithUppercaseFirst);
+    }
+
+    /// <summary>
+    /// Tests that the ToLowerCaseFirst extension method does not throw an exception when the string is empty.
+    /// </summary>
+    [Fact]
+    public void ToLowerCaseFirst_WhenStringIsEmpty_DoesNotThrow()
+    {
+        // Arrange
+        var emptyString = string.Empty;
+
+        // Act
+        Action act = () => emptyString.ToLowerCaseFirst();
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    /// <summary>
+    /// Tests that the ToLowerCaseFirst extension method throws an ArgumentNullException when the string is null.
+    /// </summary>
+    [Fact]
+    public void ToLowerCaseFirst_WhenStringIsNull_ThrowsArgumentNullException()
+    {
+        // Arrange
+#pragma warning disable CS8600
+        string nullString = null;
+#pragma warning restore CS8600
+
+        // Act
+#pragma warning disable CS8604
+        Action act = () => nullString.ToLowerCaseFirst();
+#pragma warning restore CS8604
+
+        // Assert
+        act.Should().Throw<ArgumentNullException>().WithMessage("*value*");
+    }
+
+    /// <summary>
+    /// Tests that the ToLowerCaseFirst extension method returns the correct value when the string has only one character.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <param name="expected">The expected output string.</param>
+    [Theory]
+    [InlineData("A", "a")]
+    [InlineData("Z", "z")]
+    [InlineData("a", "a")]
+    [InlineData("z", "z")]
+    public void ToLowerCaseFirst_WhenStringHasOneCharacter_ReturnsCorrectValue(string input, string expected)
+    {
+        // Act
+        var result = input.ToLowerCaseFirst();
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
+    /// <summary>
+    /// Tests that the ToLowerCaseFirst extension method returns the correct value when the string has multiple characters.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <param name="expected">The expected output string.</param>
+    [Theory]
+    [InlineData("Hello", "hello")]
+    [InlineData("World", "world")]
+    [InlineData("HELLO", "hELLO")]
+    [InlineData("WORLD", "wORLD")]
+    public void ToLowerCaseFirst_WhenStringHasMultipleCharacters_ReturnsCorrectValue(string input, string expected)
+    {
+        // Act
+        var result = input.ToLowerCaseFirst();
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
+    // ── Compare ────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Compare_OrdinalIgnoreCase_EqualStrings_ReturnsZero()
+    {
+        // Act
+        var result = "hello".Compare("HELLO", StringComparison.OrdinalIgnoreCase);
+
+        // Assert
+        result.Should().Be(0);
+    }
+
+    [Fact]
+    public void Compare_Ordinal_DifferentStrings_ReturnsNonZero()
+    {
+        // Act
+        var result = "abc".Compare("def", StringComparison.Ordinal);
+
+        // Assert
+        result.Should().BeNegative();
+    }
+
+    [Fact]
+    public void Compare_Ordinal_SameStrings_ReturnsZero()
+    {
+        // Act
+        var result = "test".Compare("test", StringComparison.Ordinal);
+
+        // Assert
+        result.Should().Be(0);
+    }
+
+    // ── CompareOrdinal ─────────────────────────────────────────────────
+
+    [Fact]
+    public void CompareOrdinal_EqualStrings_ReturnsZero()
+    {
+        // Act
+        var result = "hello".CompareOrdinal("hello");
+
+        // Assert
+        result.Should().Be(0);
+    }
+
+    [Fact]
+    public void CompareOrdinal_FirstLessThanSecond_ReturnsNegative()
+    {
+        // Act
+        var result = "abc".CompareOrdinal("xyz");
+
+        // Assert
+        result.Should().BeNegative();
+    }
+
+    [Fact]
+    public void CompareOrdinal_FirstGreaterThanSecond_ReturnsPositive()
+    {
+        // Act
+        var result = "xyz".CompareOrdinal("abc");
+
+        // Assert
+        result.Should().BePositive();
+    }
+
+    // ── Format ─────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Format_WithArgs_ReturnsFormattedString()
+    {
+        // Act
+        var result = "Hello, {0}! You are {1} years old.".Format("World", 42);
+
+        // Assert
+        result.Should().Be("Hello, World! You are 42 years old.");
+    }
+
+    [Fact]
+    public void Format_WithNoArgs_ReturnsOriginalString()
+    {
+        // Act
+        var result = "No placeholders here.".Format();
+
+        // Assert
+        result.Should().Be("No placeholders here.");
+    }
+
+    [Fact]
+    public void Format_WithSingleArg_ReturnsFormattedString()
+    {
+        // Act
+        var result = "Value: {0}".Format(42);
+
+        // Assert
+        result.Should().Be("Value: 42");
+    }
+
+    [Fact]
+    public void ToUpperCaseFirst_WithLeadingSupplementaryChar_CasesWholeRune()
+    {
+        // U+10428 DESERET SMALL LETTER LONG I → U+10400 capital. The first "character" is a surrogate
+        // pair; casing must treat it as one scalar rather than no-op on (or split) the surrogate halves.
+        var result = "\U00010428test".ToUpperCaseFirst();
+
+        result.Should().Be("\U00010400test");
+    }
+
+    [Fact]
+    public void ToLowerCaseFirst_WithLeadingSupplementaryChar_CasesWholeRune()
+    {
+        var result = "\U00010400TEST".ToLowerCaseFirst();
+
+        result.Should().Be("\U00010428TEST");
+    }
+
+    [Fact]
+    public void Compare_NullReceiver_TreatedAsLessThanNonNull()
+    {
+        // These wrappers delegate to BCL string.Compare/CompareOrdinal, whose documented contract is
+        // that null sorts before any non-null string. G-06: Compare/CompareOrdinal accept string?, so
+        // no CS8604/CS8625 suppression is needed.
+        string? nullString = null;
+        nullString.Compare("x", StringComparison.Ordinal).Should().BeNegative();
+        nullString.CompareOrdinal("x").Should().BeNegative();
+        "x".Compare(null, StringComparison.Ordinal).Should().BePositive();
+    }
+}
