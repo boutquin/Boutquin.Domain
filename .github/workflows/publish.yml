@@ -12,17 +12,17 @@ jobs:
       PACKAGE_OUTPUT: ${{ github.workspace }}/artifacts/packages
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0 # Full history needed for MinVer
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@v6.0.0
         with:
           dotnet-version: 10.0.401
 
       - name: Cache NuGet packages
-        uses: actions/cache@v6
+        uses: actions/cache@v6.1.0
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Build.props', '**/Directory.Packages.props') }}
@@ -57,7 +57,7 @@ jobs:
           dotnet run --project tools/Boutquin.PackageVerification --configuration Release --no-build -- verify --spec eng/package-verification.json --artifacts "$PACKAGE_OUTPUT" --version "$package_version" --commit "$commit" --hashes "$PACKAGE_OUTPUT/package-hashes.json"
 
       - name: Preserve verified release artifacts and hashes
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: nuget-release-${{ github.ref_name }}
           path: artifacts/packages/
