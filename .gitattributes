@@ -78,3 +78,6 @@ review-accepted.yaml export-ignore
 #*.RTF   diff=astextplain\n\n# Arena run evidence: versioned and shared, but never in a `git archive`.
 .code-arena/ export-ignore
 .code-arena/** export-ignore
+
+# Agent instructions are private, like their canonical source.
+AGENTS.md export-ignore

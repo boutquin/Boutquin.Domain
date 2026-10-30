@@ -16,17 +16,17 @@ jobs:
       PACKAGE_VERSION: 1.0.0-ci.${{ github.run_id }}.${{ github.run_attempt }}
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0 # Full history needed for MinVer
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@v6.0.0
         with:
           dotnet-version: 10.0.401
 
       - name: Cache NuGet packages
-        uses: actions/cache@v6
+        uses: actions/cache@v6.1.0
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Build.props', '**/Directory.Packages.props') }}
@@ -50,7 +50,7 @@ jobs:
         run: dotnet test --configuration Release --no-build --no-restore --collect:"XPlat Code Coverage" --results-directory ./coverage
 
       - name: Upload coverage
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: coverage-report
           path: coverage/

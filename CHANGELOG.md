@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-30
+
+### Changed
+
+- Update FluentValidation to 12.2.0 and build, test and CI dependencies to current stable releases.
+- Preserve the public API and runtime source; exact internal package ranges keep all three packages on 1.0.1.
+
 ## [1.0.0] - 2026-09-17
 
 > This release includes the work previously recorded as 0.8.0 and 0.9.0 development checkpoints.
