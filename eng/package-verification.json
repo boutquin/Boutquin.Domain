@@ -27,5 +27,9 @@
         "Boutquin.Validation"
       ]
     }
+  ],
+  "targetFrameworks": [
+    "net10.0",
+    "net11.0"
   ]
 }

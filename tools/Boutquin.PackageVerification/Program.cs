@@ -251,8 +251,6 @@ internal static class Program
         RequireEqual(context.Spec.RepositoryUrl, RequiredAttribute(repository, "url"), "repository URL");
         RequireEqualIgnoreCase(commit, RequiredAttribute(repository, "commit"), "repository commit");
 
-        VerifyDependencies(context, package, metadata, version);
-
         RequireEqual("README.md", RequiredElement(metadata, "readme").Value, "package readme path");
         var readmeEntry = GetSingleEntry(
             archive,
@@ -273,37 +271,60 @@ internal static class Program
             }
         }
 
-        var assemblyPath = $"lib/{context.Spec.TargetFramework}/{package.Spec.Assembly}";
-        var assemblyEntry = GetSingleEntry(
-            archive,
-            entry => string.Equals(entry.FullName, assemblyPath, StringComparison.Ordinal),
-            assemblyPath);
-        var codeViewGuid = VerifyAssembly(
-            package.Spec.Id,
-            assemblyEntry,
-            semanticVersion,
-            version,
-            commit);
+        var frameworks = context.Spec.TargetFrameworks.Count == 0
+            ? [context.Spec.TargetFramework]
+            : context.Spec.TargetFrameworks;
+        foreach (var framework in frameworks)
+        {
+            VerifyDependencies(context, package, metadata, version, framework);
+            var assemblyPath = $"lib/{framework}/{package.Spec.Assembly}";
+            var assemblyEntry = GetSingleEntry(
+                archive,
+                entry => string.Equals(entry.FullName, assemblyPath, StringComparison.Ordinal),
+                assemblyPath);
+            var codeViewGuid = VerifyAssembly(
+                package.Spec.Id,
+                assemblyEntry,
+                semanticVersion,
+                version,
+                commit);
 
-        using var symbolsArchive = ZipFile.OpenRead(package.SnupkgPath);
-        var pdbPath = $"lib/{context.Spec.TargetFramework}/{Path.ChangeExtension(package.Spec.Assembly, ".pdb")}";
-        var pdbEntry = GetSingleEntry(
-            symbolsArchive,
-            entry => string.Equals(entry.FullName, pdbPath, StringComparison.Ordinal),
-            pdbPath);
-        VerifyPortablePdb(package.Spec.Id, pdbEntry, codeViewGuid);
+            using var symbolsArchive = ZipFile.OpenRead(package.SnupkgPath);
+            var pdbPath = $"lib/{framework}/{Path.ChangeExtension(package.Spec.Assembly, ".pdb")}";
+            var pdbEntry = GetSingleEntry(
+                symbolsArchive,
+                entry => string.Equals(entry.FullName, pdbPath, StringComparison.Ordinal),
+                pdbPath);
+            VerifyPortablePdb(package.Spec.Id, pdbEntry, codeViewGuid);
+        }
     }
 
     private static void VerifyDependencies(
         VerificationContext context,
         PackageArtifact package,
         XElement metadata,
-        string version)
+        string version,
+        string framework)
     {
         var packageIds = context.Spec.Packages
             .Select(item => item.Id)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var dependencies = metadata
+        var groups = metadata.Element(metadata.Name.Namespace + "dependencies")?
+            .Elements(metadata.Name.Namespace + "group").ToArray() ?? [];
+        var scope = metadata;
+        if (groups.Length != 0)
+        {
+            var matchingGroups = groups.Where(group => string.Equals(
+                group.Attribute("targetFramework")?.Value, framework, StringComparison.OrdinalIgnoreCase)).ToArray();
+            if (matchingGroups.Length != 1)
+            {
+                throw new InvalidDataException($"{package.Spec.Id} must contain exactly one dependency group for {framework}.");
+            }
+
+            scope = matchingGroups[0];
+        }
+
+        var dependencies = scope
             .Descendants(metadata.Name.Namespace + "dependency")
             .Select(element => new
             {
@@ -806,6 +827,8 @@ internal sealed record VerificationSpec
     public string RepositoryType { get; init; } = string.Empty;
 
     public string TargetFramework { get; init; } = string.Empty;
+
+    public List<string> TargetFrameworks { get; init; } = [];
 
     public List<PackageSpec> Packages { get; init; } = [];
 }
