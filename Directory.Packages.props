@@ -22,4 +22,8 @@
   <ItemGroup>
     <PackageVersion Include="xunit.analyzers" Version="2.3.0" />
   </ItemGroup>
+  <!-- Latest stable packages for the .NET 11 target, verified against NuGet.org on 2026-11-14. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
+    <PackageVersion Update="Microsoft.AspNetCore.TestHost" Version="11.0.0" />
+  </ItemGroup>
 </Project>

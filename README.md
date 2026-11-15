@@ -1,5 +1,9 @@
 # Boutquin.Domain
 
+## Supported target frameworks
+
+Runtime libraries target both .NET 10 and .NET 11. Build with the .NET 11 SDK selected by `global.json`; install both runtimes to run the full test suite. Compiler tooling retains its .NET Standard target. The .NET 11 target uses the latest stable third-party dependencies verified on NuGet.org on November 14, 2026; target-specific pins preserve the .NET 10 dependency contract.
+
 ![NuGet](https://img.shields.io/nuget/vpre/Boutquin.Domain?style=for-the-badge) ![License](https://img.shields.io/github/license/boutquin/Boutquin.Domain?style=for-the-badge)
 
 A .NET 10 library family for domain-driven design building blocks, FluentValidation failures, and ASP.NET Core exception handling.
